@@ -45,7 +45,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_r300reveng_OBJECTS = ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) \
 	ioctl_drm.$(OBJEXT) ioctl_radeon.$(OBJEXT) main.$(OBJEXT) \
-	maps.$(OBJEXT)
+	maps.$(OBJEXT) maps_analyze.$(OBJEXT)
 r300reveng_OBJECTS = $(am_r300reveng_OBJECTS)
 r300reveng_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -156,7 +156,9 @@ r300reveng_SOURCES = \
 		     ioctl_radeon.h \
 		     main.c \
 		     maps.c \
-		     maps.h
+		     maps.h \
+		     maps_analyze.c \
+		     maps_analyze.h
 
 all: all-am
 
@@ -230,6 +232,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_radeon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maps.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maps_analyze.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

@@ -13,4 +13,6 @@ r300reveng_SOURCES = \
 		     ioctl_radeon.h \
 		     main.c \
 		     maps.c \
-		     maps.h
+		     maps.h \
+		     maps_analyze.c \
+		     maps_analyze.h

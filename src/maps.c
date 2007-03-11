@@ -23,6 +23,7 @@
 #include <unistd.h>
 
 #include "maps.h"
+#include "maps_analyze.h"
 
 int mapnum = 0;
 struct map_t maps[BUFSIZ];
@@ -173,21 +174,5 @@ after (void)
       memcpy (maps[i].after, maps[i].start, maps[i].size);
     }
 
-  // print info, and dump the changed regs etc. see renouveau.
-  for (i = 0; i < mapnum; i++)
-    {
-      fprintf (stderr, "map %d:\n", i);
-      int j;
-      for (j = 0; j < maps[i].size / 4; j++)
-	{
-	  if (maps[i].before[j] == maps[i].after[j])
-	    {
-	      continue;
-	    }
-	  fprintf (stderr, "changed reg 0x%08x from 0x%08x to 0x%08x\n", j,
-		   maps[i].before[j], maps[i].after[j]);
-	}
-
-      fprintf (stderr, "\n");
-    }
+  analyze_maps ();
 }
