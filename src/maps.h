@@ -30,7 +30,6 @@ struct map_t
   unsigned int *after;
 
   char *dev;
-  int flags;
 };
 
 extern int mapnum;

@@ -81,7 +81,6 @@ parse_map (char *str, struct map_t *map)
   map->size = vm_end - vm_start;
   map->before = NULL;
   map->after = NULL;
-  map->flags = 0;
   map->dev = strdup (dev);
 
   return 0;
