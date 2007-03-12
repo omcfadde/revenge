@@ -27,7 +27,7 @@
 
 int mapnum = 0;
 struct map_t maps[BUFSIZ];
-
+
 static void
 free_map (struct map_t *map)
 {
@@ -57,7 +57,7 @@ free_maps (void)
       free_map (&maps[i]);
     }
 }
-
+
 static int
 parse_map (char *str, struct map_t *map)
 {
@@ -151,7 +151,7 @@ alloc_maps (void)
 
   fclose (fd);
 }
-
+
 void
 before (void)
 {

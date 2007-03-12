@@ -28,7 +28,7 @@
 #include "ioctl_drm.h"
 #include "ioctl_radeon.h"
 #include "main.h"
-
+
 #ifndef MAX_ERRNO
 #define MAX_ERRNO	4095
 #endif
@@ -229,12 +229,12 @@ __syscall_return(type,__res); \
 }
 
 #endif
-
+
 /* asm/unistd.h */
 #define __NR_sys_ioctl __NR_ioctl
 
 _syscall3 (int, sys_ioctl, int, fd, int, request, void *, ptr);
-
+
 // both fglrx and out driver use drm, so always check those. only check
 // radeon_ioctl's when running our driver, and only check blob_ioctl's when
 // running fglrx.
