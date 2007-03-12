@@ -83,6 +83,16 @@ test_tri (void)
 // TODO: add functionality to read/write any register (like radeontool), in
 // addidtion to the normal functionality of running the tests and creating a
 // dump.
+//
+// TODO: add option parsing (see option_* above)
+//
+// TODO: add ability to dump MMIO stuff via interfacing with the kernel. the
+// kernel would be patched with the kmmio patch, and this program will contain
+// the code to read that. See mmio-trace. This is very important as apparently
+// (unconfirmed) the newer blobs don't use indirect buffers anymore.
+//
+// TODO: make a better testing framework (test.c, test_<type>.c, ...) etc the
+// test_tri stuff in here is just a hack for testing.
 
 int
 main (int argc, char **argv)
