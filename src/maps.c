@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+#include <GL/gl.h>
+#include <GL/glext.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -152,10 +154,19 @@ alloc_maps (void)
   fclose (fd);
 }
 
+inline static void
+quiescent (void)
+{
+  glFlush ();
+  sleep (1);
+}
+
 void
 before (void)
 {
   int i;
+
+  quiescent ();
 
   for (i = 0; i < mapnum; i++)
     {
@@ -167,6 +178,8 @@ void
 after (void)
 {
   int i;
+
+  quiescent ();
 
   for (i = 0; i < mapnum; i++)
     {

@@ -17,8 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-#include <GL/gl.h>
-#include <GL/glext.h>
 #include <SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,6 +24,7 @@
 
 #include "main.h"
 #include "maps.h"
+#include "test.h"
 
 int option_blob = 0;		// define to 1 if you're using the blob.
 int option_ioctl = 1;		// define to 1 for ioctl dumping.
@@ -44,40 +43,6 @@ alloc_opengl (void)
   Surface =
     SDL_SetVideoMode (640, 480, 0,
 		      SDL_OPENGL | SDL_NOFRAME /*| SDL_FULLSCREEN */ );
-}
-
-inline static void
-test_prologue (void)
-{
-  sleep (1);
-  glFlush ();
-  sleep (1);
-  before ();
-  sleep (1);
-  glFlush ();
-  sleep (1);
-}
-
-inline static void
-test_epilogue (void)
-{
-  sleep (1);
-  glFlush ();
-  sleep (1);
-  after ();
-  sleep (1);
-  glFlush ();
-  sleep (1);
-}
-
-void
-test_tri (void)
-{
-  glBegin (GL_TRIANGLES);
-  glVertex3f (1.0, 0.0, 0.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
 }
 
 // TODO: add functionality to read/write any register (like radeontool), in
@@ -100,13 +65,9 @@ main (int argc, char **argv)
   alloc_opengl ();
   alloc_maps ();
 
-  sleep (1);
-  glFlush ();
-  sleep (1);
-
-  test_prologue ();
+  before ();
   test_tri ();
-  test_epilogue ();
+  after ();
 
   free_maps ();
 

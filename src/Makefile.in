@@ -45,7 +45,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) \
 	ioctl_drm.$(OBJEXT) ioctl_radeon.$(OBJEXT) main.$(OBJEXT) \
-	maps.$(OBJEXT) maps_analyze.$(OBJEXT)
+	maps.$(OBJEXT) maps_analyze.$(OBJEXT) test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -144,7 +144,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_CFLAGS = -Wall `sdl-config --cflags`
+AM_CFLAGS = -DGL_GLEXT_PROTOTYPES -Wall `sdl-config --cflags`
 revenge_SOURCES = \
 		  ioctl.c \
 		  ioctl.h \
@@ -158,7 +158,9 @@ revenge_SOURCES = \
 		  maps.c \
 		  maps.h \
 		  maps_analyze.c \
-		  maps_analyze.h
+		  maps_analyze.h \
+		  test.c \
+		  test.h
 
 all: all-am
 
@@ -233,6 +235,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maps.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maps_analyze.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

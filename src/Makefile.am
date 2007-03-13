@@ -1,4 +1,4 @@
-AM_CFLAGS = -Wall `sdl-config --cflags`
+AM_CFLAGS = -DGL_GLEXT_PROTOTYPES -Wall `sdl-config --cflags`
 
 bin_PROGRAMS = revenge
 
@@ -15,4 +15,6 @@ revenge_SOURCES = \
 		  maps.c \
 		  maps.h \
 		  maps_analyze.c \
-		  maps_analyze.h
+		  maps_analyze.h \
+		  test.c \
+		  test.h
