@@ -30,7 +30,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = r300reveng$(EXEEXT)
+bin_PROGRAMS = revenge$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -43,11 +43,11 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_r300reveng_OBJECTS = ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) \
+am_revenge_OBJECTS = ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) \
 	ioctl_drm.$(OBJEXT) ioctl_radeon.$(OBJEXT) main.$(OBJEXT) \
 	maps.$(OBJEXT) maps_analyze.$(OBJEXT)
-r300reveng_OBJECTS = $(am_r300reveng_OBJECTS)
-r300reveng_LDADD = $(LDADD)
+revenge_OBJECTS = $(am_revenge_OBJECTS)
+revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -55,8 +55,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(r300reveng_SOURCES)
-DIST_SOURCES = $(r300reveng_SOURCES)
+SOURCES = $(revenge_SOURCES)
+DIST_SOURCES = $(revenge_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -145,20 +145,20 @@ target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -Wall `sdl-config --cflags`
-r300reveng_SOURCES = \
-		     ioctl.c \
-		     ioctl.h \
-		     ioctl_blob.c \
-		     ioctl_blob.h \
-		     ioctl_drm.c \
-		     ioctl_drm.h \
-		     ioctl_radeon.c \
-		     ioctl_radeon.h \
-		     main.c \
-		     maps.c \
-		     maps.h \
-		     maps_analyze.c \
-		     maps_analyze.h
+revenge_SOURCES = \
+		  ioctl.c \
+		  ioctl.h \
+		  ioctl_blob.c \
+		  ioctl_blob.h \
+		  ioctl_drm.c \
+		  ioctl_drm.h \
+		  ioctl_radeon.c \
+		  ioctl_radeon.h \
+		  main.c \
+		  maps.c \
+		  maps.h \
+		  maps_analyze.c \
+		  maps_analyze.h
 
 all: all-am
 
@@ -216,9 +216,9 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-r300reveng$(EXEEXT): $(r300reveng_OBJECTS) $(r300reveng_DEPENDENCIES) 
-	@rm -f r300reveng$(EXEEXT)
-	$(LINK) $(r300reveng_OBJECTS) $(r300reveng_LDADD) $(LIBS)
+revenge$(EXEEXT): $(revenge_OBJECTS) $(revenge_DEPENDENCIES) 
+	@rm -f revenge$(EXEEXT)
+	$(LINK) $(revenge_OBJECTS) $(revenge_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
