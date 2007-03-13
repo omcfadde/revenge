@@ -30,18 +30,7 @@
 static char *
 pretty_string (char *str)
 {
-  static char buf[BUFSIZ];
-
-  if (str)
-    {
-      snprintf (buf, BUFSIZ, "\"%s\"", str);
-    }
-  else
-    {
-      snprintf (buf, BUFSIZ, "NULL");
-    }
-
-  return buf;
+  return str;
 }
 
 static void
