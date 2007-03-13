@@ -81,11 +81,7 @@ main (int argc, char **argv)
 {
   alloc_opengl ();
   alloc_maps ();
-
-  before ();
-  test_tri ();
-  after ();
-
+  test ();
   free_maps ();
 
   return 0;

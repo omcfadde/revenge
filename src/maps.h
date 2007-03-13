@@ -36,7 +36,7 @@ extern int mapnum;
 extern struct map_t maps[BUFSIZ];
 void alloc_maps (void);
 void free_maps (void);
-void before (void);
-void after (void);
+void before_maps (void);
+void after_maps (void);
 
 #endif

@@ -22,7 +22,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void
+#include "maps.h"
+#include "maps_analyze.h"
+
+static void
+quiescent (void)
+{
+  glFlush ();
+  sleep (1);
+}
+
+static void
+before (void)
+{
+  quiescent ();
+  before_maps ();
+}
+
+static void
+after (void)
+{
+  quiescent ();
+  after_maps ();
+  analyze_maps ();
+}
+
+static void
 test_tri (void)
 {
   glBegin (GL_TRIANGLES);
@@ -30,4 +55,12 @@ test_tri (void)
   glVertex3f (0.0, 1.0, 0.0);
   glVertex3f (0.0, 0.0, 1.0);
   glEnd ();
+}
+
+void
+test (void)
+{
+  before ();
+  test_tri ();
+  after ();
 }

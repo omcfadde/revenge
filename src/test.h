@@ -20,6 +20,6 @@
 #ifndef __TEST_H__
 #define __TEST_H__
 
-void test_tri (void);
+void test (void);
 
 #endif

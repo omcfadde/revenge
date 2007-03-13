@@ -17,15 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-#include <GL/gl.h>
-#include <GL/glext.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "maps.h"
-#include "maps_analyze.h"
 
 int mapnum = 0;
 struct map_t maps[BUFSIZ];
@@ -154,19 +151,10 @@ alloc_maps (void)
   fclose (fd);
 }
 
-inline static void
-quiescent (void)
-{
-  glFlush ();
-  sleep (1);
-}
-
 void
-before (void)
+before_maps (void)
 {
   int i;
-
-  quiescent ();
 
   for (i = 0; i < mapnum; i++)
     {
@@ -175,16 +163,12 @@ before (void)
 }
 
 void
-after (void)
+after_maps (void)
 {
   int i;
-
-  quiescent ();
 
   for (i = 0; i < mapnum; i++)
     {
       memcpy (maps[i].after, maps[i].start, maps[i].size);
     }
-
-  analyze_maps ();
 }
