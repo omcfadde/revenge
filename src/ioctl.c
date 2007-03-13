@@ -332,22 +332,15 @@ pretty_ioctl (int ioctl_dir, int ioctl_type, int ioctl_nr,
 
   if ((ioctl = find_ioctl (ioctl_dir, ioctl_type, ioctl_nr, ioctl_size)))
     {
-      // TODO: print more info!
       fprintf (stderr, "%s (%s) %d %d %d\n", ioctl->name,
 	       pretty_ioctl_dir (ioctl->dir), ioctl->type, ioctl->nr,
 	       ioctl->size);
 
-      // for the ioctls which have a known format (drm and r300 ioctls) print
-      // them in a structured format rather than in hex.
-
-      // TODO: still not ready...
-#if 0
       if (ioctl->func)
 	{
 	  ioctl->func (ioctl, ioctl_ptr);
 	}
       else
-#endif
 	{
 	  pretty_generic_ioctl (ioctl, ioctl_ptr);
 	}
