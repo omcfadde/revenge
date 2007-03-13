@@ -20,6 +20,12 @@
 #ifndef __TEST_H__
 #define __TEST_H__
 
+struct test_t
+{
+  char *name;
+  void (*func) (void);
+};
+
 void test (void);
 
 #endif

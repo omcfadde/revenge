@@ -21,9 +21,29 @@
 #include <GL/glext.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "maps.h"
 #include "maps_analyze.h"
+#include "test.h"
+
+static void
+test_tri (void)
+{
+  glBegin (GL_TRIANGLES);
+  glColor3f (1.0, 0.0, 0.0);
+  glVertex3f (1.0, 0.0, 0.0);
+  glColor3f (0.0, 1.0, 0.0);
+  glVertex3f (0.0, 1.0, 0.0);
+  glColor3f (0.0, 0.0, 1.0);
+  glVertex3f (0.0, 0.0, 1.0);
+  glEnd ();
+}
+
+static struct test_t tests[] = {
+    {"test_tri", test_tri},
+    {NULL, NULL}
+};
 
 static void
 quiescent (void)
@@ -47,20 +67,16 @@ after (void)
   analyze_maps ();
 }
 
-static void
-test_tri (void)
-{
-  glBegin (GL_TRIANGLES);
-  glVertex3f (1.0, 0.0, 0.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
-}
-
 void
 test (void)
 {
-  before ();
-  test_tri ();
-  after ();
+  struct test_t *test;
+
+  for (test = tests; test->name; test++)
+    {
+      fprintf (stderr, "%s\n", test->name);
+      before ();
+      test->func ();
+      after ();
+    }
 }

@@ -484,5 +484,5 @@ struct ioctl_t drm_ioctls[] = {
   {"DRM_IOCTL_UPDATE_DRAW", pretty_drm_ioctl_update_draw,
    _IOC_DIR (DRM_IOCTL_UPDATE_DRAW), _IOC_TYPE (DRM_IOCTL_UPDATE_DRAW),
    _IOC_NR (DRM_IOCTL_UPDATE_DRAW), _IOC_SIZE (DRM_IOCTL_UPDATE_DRAW)},
-  {NULL, NULL, 0, 0, 0, 0},
+  {NULL, NULL, 0, 0, 0, 0}
 };
