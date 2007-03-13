@@ -23,5 +23,5 @@
 #include "ioctl.h"
 
 struct ioctl_t blob_ioctls[] = {
-  {NULL, 0, 0, 0},
+  {NULL, NULL, 0, 0, 0, 0},
 };

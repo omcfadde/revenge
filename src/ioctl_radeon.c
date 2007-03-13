@@ -260,5 +260,5 @@ struct ioctl_t radeon_ioctls[] = {
    _IOC_TYPE (DRM_IOCTL_RADEON_SURF_FREE),
    _IOC_NR (DRM_IOCTL_RADEON_SURF_FREE),
    _IOC_SIZE (DRM_IOCTL_RADEON_SURF_FREE)},
-  {NULL, 0, 0, 0},
+  {NULL, NULL, 0, 0, 0, 0},
 };

@@ -31,4 +31,3 @@ test_tri (void)
   glVertex3f (0.0, 0.0, 1.0);
   glEnd ();
 }
-
