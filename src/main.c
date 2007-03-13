@@ -29,7 +29,24 @@
 int option_blob = 0;		// define to 1 if you're using the blob.
 int option_ioctl = 1;		// define to 1 for ioctl dumping.
 
-void
+int option_ioctl_before = 0;	// define to 1 to dump the (write) ioctls before
+// executing them as well as after execuding them (the default) see below.
+
+/*
+ * Note about ioctls.
+ *
+ * _IOC_READ: the data from this ioctl is only read by the kernel.
+ * _IOC_WRITE: the data from the ioctl is only written by the kernel.
+ * _IOC_READ | _IOC_WRITE: the data from this ioctl is read and/or written by
+ * the kernel.
+ *
+ * For _IOC_READ | _IOC_WRITE it is possible for the data to be set to one value
+ * before executing the ioctl, then read by the kernel, then set to a different
+ * value. This is why it can be useful to dump the ioctl's before and after
+ * executing them, but it's not really needed by default.
+ */
+
+static void
 alloc_opengl (void)
 {
   SDL_Surface *Surface;

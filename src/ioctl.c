@@ -369,12 +369,17 @@ ioctl (int fd, int request, void *ptr)
 
   ioctl_ptr = ptr;
 
-  if (option_ioctl)
+  if (option_ioctl && option_ioctl_before)
     {
       pretty_ioctl (ioctl_dir, ioctl_type, ioctl_nr, ioctl_size, ioctl_ptr);
     }
 
   res = sys_ioctl (fd, request, ptr);
+
+  if (option_ioctl)
+    {
+      pretty_ioctl (ioctl_dir, ioctl_type, ioctl_nr, ioctl_size, ioctl_ptr);
+    }
 
   return res;
 }
