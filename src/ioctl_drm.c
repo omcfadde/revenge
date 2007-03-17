@@ -30,13 +30,30 @@
 static char *
 pretty_string (char *str)
 {
-  return str;
+  char *buf;
+
+  buf = (char *) malloc (BUFSIZ);
+  if (str)
+    {
+      snprintf (buf, BUFSIZ, "\"%s\"", str);
+    }
+  else
+    {
+      snprintf (buf, BUFSIZ, "NULL");
+    }
+
+  return buf;
 }
 
 static void
 pretty_drm_ioctl_version (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  char *name, *date, *desc;
   drm_version_t *drm_version = (drm_version_t *) ioctl_ptr;
+
+  name = pretty_string (drm_version->name);
+  date = pretty_string (drm_version->date);
+  desc = pretty_string (drm_version->desc);
 
   fprintf (stderr,
 	   "{version_major = %d, version_minor = %d, version_patchlevel = %d, "
@@ -44,18 +61,25 @@ pretty_drm_ioctl_version (struct ioctl_t *ioctl, int *ioctl_ptr)
 	   "date = %s, desc_len = %zd, desc = %s}\n",
 	   drm_version->version_major, drm_version->version_minor,
 	   drm_version->version_patchlevel, drm_version->name_len,
-	   pretty_string (drm_version->name), drm_version->date_len,
-	   pretty_string (drm_version->date), drm_version->desc_len,
-	   pretty_string (drm_version->desc));
+	   name, drm_version->date_len, date, drm_version->desc_len, desc);
+
+  free (name);
+  free (date);
+  free (desc);
 }
 
 static void
 pretty_drm_ioctl_get_unique (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  char *unique;
   drm_unique_t *drm_unique = (drm_unique_t *) ioctl_ptr;
 
+  unique = pretty_string (drm_unique->unique);
+
   fprintf (stderr, "{unique_len = %zd, unique = %s}\n",
-	   drm_unique->unique_len, pretty_string (drm_unique->unique));
+	   drm_unique->unique_len, unique);
+
+  free (unique);
 }
 
 static void
@@ -94,10 +118,15 @@ pretty_drm_ioctl_set_version (struct ioctl_t *ioctl, int *ioctl_ptr)
 static void
 pretty_drm_ioctl_set_unique (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  char *unique;
   drm_unique_t *drm_unique = (drm_unique_t *) ioctl_ptr;
 
+  unique = pretty_string (drm_unique->unique);
+
   fprintf (stderr, "{unique_len = %zd, unique = %s}\n",
-	   drm_unique->unique_len, pretty_string (drm_unique->unique));
+	   drm_unique->unique_len, unique);
+
+  free (unique);
 }
 
 static void
