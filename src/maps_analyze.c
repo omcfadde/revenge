@@ -22,25 +22,57 @@
 
 #include "maps.h"
 
-void
-analyze_maps (void)
+static int
+analyze_map_changed (struct map_t *map)
 {
   int i, j;
 
-  // print info, and dump the changed regs etc. see renouveau.
+  for (i = 0, j = 0; i < map->size / 4; i++)
+    {
+      if (map->before[i] != map->after[i])
+	{
+	  j++;
+	}
+    }
+
+  return j;
+}
+
+static void
+analyze_map (struct map_t *map)
+{
+  int i;
+
+  for (i = 0; i < map->size / 4; i++)
+    {
+      if (map->before[i] == map->after[i])
+	{
+	  continue;
+	}
+      fprintf (stderr, "0x%08x: 0x%08x -> 0x%08x\n", i,
+	       map->before[i], map->after[i]);
+    }
+}
+
+void
+analyze_maps (void)
+{
+  int i;
+  int map_changed;
+  struct map_t *map;
+
   for (i = 0; i < mapnum; i++)
     {
-      fprintf (stderr, "map %d:\n", i);
-      for (j = 0; j < maps[i].size / 4; j++)
-	{
-	  if (maps[i].before[j] == maps[i].after[j])
-	    {
-	      continue;
-	    }
-	  fprintf (stderr, "changed reg 0x%08x from 0x%08x to 0x%08x\n", j,
-		   maps[i].before[j], maps[i].after[j]);
-	}
+      map = &maps[i];
 
-      fprintf (stderr, "\n");
+      map_changed = analyze_map_changed (map);
+
+      fprintf (stderr, "Map %d/%d has %d/%ld changed dwords.\n", i, mapnum,
+	       map_changed, map->size / 4);
+
+      if (map_changed)
+	{
+	  analyze_map (map);
+	}
     }
 }
