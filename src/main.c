@@ -46,7 +46,7 @@ int option_ioctl_before = 0;	// define to 1 to dump the (write) ioctls before
  * executing them, but it's not really needed by default.
  */
 
-static void
+static int
 alloc_opengl (void)
 {
   SDL_Surface *Surface;
@@ -57,9 +57,14 @@ alloc_opengl (void)
   SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, 0);
   SDL_GL_SetAttribute (SDL_GL_STENCIL_SIZE, 8);
 
-  Surface =
-    SDL_SetVideoMode (640, 480, 0,
-		      SDL_OPENGL | SDL_NOFRAME /*| SDL_FULLSCREEN */ );
+  if (!(Surface = SDL_SetVideoMode (640, 480, 0, SDL_OPENGL | SDL_NOFRAME)))
+    {
+      fprintf (stderr, "%s\n", SDL_GetError ());
+      SDL_Quit ();
+      return 1;
+    }
+
+  return 0;
 }
 
 // TODO: add functionality to read/write any register (like radeontool), in
@@ -79,7 +84,11 @@ alloc_opengl (void)
 int
 main (int argc, char **argv)
 {
-  alloc_opengl ();
+  if (alloc_opengl ())
+    {
+      return 1;
+    }
+
   alloc_maps ();
   test ();
   free_maps ();

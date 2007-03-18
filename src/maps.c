@@ -87,12 +87,12 @@ parse_map (char *str, struct map_t *map)
 static int
 good_map (struct map_t *map, int mapnum)
 {
-  if (strncmp (map->dev, "/dev/dri/card", 13) == 0)
+  if (strncmp (map->dev, "/dev/dri/card", 13) != 0)
     {
-      return 0;
+      return 1;
     }
 
-  return 1;
+  return 0;
 }
 
 void
