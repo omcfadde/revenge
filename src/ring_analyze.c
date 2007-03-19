@@ -17,66 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
-#include <GL/gl.h>
-#include <GL/glext.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #include "ring.h"
-#include "ring_analyze.h"
-#include "test.h"
 
 static void
-test_tri (void)
+analyze_ring_ib (void)
 {
-  glBegin (GL_TRIANGLES);
-  glColor3f (1.0, 0.0, 0.0);
-  glVertex3f (1.0, 0.0, 0.0);
-  glColor3f (0.0, 1.0, 0.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glColor3f (0.0, 0.0, 1.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
-}
-
-static struct test_t tests[] = {
-    {"test_tri", test_tri},
-    {NULL, NULL}
-};
-
-static void
-quiescent (void)
-{
-  glFlush ();
-  sleep (1);
-}
-
-static void
-before (void)
-{
-  quiescent ();
-  before_ring ();
-}
-
-static void
-after (void)
-{
-  quiescent ();
-  after_ring ();
-  analyze_ring ();
+  fprintf (stderr, "ib!\n");
 }
 
 void
-test (void)
+analyze_ring (void)
 {
-  struct test_t *test;
+  int i;
+  unsigned long packet_type, packet_cnt, packet_reg;
 
-  for (test = tests; test->name; test++)
+  for (i = ring_head; i < ring_tail; i++, i &= ring_size - 1)
     {
-      fprintf (stderr, "%s\n", test->name);
-      before ();
-      test->func ();
-      after ();
+      switch (ring_mem_map[i])
+	{
+	case CP_PACKET0 (RADEON_CP_IB_BASE, 1):
+	  analyze_ring_ib ();
+	  break;
+	default:
+	  fprintf (stderr, "0x%08lx\n", ring_mem_map[i]);
+	  break;
+	}
     }
 }
+
