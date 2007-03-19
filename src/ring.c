@@ -26,17 +26,11 @@
 #include <sys/types.h>
 
 #define RADEON_MC_AGP_LOCATION		0x014c
-
 #define RADEON_CP_RB_BASE		0x0700
 #define RADEON_CP_RB_CNTL		0x0704
-
-#define RADEON_CP_RB_RPTR_ADDR		0x070c
 #define RADEON_CP_RB_RPTR		0x0710
-
 #define RADEON_CP_IB_BASE		0x0738
-
 #define RADEON_CP_PACKET0		0x00000000
-
 #define CP_PACKET0( reg, n )						\
 	(RADEON_CP_PACKET0 | ((n) << 16) | ((reg) >> 2))
 
@@ -99,9 +93,7 @@ alloc_ring (void)
   fprintf (stderr, "ring_mem_map = 0x%x\n", ring_mem_map);
 
   ring_size = (1 << ((mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
-  fprintf (stderr, "ring_size = 0x%x dwords\n", ring_size);
-
-  printf ("addr = 0x%x\n", mem_map[RADEON_CP_RB_RPTR_ADDR >> 2]);
+  fprintf (stderr, "ring_size = 0x%x\n", ring_size);
 }
 
 void
@@ -117,8 +109,7 @@ after_ring (void)
   int i;
 
   ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
-  fprintf (stderr, "ring_head = 0x%lx ring_tail = 0x%lx (%ld dwords)\n",
-	   ring_head, ring_tail, ring_tail - ring_head);
+  fprintf (stderr, "ring_tail = 0x%lx\n", ring_tail);
 
   for (i = ring_head; i < ring_tail; i++, i &= ring_size - 1)
     {
