@@ -23,7 +23,6 @@
 #include <unistd.h>
 
 #include "main.h"
-#include "maps.h"
 #include "ring.h"
 #include "test.h"
 
@@ -90,10 +89,8 @@ main (int argc, char **argv)
       return 1;
     }
 
-  alloc_maps ();
   alloc_ring ();
   test ();
-  free_maps ();
   free_ring ();
 
   return 0;

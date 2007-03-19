@@ -45,8 +45,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) \
 	ioctl_drm.$(OBJEXT) ioctl_radeon.$(OBJEXT) main.$(OBJEXT) \
-	maps.$(OBJEXT) maps_analyze.$(OBJEXT) ring.$(OBJEXT) \
-	test.$(OBJEXT)
+	ring.$(OBJEXT) test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -156,10 +155,6 @@ revenge_SOURCES = \
 		  ioctl_radeon.c \
 		  ioctl_radeon.h \
 		  main.c \
-		  maps.c \
-		  maps.h \
-		  maps_analyze.c \
-		  maps_analyze.h \
 		  ring.c \
 		  ring.h \
 		  test.c \
@@ -236,8 +231,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_drm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_radeon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maps.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maps_analyze.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ring.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
 

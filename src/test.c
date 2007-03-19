@@ -23,8 +23,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "maps.h"
-#include "maps_analyze.h"
 #include "ring.h"
 #include "test.h"
 
@@ -57,7 +55,6 @@ static void
 before (void)
 {
   quiescent ();
-  before_maps ();
   before_ring ();
 }
 
@@ -65,8 +62,6 @@ static void
 after (void)
 {
   quiescent ();
-  after_maps ();
-  analyze_maps ();
   after_ring ();
 }
 

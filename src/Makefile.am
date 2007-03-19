@@ -12,10 +12,6 @@ revenge_SOURCES = \
 		  ioctl_radeon.c \
 		  ioctl_radeon.h \
 		  main.c \
-		  maps.c \
-		  maps.h \
-		  maps_analyze.c \
-		  maps_analyze.h \
 		  ring.c \
 		  ring.h \
 		  test.c \
