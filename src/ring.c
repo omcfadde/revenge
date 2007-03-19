@@ -24,6 +24,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #define RADEON_MC_AGP_LOCATION		0x014c
 #define RADEON_CP_RB_BASE		0x0700
@@ -33,6 +34,12 @@
 #define RADEON_CP_PACKET0		0x00000000
 #define CP_PACKET0( reg, n )						\
 	(RADEON_CP_PACKET0 | ((n) << 16) | ((reg) >> 2))
+
+#define RADEON_CP_PACKET_MASK		0xC0000000
+#define RADEON_CP_PACKET_COUNT_MASK	0x3fff0000
+#define RADEON_CP_PACKET0_REG_MASK	0x000007ff
+#define RADEON_CP_PACKET1_REG0_MASK	0x000007ff
+#define RADEON_CP_PACKET1_REG1_MASK	0x003ff800
 
 #define REG_ADDR 0xe5000000	// lspci
 #define REG_SIZE 0x7d4		// ???
@@ -87,13 +94,13 @@ alloc_ring (void)
   ring_offset =
     mem_map[RADEON_CP_RB_BASE >> 2] -
     ((mem_map[RADEON_MC_AGP_LOCATION >> 2] & 0xffff) << 16);
-  fprintf (stderr, "ring_offset = 0x%x\n", ring_offset);
+  fprintf (stderr, "ring_offset = 0x%lx\n", ring_offset);
 
-  ring_mem_map = (char *) agp_mem_map + ring_offset;
-  fprintf (stderr, "ring_mem_map = 0x%x\n", ring_mem_map);
+  ring_mem_map = (unsigned long *) ((char *) agp_mem_map + ring_offset);
+  fprintf (stderr, "ring_mem_map = 0x%lx\n", (unsigned long) ring_mem_map);
 
   ring_size = (1 << ((mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
-  fprintf (stderr, "ring_size = 0x%x\n", ring_size);
+  fprintf (stderr, "ring_size = 0x%lx\n", ring_size);
 }
 
 void
@@ -107,14 +114,18 @@ void
 after_ring (void)
 {
   int i;
+  unsigned long packet_type, packet_cnt, packet_reg;
 
   ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
   fprintf (stderr, "ring_tail = 0x%lx\n", ring_tail);
 
   for (i = ring_head; i < ring_tail; i++, i &= ring_size - 1)
     {
-      // this should rather be like ring_mem_agp[i] & TYPE_OF_PACKET_MASK
-      switch (ring_mem_map[i])
+      // TODO
+      packet_type = ring_mem_map[i];
+      packet_cnt = ring_mem_map[i];
+      packet_reg = ring_mem_map[i];
+      switch (packet_type)
 	{
 	case CP_PACKET0 (RADEON_CP_IB_BASE, 1):
 	  fprintf (stderr, "ib!\n");

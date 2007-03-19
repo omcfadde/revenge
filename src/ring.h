@@ -20,6 +20,7 @@
 #ifndef __RING_H__
 #define __RING_H__
 
+void free_ring (void);
 void alloc_ring (void);
 void before_ring (void);
 void after_ring (void);
