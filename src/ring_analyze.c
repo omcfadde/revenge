@@ -22,10 +22,28 @@
 
 #include "ring.h"
 
-static void
-analyze_ring_ib (void)
+static int
+analyze_ring_ib (int i, unsigned long *packet)
 {
-  fprintf (stderr, "ib!\n");
+  unsigned long ib_addr, ib_size;
+
+  i++;
+  ib_addr = ring_mem_map[i];
+
+  i++;
+  ib_size = ring_mem_map[i];
+
+  fprintf (stderr, "indirect buffer! addr = 0x%lx size = 0x%lx\n", ib_addr, ib_size);
+
+  return i;
+}
+
+static int
+analyze_ring_default (int i, unsigned long *packet)
+{
+  fprintf (stderr, "0x%08lx\n", ring_mem_map[i]);
+
+  return i;
 }
 
 void
@@ -39,12 +57,11 @@ analyze_ring (void)
       switch (ring_mem_map[i])
 	{
 	case CP_PACKET0 (RADEON_CP_IB_BASE, 1):
-	  analyze_ring_ib ();
+	  i = analyze_ring_ib (i, &ring_mem_map[i]);
 	  break;
 	default:
-	  fprintf (stderr, "0x%08lx\n", ring_mem_map[i]);
+	  i = analyze_ring_default (i, &ring_mem_map[i]);
 	  break;
 	}
     }
 }
-
