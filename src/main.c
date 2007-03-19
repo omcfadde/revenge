@@ -24,6 +24,7 @@
 
 #include "main.h"
 #include "maps.h"
+#include "ring.h"
 #include "test.h"
 
 int option_blob = 0;		// define to 1 if you're using the blob.
@@ -90,8 +91,10 @@ main (int argc, char **argv)
     }
 
   alloc_maps ();
+  alloc_ring ();
   test ();
   free_maps ();
+  free_ring ();
 
   return 0;
 }

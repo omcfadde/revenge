@@ -16,5 +16,7 @@ revenge_SOURCES = \
 		  maps.h \
 		  maps_analyze.c \
 		  maps_analyze.h \
+		  ring.c \
+		  ring.h \
 		  test.c \
 		  test.h
