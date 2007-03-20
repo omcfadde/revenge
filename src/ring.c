@@ -81,25 +81,25 @@ alloc_ring (void)
   ring_offset =
     mem_map[RADEON_CP_RB_BASE >> 2] -
     ((mem_map[RADEON_MC_AGP_LOCATION >> 2] & 0xffff) << 16);
-  fprintf (stderr, "ring_offset = 0x%lx\n", ring_offset);
+  printf ("ring_offset = 0x%lx\n", ring_offset);
 
   ring_mem_map = (unsigned long *) ((char *) agp_mem_map + ring_offset);
-  fprintf (stderr, "ring_mem_map = 0x%lx\n", (unsigned long) ring_mem_map);
+  printf ("ring_mem_map = 0x%lx\n", (unsigned long) ring_mem_map);
 
   ring_size = (1 << ((mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
-  fprintf (stderr, "ring_size = 0x%lx\n", ring_size);
+  printf ("ring_size = 0x%lx\n", ring_size);
 }
 
 void
 before_ring (void)
 {
   ring_head = ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
-  fprintf (stderr, "ring_head = ring_tail = 0x%lx\n", ring_head);
+  printf ("ring_head = ring_tail = 0x%lx\n", ring_head);
 }
 
 void
 after_ring (void)
 {
   ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
-  fprintf (stderr, "ring_tail = 0x%lx\n", ring_tail);
+  printf ("ring_tail = 0x%lx\n", ring_tail);
 }

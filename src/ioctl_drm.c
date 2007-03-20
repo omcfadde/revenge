@@ -55,13 +55,12 @@ pretty_drm_ioctl_version (struct ioctl_t *ioctl, int *ioctl_ptr)
   date = pretty_string (drm_version->date);
   desc = pretty_string (drm_version->desc);
 
-  fprintf (stderr,
-	   "{version_major = %d, version_minor = %d, version_patchlevel = %d, "
-	   "name_len = %zd, name = %s, date_len = %zd, "
-	   "date = %s, desc_len = %zd, desc = %s}\n",
-	   drm_version->version_major, drm_version->version_minor,
-	   drm_version->version_patchlevel, drm_version->name_len,
-	   name, drm_version->date_len, date, drm_version->desc_len, desc);
+  printf ("{version_major = %d, version_minor = %d, version_patchlevel = %d, "
+	  "name_len = %zd, name = %s, date_len = %zd, "
+	  "date = %s, desc_len = %zd, desc = %s}\n",
+	  drm_version->version_major, drm_version->version_minor,
+	  drm_version->version_patchlevel, drm_version->name_len,
+	  name, drm_version->date_len, date, drm_version->desc_len, desc);
 
   free (name);
   free (date);
@@ -76,8 +75,8 @@ pretty_drm_ioctl_get_unique (struct ioctl_t *ioctl, int *ioctl_ptr)
 
   unique = pretty_string (drm_unique->unique);
 
-  fprintf (stderr, "{unique_len = %zd, unique = %s}\n",
-	   drm_unique->unique_len, unique);
+  printf ("{unique_len = %zd, unique = %s}\n",
+	  drm_unique->unique_len, unique);
 
   free (unique);
 }
@@ -87,7 +86,7 @@ pretty_drm_ioctl_get_magic (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
   drm_auth_t *drm_auth = (drm_auth_t *) ioctl_ptr;
 
-  fprintf (stderr, "{magic = %d}\n", drm_auth->magic);
+  printf ("{magic = %d}\n", drm_auth->magic);
 }
 
 static void
@@ -123,8 +122,8 @@ pretty_drm_ioctl_set_unique (struct ioctl_t *ioctl, int *ioctl_ptr)
 
   unique = pretty_string (drm_unique->unique);
 
-  fprintf (stderr, "{unique_len = %zd, unique = %s}\n",
-	   drm_unique->unique_len, unique);
+  printf ("{unique_len = %zd, unique = %s}\n",
+	  drm_unique->unique_len, unique);
 
   free (unique);
 }
@@ -134,7 +133,7 @@ pretty_drm_ioctl_auth_magic (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
   drm_auth_t *drm_auth = (drm_auth_t *) ioctl_ptr;
 
-  fprintf (stderr, "{magic = %d}\n", drm_auth->magic);
+  printf ("{magic = %d}\n", drm_auth->magic);
 }
 
 static void
@@ -142,7 +141,7 @@ pretty_drm_ioctl_block (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
   drm_block_t *drm_block = (drm_block_t *) ioctl_ptr;
 
-  fprintf (stderr, "{unused = %d}\n", drm_block->unused);
+  printf ("{unused = %d}\n", drm_block->unused);
 }
 
 static void
@@ -262,8 +261,8 @@ pretty_drm_ioctl_lock (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
   drm_lock_t *drm_lock = (drm_lock_t *) ioctl_ptr;
 
-  fprintf (stderr, "{context = %d, flags = %s}\n", drm_lock->context,
-	   pretty_drm_ioctl_lock_flags (drm_lock->flags));
+  printf ("{context = %d, flags = %s}\n", drm_lock->context,
+	  pretty_drm_ioctl_lock_flags (drm_lock->flags));
 }
 
 static void
@@ -271,8 +270,8 @@ pretty_drm_ioctl_unlock (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
   drm_lock_t *drm_lock = (drm_lock_t *) ioctl_ptr;
 
-  fprintf (stderr, "{context = %d, flags = %s}\n", drm_lock->context,
-	   pretty_drm_ioctl_lock_flags (drm_lock->flags));
+  printf ("{context = %d, flags = %s}\n", drm_lock->context,
+	  pretty_drm_ioctl_lock_flags (drm_lock->flags));
 }
 
 static void
@@ -280,8 +279,8 @@ pretty_drm_ioctl_finish (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
   drm_lock_t *drm_lock = (drm_lock_t *) ioctl_ptr;
 
-  fprintf (stderr, "{context = %d, flags = %s}\n", drm_lock->context,
-	   pretty_drm_ioctl_lock_flags (drm_lock->flags));
+  printf ("{context = %d, flags = %s}\n", drm_lock->context,
+	  pretty_drm_ioctl_lock_flags (drm_lock->flags));
 }
 
 static void

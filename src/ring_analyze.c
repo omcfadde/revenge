@@ -54,7 +54,7 @@ analyze_ring_packet0 (unsigned long *packet_type, unsigned long *packet_cnt,
   switch (*packet_reg)
     {
     case RADEON_CP_IB_BASE:
-      fprintf (stderr, "ib!\n");
+      printf ("ib!\n");
       break;
     default:
       /* empty */
@@ -102,9 +102,9 @@ analyze_ring (void)
       /* ??? */
       packet_reg = packet_reg << 2;
 
-      fprintf (stderr,
-	       "packet_type = 0x%08lx packet_cnt = 0x%08lx packet_reg = 0x%08lx\n",
-	       packet_type, packet_cnt, packet_reg);
+      printf
+	("packet_type = 0x%08lx packet_cnt = 0x%08lx packet_reg = 0x%08lx\n",
+	 packet_type, packet_cnt, packet_reg);
 
       switch (packet_type)
 	{

@@ -312,15 +312,15 @@ pretty_generic_ioctl (struct ioctl_t *ioctl, int *ioctl_ptr)
 	{
 	  if (i % 8 == 0 && i > 0)
 	    {
-	      fprintf (stderr, "\n");
+	      printf ("\n");
 	    }
-	  fprintf (stderr, "%08x", ioctl_ptr[i]);
+	  printf ("%08x", ioctl_ptr[i]);
 	  if ((i + 1) % 8 != 0 && i + 1 < ioctl->size / 4)
 	    {
-	      fprintf (stderr, " ");
+	      printf (" ");
 	    }
 	}
-      fprintf (stderr, "\n");
+      printf ("\n");
     }
 }
 
@@ -332,9 +332,9 @@ pretty_ioctl (int ioctl_dir, int ioctl_type, int ioctl_nr,
 
   if ((ioctl = find_ioctl (ioctl_dir, ioctl_type, ioctl_nr, ioctl_size)))
     {
-      fprintf (stderr, "%s (%s) %d %d %d\n", ioctl->name,
-	       pretty_ioctl_dir (ioctl->dir), ioctl->type, ioctl->nr,
-	       ioctl->size);
+      printf ("%s (%s) %d %d %d\n", ioctl->name,
+	      pretty_ioctl_dir (ioctl->dir), ioctl->type, ioctl->nr,
+	      ioctl->size);
 
       if (ioctl->func)
 	{
@@ -350,7 +350,7 @@ pretty_ioctl (int ioctl_dir, int ioctl_type, int ioctl_nr,
       // TODO: do something better than just giving up, for example, check if
       // the ioctl is within the device specific range and make a big warning
       // about this, as it should probably be added to the blob's ioctls.
-      fprintf (stderr, "warning: unknown ioctl %d!\n", ioctl_nr);
+      printf ("warning: unknown ioctl %d!\n", ioctl_nr);
     }
 }
 

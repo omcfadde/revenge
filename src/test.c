@@ -48,9 +48,9 @@ test_tri (void)
 }
 
 static struct test_t tests[] = {
-    {"test_null", test_null},
-    {"test_tri", test_tri},
-    {NULL, NULL}
+  {"test_null", test_null},
+  {"test_tri", test_tri},
+  {NULL, NULL}
 };
 
 static void
@@ -86,7 +86,7 @@ test (void)
     {
       for (i = 0; i < 3; i++)
 	{
-	  fprintf (stderr, "%s %d\n", test->name, i);
+	  printf ("%s %d\n", test->name, i);
 	  snprintf (buf, BUFSIZ, "%s_%d", test->name, i);
 	  open_fd (buf);
 
@@ -95,7 +95,7 @@ test (void)
 	  after ();
 
 	  close_fd ();
-	  fprintf (stderr, "\n");
+	  printf ("\n");
 	}
     }
 }

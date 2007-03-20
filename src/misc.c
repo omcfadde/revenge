@@ -29,14 +29,14 @@ open_fd (const char *name)
 {
   char buf[BUFSIZ];
 
-  fflush (stderr);
+  fflush (stdout);
 
-  fgetpos (stderr, &_old_fpos);
-  _old_fd = dup (fileno (stderr));
+  fgetpos (stdout, &_old_fpos);
+  _old_fd = dup (fileno (stdout));
 
   snprintf (buf, BUFSIZ, "revenge_%s.txt", name);
 
-  if (!freopen (buf, "w", stderr))
+  if (!freopen (buf, "w", stdout))
     {
       //ERR_PRINT ("Opening '%s' failed: %s\n", buf, strerror (errno));
     }
@@ -48,7 +48,7 @@ open_fd (const char *name)
 void
 close_fd (void)
 {
-  fflush (stderr);
+  fflush (stdout);
   if (_old_fd == -1)
     {
       //ERR_PRINT("no previous stream to return output to, continuing with the current output.\n");
@@ -56,7 +56,7 @@ close_fd (void)
     }
 
   /* return the previous output file */
-  if (dup2 (_old_fd, fileno (stderr)) == -1)
+  if (dup2 (_old_fd, fileno (stdout)) == -1)
     {
       //ERR_PRINT ("Redirecting to previous file failed: %s\n", strerror (errno));
     }
@@ -66,6 +66,6 @@ close_fd (void)
     }
 
   _old_fd = -1;
-  clearerr (stderr);
-  fsetpos (stderr, &_old_fpos);
+  clearerr (stdout);
+  fsetpos (stdout, &_old_fpos);
 }
