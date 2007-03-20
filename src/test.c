@@ -70,13 +70,20 @@ after (void)
 void
 test (void)
 {
+  int i;
   struct test_t *test;
 
   for (test = tests; test->name; test++)
     {
-      fprintf (stderr, "%s\n", test->name);
-      before ();
-      test->func ();
-      after ();
+      for (i = 0; i < 3; i++)
+	{
+	  fprintf (stderr, "%s %d\n", test->name, i);
+
+	  before ();
+	  test->func ();
+	  after ();
+
+	  fprintf (stderr, "\n");
+	}
     }
 }
