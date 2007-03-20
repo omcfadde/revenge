@@ -17,33 +17,67 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "ring.h"
 
-static int
-analyze_ring_ib (int i, unsigned long *packet)
+/*
+ * Radeon Packets
+ *
+ * 11000000000000000000000000000000 Type
+ * 00111111111111110000000000000000 Count
+ *
+ * ???
+ */
+
+#define REVENGE_CP_PACKET_TYPE_SHIFT 30
+#define REVENGE_CP_PACKET_TYPE_MASK 0x3
+
+#define REVENGE_CP_PACKET_TYPE0 0x0
+#define REVENGE_CP_PACKET_TYPE1 0x1
+#define REVENGE_CP_PACKET_TYPE2 0x2
+#define REVENGE_CP_PACKET_TYPE3 0x3
+
+#define REVENGE_CP_PACKET_CNT_SHIFT 16
+#define REVENGE_CP_PACKET_CNT_MASK 0x3fff
+
+/* not sure about these... */
+#define REVENGE_CP_PACKET_REG_SHIFT 0
+#define REVENGE_CP_PACKET_REG_MASK 0xffff
+
+static void
+analyze_ring_packet0 (unsigned long *packet_type, unsigned long *packet_cnt,
+		      unsigned long *packet_reg)
 {
-  unsigned long ib_addr, ib_size;
-
-  i++;
-  ib_addr = ring_mem_map[i];
-
-  i++;
-  ib_size = ring_mem_map[i];
-
-  fprintf (stderr, "indirect buffer! addr = 0x%lx size = 0x%lx\n", ib_addr, ib_size);
-
-  return i;
+  switch (*packet_reg)
+    {
+    case RADEON_CP_IB_BASE:
+      fprintf (stderr, "ib!\n");
+      break;
+    default:
+      /* empty */
+      break;
+    }
 }
 
-static int
-analyze_ring_default (int i, unsigned long *packet)
+static void
+analyze_ring_packet1 (unsigned long *packet_type, unsigned long *packet_cnt,
+		      unsigned long *packet_reg)
 {
-  fprintf (stderr, "0x%08lx\n", ring_mem_map[i]);
+}
 
-  return i;
+static void
+analyze_ring_packet2 (unsigned long *packet_type, unsigned long *packet_cnt,
+		      unsigned long *packet_reg)
+{
+}
+
+static void
+analyze_ring_packet3 (unsigned long *packet_type, unsigned long *packet_cnt,
+		      unsigned long *packet_reg)
+{
 }
 
 void
@@ -54,13 +88,40 @@ analyze_ring (void)
 
   for (i = ring_head; i < ring_tail; i++, i &= ring_size - 1)
     {
-      switch (ring_mem_map[i])
+      /* ??? */
+      packet_type =
+	(ring_mem_map[i] >> REVENGE_CP_PACKET_TYPE_SHIFT) &
+	REVENGE_CP_PACKET_TYPE_MASK;
+      packet_cnt =
+	(ring_mem_map[i] >> REVENGE_CP_PACKET_CNT_SHIFT) &
+	REVENGE_CP_PACKET_CNT_MASK;
+      packet_reg =
+	(ring_mem_map[i] >> REVENGE_CP_PACKET_REG_SHIFT) &
+	REVENGE_CP_PACKET_REG_MASK;
+
+      /* ??? */
+      packet_reg = packet_reg << 2;
+
+      fprintf (stderr,
+	       "packet_type = 0x%08lx packet_cnt = 0x%08lx packet_reg = 0x%08lx\n",
+	       packet_type, packet_cnt, packet_reg);
+
+      switch (packet_type)
 	{
-	case CP_PACKET0 (RADEON_CP_IB_BASE, 1):
-	  i = analyze_ring_ib (i, &ring_mem_map[i]);
+	case REVENGE_CP_PACKET_TYPE0:
+	  analyze_ring_packet0 (&packet_type, &packet_cnt, &packet_reg);
+	  break;
+	case REVENGE_CP_PACKET_TYPE1:
+	  analyze_ring_packet1 (&packet_type, &packet_cnt, &packet_reg);
+	  break;
+	case REVENGE_CP_PACKET_TYPE2:
+	  analyze_ring_packet2 (&packet_type, &packet_cnt, &packet_reg);
+	  break;
+	case REVENGE_CP_PACKET_TYPE3:
+	  analyze_ring_packet3 (&packet_type, &packet_cnt, &packet_reg);
 	  break;
 	default:
-	  i = analyze_ring_default (i, &ring_mem_map[i]);
+	  assert (0);
 	  break;
 	}
     }
