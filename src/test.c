@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "misc.h"
 #include "ring.h"
 #include "ring_analyze.h"
 #include "test.h"
@@ -78,11 +79,13 @@ test (void)
       for (i = 0; i < 3; i++)
 	{
 	  fprintf (stderr, "%s %d\n", test->name, i);
+	  open_fd (test->name);
 
 	  before ();
 	  test->func ();
 	  after ();
 
+	  close_fd ();
 	  fprintf (stderr, "\n");
 	}
     }
