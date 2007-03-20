@@ -41,17 +41,17 @@ unsigned long ring_head, ring_size, ring_tail;
 void
 free_ring (void)
 {
-  close (mem_fd);
+  if (munmap (agp_mem_map, AGP_SIZE) < 0)
+    {
+      assert (0);
+    }
 
   if (munmap (mem_map, REG_SIZE) < 0)
     {
       assert (0);
     }
 
-  if (munmap (agp_mem_map, AGP_SIZE) < 0)
-    {
-      assert (0);
-    }
+  close (mem_fd);
 }
 
 void
