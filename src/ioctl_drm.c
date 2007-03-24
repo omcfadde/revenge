@@ -59,8 +59,8 @@ pretty_drm_ioctl_version (struct ioctl_t *ioctl, int *ioctl_ptr)
 	  "name_len = %zd, name = %s, date_len = %zd, "
 	  "date = %s, desc_len = %zd, desc = %s}\n",
 	  drm_version->version_major, drm_version->version_minor,
-	  drm_version->version_patchlevel, drm_version->name_len,
-	  name, drm_version->date_len, date, drm_version->desc_len, desc);
+	  drm_version->version_patchlevel, drm_version->name_len, name,
+	  drm_version->date_len, date, drm_version->desc_len, desc);
 
   free (name);
   free (date);
@@ -75,8 +75,8 @@ pretty_drm_ioctl_get_unique (struct ioctl_t *ioctl, int *ioctl_ptr)
 
   unique = pretty_string (drm_unique->unique);
 
-  printf ("{unique_len = %zd, unique = %s}\n",
-	  drm_unique->unique_len, unique);
+  printf ("{unique_len = %zd, unique = %s}\n", drm_unique->unique_len,
+	  unique);
 
   free (unique);
 }
@@ -122,8 +122,8 @@ pretty_drm_ioctl_set_unique (struct ioctl_t *ioctl, int *ioctl_ptr)
 
   unique = pretty_string (drm_unique->unique);
 
-  printf ("{unique_len = %zd, unique = %s}\n",
-	  drm_unique->unique_len, unique);
+  printf ("{unique_len = %zd, unique = %s}\n", drm_unique->unique_len,
+	  unique);
 
   free (unique);
 }
@@ -147,11 +147,25 @@ pretty_drm_ioctl_block (struct ioctl_t *ioctl, int *ioctl_ptr)
 static void
 pretty_drm_ioctl_unblock (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_block_t *drm_block = (drm_block_t *) ioctl_ptr;
+
+  printf ("{unused = %d}\n", drm_block->unused);
+}
+
+static char *
+pretty_drm_ioctl_control_func (int func)
+{
+  return "TODO";
 }
 
 static void
 pretty_drm_ioctl_control (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_control_t *drm_control = (drm_control_t *) ioctl_ptr;
+
+  printf ("{func = %s, irq = %d}\n",
+	  pretty_drm_ioctl_control_func (drm_control->func),
+	  drm_control->irq);
 }
 
 static void
@@ -159,14 +173,36 @@ pretty_drm_ioctl_add_map (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
 }
 
+static char *
+pretty_drm_ioctl_bufs_flags (int func)
+{
+  return "TODO";
+}
+
 static void
 pretty_drm_ioctl_add_bufs (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_buf_desc_t *drm_buf_desc = (drm_buf_desc_t *) ioctl_ptr;
+
+  printf
+    ("{count = %d, size = %d, low_mark = %d, high_mark = %d, flags = %s, agp_start = %ld}\n",
+     drm_buf_desc->count, drm_buf_desc->size, drm_buf_desc->low_mark,
+     drm_buf_desc->high_mark,
+     pretty_drm_ioctl_bufs_flags (drm_buf_desc->flags),
+     drm_buf_desc->agp_start);
 }
 
 static void
 pretty_drm_ioctl_mark_bufs (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_buf_desc_t *drm_buf_desc = (drm_buf_desc_t *) ioctl_ptr;
+
+  printf
+    ("{count = %d, size = %d, low_mark = %d, high_mark = %d, flags = %s, agp_start = %ld}\n",
+     drm_buf_desc->count, drm_buf_desc->size, drm_buf_desc->low_mark,
+     drm_buf_desc->high_mark,
+     pretty_drm_ioctl_bufs_flags (drm_buf_desc->flags),
+     drm_buf_desc->agp_start);
 }
 
 static void
@@ -252,7 +288,6 @@ pretty_drm_ioctl_dma (struct ioctl_t *ioctl, int *ioctl_ptr)
 static char *
 pretty_drm_ioctl_lock_flags (int flags)
 {
-  // TODO
   return "TODO";
 }
 
