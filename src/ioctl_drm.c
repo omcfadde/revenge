@@ -174,7 +174,7 @@ pretty_drm_ioctl_add_map (struct ioctl_t *ioctl, int *ioctl_ptr)
 }
 
 static char *
-pretty_drm_ioctl_bufs_flags (int func)
+pretty_drm_ioctl_bufs_flags (int flags)
 {
   return "TODO";
 }
