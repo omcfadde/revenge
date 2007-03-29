@@ -38,7 +38,7 @@ open_fd (const char *name)
 
   if (!freopen (buf, "w", stdout))
     {
-      //ERR_PRINT ("Opening '%s' failed: %s\n", buf, strerror (errno));
+      /* ERR_PRINT ("Opening '%s' failed: %s\n", buf, strerror (errno)); */
     }
 }
 
@@ -51,14 +51,14 @@ close_fd (void)
   fflush (stdout);
   if (_old_fd == -1)
     {
-      //ERR_PRINT("no previous stream to return output to, continuing with the current output.\n");
+      /* ERR_PRINT("no previous stream to return output to, continuing with the current output.\n"); */
       return;
     }
 
   /* return the previous output file */
   if (dup2 (_old_fd, fileno (stdout)) == -1)
     {
-      //ERR_PRINT ("Redirecting to previous file failed: %s\n", strerror (errno));
+      /* ERR_PRINT ("Redirecting to previous file failed: %s\n", strerror (errno)); */
     }
   else
     {

@@ -26,11 +26,12 @@
 #include "ring.h"
 #include "test.h"
 
-int option_blob = 0;		// define to 1 if you're using the blob.
-int option_ioctl = 1;		// define to 1 for ioctl dumping.
+int option_blob = 0;		/* define to 1 if you're using the blob. */
+int option_ioctl = 1;		/* define to 1 for ioctl dumping. */
 
-int option_ioctl_before = 0;	// define to 1 to dump the (write) ioctls before
-// executing them as well as after execuding them (the default) see below.
+int option_ioctl_before = 0;	/* define to 1 to dump the (write) ioctls before
+				   executing them as well as after execuding
+				   them (the default) see below. */
 
 /*
  * Note about ioctls.
@@ -67,19 +68,21 @@ alloc_opengl (void)
   return 0;
 }
 
-// TODO: add functionality to read/write any register (like radeontool), in
-// addidtion to the normal functionality of running the tests and creating a
-// dump.
-//
-// TODO: add option parsing (see option_* above)
-//
-// TODO: add ability to dump MMIO stuff via interfacing with the kernel. the
-// kernel would be patched with the kmmio patch, and this program will contain
-// the code to read that. See mmio-trace. This is very important as apparently
-// (unconfirmed) the newer blobs don't use indirect buffers anymore.
-//
-// TODO: make a better testing framework (test.c, test_<type>.c, ...) etc the
-// test_tri stuff in here is just a hack for testing.
+/*
+ * TODO: add functionality to read/write any register (like radeontool), in
+ * addidtion to the normal functionality of running the tests and creating a
+ * dump.
+ *
+ * TODO: add option parsing (see option_* above)
+ *
+ * TODO: add ability to dump MMIO stuff via interfacing with the kernel. the
+ * kernel would be patched with the kmmio patch, and this program will contain
+ * the code to read that. See mmio-trace. This is very important as apparently
+ * (unconfirmed) the newer blobs don't use indirect buffers anymore.
+ *
+ * TODO: make a better testing framework (test.c, test_<type>.c, ...) etc the
+ * test_tri stuff in here is just a hack for testing.
+ */
 
 int
 main (int argc, char **argv)

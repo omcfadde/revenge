@@ -24,8 +24,10 @@
 
 #include "ioctl.h"
 
-// TODO: some function to add newlines when the printed data would exceed 80
-// cols. the newline should be after the last comma not the last space
+/*
+ * TODO: some function to add newlines when the printed data would exceed 80
+ * cols. the newline should be after the last comma not the last space
+ */
 
 static char *
 pretty_string (char *str)

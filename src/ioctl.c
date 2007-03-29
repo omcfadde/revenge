@@ -235,9 +235,6 @@ __syscall_return(type,__res); \
 
 _syscall3 (int, sys_ioctl, int, fd, int, request, void *, ptr);
 
-// both fglrx and out driver use drm, so always check those. only check
-// radeon_ioctl's when running our driver, and only check blob_ioctl's when
-// running fglrx.
 static struct ioctl_t *
 find_ioctl (int ioctl_dir, int ioctl_type, int ioctl_nr, int ioctl_size)
 {
@@ -299,8 +296,6 @@ pretty_ioctl_dir (int ioctl_dir)
     }
 }
 
-// print the ioctl's data in hex. a lot of the code is just to format it nicely
-// (hexdump style)
 static void
 pretty_generic_ioctl (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
@@ -347,9 +342,11 @@ pretty_ioctl (int ioctl_dir, int ioctl_type, int ioctl_nr,
     }
   else
     {
-      // TODO: do something better than just giving up, for example, check if
-      // the ioctl is within the device specific range and make a big warning
-      // about this, as it should probably be added to the blob's ioctls.
+      /*
+       * TODO: do something better than just giving up, for example, check if
+       * the ioctl is within the device specific range and make a big warning
+       * about this, as it should probably be added to the blob's ioctls.
+       */
       printf ("warning: unknown ioctl %d!\n", ioctl_nr);
     }
 }
