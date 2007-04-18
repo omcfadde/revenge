@@ -58,12 +58,11 @@ pretty_drm_ioctl_version (struct ioctl_t *ioctl, int *ioctl_ptr)
   date = pretty_string (drm_version->date);
   desc = pretty_string (drm_version->desc);
 
-  printf ("{version_major = %d, version_minor = %d, version_patchlevel = %d, "
-	  "name_len = %zd, name = %s, date_len = %zd, "
-	  "date = %s, desc_len = %zd, desc = %s}\n",
-	  drm_version->version_major, drm_version->version_minor,
-	  drm_version->version_patchlevel, drm_version->name_len, name,
-	  drm_version->date_len, date, drm_version->desc_len, desc);
+  printf
+    ("{version_major = %d, version_minor = %d, version_patchlevel = %d, name_len = %zd, name = %s, date_len = %zd, date = %s, desc_len = %zd, desc = %s}\n",
+     drm_version->version_major, drm_version->version_minor,
+     drm_version->version_patchlevel, drm_version->name_len, name,
+     drm_version->date_len, date, drm_version->desc_len, desc);
 
   free (name);
   free (date);
