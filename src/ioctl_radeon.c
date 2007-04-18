@@ -33,6 +33,7 @@ pretty_drm_ioctl_radeon_cp_init (struct ioctl_t *ioctl, int *ioctl_ptr)
 static void
 pretty_drm_ioctl_radeon_cp_start (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  /* empty */
 }
 
 static void
@@ -43,16 +44,19 @@ pretty_drm_ioctl_radeon_cp_stop (struct ioctl_t *ioctl, int *ioctl_ptr)
 static void
 pretty_drm_ioctl_radeon_cp_reset (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  /* empty */
 }
 
 static void
 pretty_drm_ioctl_radeon_cp_idle (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  /* empty */
 }
 
 static void
 pretty_drm_ioctl_radeon_reset (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  /* empty */
 }
 
 static void
@@ -63,6 +67,7 @@ pretty_drm_ioctl_radeon_fullscreen (struct ioctl_t *ioctl, int *ioctl_ptr)
 static void
 pretty_drm_ioctl_radeon_swap (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  /* empty */
 }
 
 static void
@@ -105,14 +110,78 @@ pretty_drm_ioctl_radeon_cmdbuf (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
 }
 
+static char *
+pretty_drm_radeon_param (int param)
+{
+  char *buf;
+
+  buf = (char *) malloc (BUFSIZ);
+
+  switch (param)
+    {
+    case RADEON_PARAM_GART_BUFFER_OFFSET:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_GART_BUFFER_OFFSET");
+      break;
+    case RADEON_PARAM_LAST_FRAME:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_LAST_FRAME");
+      break;
+    case RADEON_PARAM_LAST_DISPATCH:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_LAST_DISPATCH");
+      break;
+    case RADEON_PARAM_LAST_CLEAR:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_LAST_CLEAR");
+      break;
+    case RADEON_PARAM_IRQ_NR:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_IRQ_NR");
+      break;
+    case RADEON_PARAM_GART_BASE:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_GART_BASE");
+      break;
+    case RADEON_PARAM_REGISTER_HANDLE:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_REGISTER_HANDLE");
+      break;
+    case RADEON_PARAM_STATUS_HANDLE:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_STATUS_HANDLE");
+      break;
+    case RADEON_PARAM_SAREA_HANDLE:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_SAREA_HANDLE");
+      break;
+    case RADEON_PARAM_GART_TEX_HANDLE:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_GART_TEX_HANDLE");
+      break;
+    case RADEON_PARAM_SCRATCH_OFFSET:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_SCRATCH_OFFSET");
+      break;
+    case RADEON_PARAM_CARD_TYPE:
+      snprintf (buf, BUFSIZ, "RADEON_PARAM_CARD_TYPE");
+      break;
+    default:
+      snprintf (buf, BUFSIZ, "NULL");
+      break;
+    }
+
+  return buf;
+}
+
 static void
 pretty_drm_ioctl_radeon_getparam (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  char *drm_radeon_param;
+  drm_radeon_getparam_t *drm_radeon_getparam =
+    (drm_radeon_getparam_t *) ioctl_ptr;
+
+  drm_radeon_param = pretty_drm_radeon_param (drm_radeon_getparam->param);
+
+  printf ("{param = %s, value = %p}\n", drm_radeon_param,
+	  drm_radeon_getparam->value);
+
+  free (drm_radeon_param);
 }
 
 static void
 pretty_drm_ioctl_radeon_flip (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  /* empty */
 }
 
 static void
@@ -123,11 +192,22 @@ pretty_drm_ioctl_radeon_alloc (struct ioctl_t *ioctl, int *ioctl_ptr)
 static void
 pretty_drm_ioctl_radeon_free (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_radeon_mem_free_t *drm_radeon_mem_free =
+    (drm_radeon_mem_free_t *) ioctl_ptr;
+
+  printf ("{region = %d, region_offset = %d}\n",
+	  drm_radeon_mem_free->region, drm_radeon_mem_free->region_offset);
 }
 
 static void
 pretty_drm_ioctl_radeon_init_heap (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_radeon_mem_init_heap_t *drm_radeon_mem_init_heap =
+    (drm_radeon_mem_init_heap_t *) ioctl_ptr;
+
+  printf ("{region = %d, size = %d, start = %d}\n",
+	  drm_radeon_mem_init_heap->region, drm_radeon_mem_init_heap->size,
+	  drm_radeon_mem_init_heap->start);
 }
 
 static void
@@ -143,11 +223,22 @@ pretty_drm_ioctl_radeon_irq_wait (struct ioctl_t *ioctl, int *ioctl_ptr)
 static void
 pretty_drm_ioctl_radeon_cp_resume (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  /* empty */
 }
 
 static void
 pretty_drm_ioctl_radeon_setparam (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  char *drm_radeon_param;
+  drm_radeon_getparam_t *drm_radeon_getparam =
+    (drm_radeon_getparam_t *) ioctl_ptr;
+
+  drm_radeon_param = pretty_drm_radeon_param (drm_radeon_getparam->param);
+
+  printf ("{param = %s, value = %p}\n", drm_radeon_param,
+	  drm_radeon_getparam->value);
+
+  free (drm_radeon_param);
 }
 
 static void
