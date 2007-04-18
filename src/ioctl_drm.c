@@ -397,7 +397,7 @@ pretty_drm_ioctl_update_draw (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
 }
 
-/* commit 1b3a6d47751018c75e4333ee3ab8ba21dbd55bdd */
+/* commit 2df2c70e20caa3d6d1a1ac12da6fe3cc0689d51f */
 struct ioctl_t drm_ioctls[] = {
   {"DRM_IOCTL_VERSION", pretty_drm_ioctl_version,
    _IOC_DIR (DRM_IOCTL_VERSION), _IOC_TYPE (DRM_IOCTL_VERSION),
