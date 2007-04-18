@@ -35,6 +35,7 @@ pretty_string (char *str)
   char *buf;
 
   buf = (char *) malloc (BUFSIZ);
+
   if (str)
     {
       snprintf (buf, BUFSIZ, "\"%s\"", str);
@@ -212,9 +213,40 @@ pretty_drm_ioctl_info_bufs (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
 }
 
+static char *
+pretty_drm_buf_pub (drm_buf_pub_t * drm_buf_pub)
+{
+  char *buf;
+
+  buf = (char *) malloc (BUFSIZ);
+
+  if (drm_buf_pub)
+    {
+      snprintf (buf, BUFSIZ,
+		"{idx = %d, total = %d, used = %d, address = %p}",
+		drm_buf_pub->idx, drm_buf_pub->total, drm_buf_pub->used,
+		drm_buf_pub->address);
+    }
+  else
+    {
+      snprintf (buf, BUFSIZ, "NULL");
+    }
+
+  return buf;
+}
+
 static void
 pretty_drm_ioctl_map_bufs (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  char *drm_buf_pub;
+  drm_buf_map_t *drm_buf_map = (drm_buf_map_t *) ioctl_ptr;
+
+  drm_buf_pub = pretty_drm_buf_pub ((drm_buf_pub_t *) drm_buf_map->list);
+
+  printf ("{count = %d, virtual = %p, list = %s}\n", drm_buf_map->count,
+	  drm_buf_map->virtual, drm_buf_pub);
+
+  free (drm_buf_pub);
 }
 
 static void
@@ -237,34 +269,64 @@ pretty_drm_ioctl_get_sarea_ctx (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
 }
 
+static char *
+pretty_drm_ioctl_ctx_flags (int flags)
+{
+  return "TODO";
+}
+
 static void
 pretty_drm_ioctl_add_ctx (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_ctx_t *drm_ctx = (drm_ctx_t *) ioctl_ptr;
+
+  printf ("{handle = %d, flags = %s}\n", drm_ctx->handle,
+	  pretty_drm_ioctl_ctx_flags (drm_ctx->flags));
 }
 
 static void
 pretty_drm_ioctl_rm_ctx (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_ctx_t *drm_ctx = (drm_ctx_t *) ioctl_ptr;
+
+  printf ("{handle = %d, flags = %s}\n", drm_ctx->handle,
+	  pretty_drm_ioctl_ctx_flags (drm_ctx->flags));
 }
 
 static void
 pretty_drm_ioctl_mod_ctx (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_ctx_t *drm_ctx = (drm_ctx_t *) ioctl_ptr;
+
+  printf ("{handle = %d, flags = %s}\n", drm_ctx->handle,
+	  pretty_drm_ioctl_ctx_flags (drm_ctx->flags));
 }
 
 static void
 pretty_drm_ioctl_get_ctx (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_ctx_t *drm_ctx = (drm_ctx_t *) ioctl_ptr;
+
+  printf ("{handle = %d, flags = %s}\n", drm_ctx->handle,
+	  pretty_drm_ioctl_ctx_flags (drm_ctx->flags));
 }
 
 static void
 pretty_drm_ioctl_switch_ctx (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_ctx_t *drm_ctx = (drm_ctx_t *) ioctl_ptr;
+
+  printf ("{handle = %d, flags = %s}\n", drm_ctx->handle,
+	  pretty_drm_ioctl_ctx_flags (drm_ctx->flags));
 }
 
 static void
 pretty_drm_ioctl_new_ctx (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
+  drm_ctx_t *drm_ctx = (drm_ctx_t *) ioctl_ptr;
+
+  printf ("{handle = %d, flags = %s}\n", drm_ctx->handle,
+	  pretty_drm_ioctl_ctx_flags (drm_ctx->flags));
 }
 
 static void
