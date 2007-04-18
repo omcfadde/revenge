@@ -72,7 +72,6 @@ void
 test (void)
 {
   char buf[BUFSIZ];
-  int i;
   struct test_t *test;
 
   for (test = tests; test->name; test++)

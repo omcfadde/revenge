@@ -47,46 +47,62 @@
 #define REVENGE_CP_PACKET_REG_SHIFT 0
 #define REVENGE_CP_PACKET_REG_MASK 0xffff
 
-static void
+static int
 analyze_ring_packet0 (unsigned long *packet_type, unsigned long *packet_cnt,
 		      unsigned long *packet_reg)
 {
+  int proc = 1;
+
   switch (*packet_reg)
     {
     case RADEON_CP_IB_BASE:
       printf ("ib!\n");
+      /* TODO */
+      proc = 3;
       break;
     default:
-      /* empty */
+      /* TODO: warning? */
+      proc = 1;
       break;
     }
+
+  return proc;
 }
 
-static void
+static int
 analyze_ring_packet1 (unsigned long *packet_type, unsigned long *packet_cnt,
 		      unsigned long *packet_reg)
 {
+  int proc = 1;
+
+  return proc;
 }
 
-static void
+static int
 analyze_ring_packet2 (unsigned long *packet_type, unsigned long *packet_cnt,
 		      unsigned long *packet_reg)
 {
+  int proc = 1;
+
+  return proc;
 }
 
-static void
+static int
 analyze_ring_packet3 (unsigned long *packet_type, unsigned long *packet_cnt,
 		      unsigned long *packet_reg)
 {
+  int proc = 1;
+
+  return proc;
 }
 
 void
 analyze_ring (void)
 {
-  int i;
-  unsigned long packet_type, packet_cnt, packet_reg;
+  int i = 0, proc = 1;
+  unsigned long packet_type = 0, packet_cnt = 0, packet_reg = 0;
 
-  for (i = ring_head; i < ring_tail; i++, i &= ring_size - 1)
+  for (i = ring_head; i < ring_tail; i += proc, i &= ring_size - 1)
     {
       /* ??? */
       packet_type =
@@ -109,18 +125,23 @@ analyze_ring (void)
       switch (packet_type)
 	{
 	case REVENGE_CP_PACKET_TYPE0:
-	  analyze_ring_packet0 (&packet_type, &packet_cnt, &packet_reg);
+	  proc =
+	    analyze_ring_packet0 (&packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE1:
-	  analyze_ring_packet1 (&packet_type, &packet_cnt, &packet_reg);
+	  proc =
+	    analyze_ring_packet1 (&packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE2:
-	  analyze_ring_packet2 (&packet_type, &packet_cnt, &packet_reg);
+	  proc =
+	    analyze_ring_packet2 (&packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE3:
-	  analyze_ring_packet3 (&packet_type, &packet_cnt, &packet_reg);
+	  proc =
+	    analyze_ring_packet3 (&packet_type, &packet_cnt, &packet_reg);
 	  break;
 	default:
+	  proc = 1;
 	  assert (0);
 	  break;
 	}
