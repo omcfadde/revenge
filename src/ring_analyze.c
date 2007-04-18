@@ -47,67 +47,49 @@
 #define REVENGE_CP_PACKET_REG_SHIFT 0
 #define REVENGE_CP_PACKET_REG_MASK 0xffff
 
-static int
+static void
 analyze_ring_packet0_ib (int ring_ptr, unsigned long *packet_type,
 			 unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 2;
   unsigned long ib_addr, ib_size;
 
   ib_addr = ring_mem_map[ring_ptr + 1];
   ib_size = ring_mem_map[ring_ptr + 2];
 
-  printf ("indirect buffer! addr = 0x%08lx, size = %ld\n", ib_addr,
-	  ib_size);
-
-  return proc;
+  printf ("indirect buffer! addr = 0x%08lx, size = %ld\n", ib_addr, ib_size);
 }
-static int
+
+static void
 analyze_ring_packet0 (int ring_ptr, unsigned long *packet_type,
 		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 0;
-
   switch (*packet_reg)
     {
     case RADEON_CP_IB_BASE:
-      proc =
-	analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt,
-				 packet_reg);
+      analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, packet_reg);
       break;
     default:
       /* empty */
       break;
     }
-
-  return proc;
 }
 
-static int
+static void
 analyze_ring_packet1 (int ring_ptr, unsigned long *packet_type,
 		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 0;
-
-  return proc;
 }
 
-static int
+static void
 analyze_ring_packet2 (int ring_ptr, unsigned long *packet_type,
 		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 0;
-
-  return proc;
 }
 
-static int
+static void
 analyze_ring_packet3 (int ring_ptr, unsigned long *packet_type,
 		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 0;
-
-  return proc;
 }
 
 void
@@ -129,40 +111,36 @@ analyze_ring (void)
 	(ring_mem_map[i] >> REVENGE_CP_PACKET_REG_SHIFT) &
 	REVENGE_CP_PACKET_REG_MASK;
 
+      /* a count of 0 actually means a count of 1... */
+      packet_cnt = packet_cnt + 1;
+
       /* ??? */
       packet_reg = packet_reg << 2;
 
-      printf
-	("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
-	 packet_type, packet_cnt, packet_reg);
+      printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+	      packet_type, packet_cnt, packet_reg);
 
       switch (packet_type)
 	{
 	case REVENGE_CP_PACKET_TYPE0:
-	  proc =
-	    1 + analyze_ring_packet0 (i, &packet_type, &packet_cnt,
-				      &packet_reg);
+	  analyze_ring_packet0 (i, &packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE1:
-	  proc =
-	    1 + analyze_ring_packet1 (i, &packet_type, &packet_cnt,
-				      &packet_reg);
+	  analyze_ring_packet1 (i, &packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE2:
-	  proc =
-	    1 + analyze_ring_packet2 (i, &packet_type, &packet_cnt,
-				      &packet_reg);
+	  analyze_ring_packet2 (i, &packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE3:
-	  proc =
-	    1 + analyze_ring_packet3 (i, &packet_type, &packet_cnt,
-				      &packet_reg);
+	  analyze_ring_packet3 (i, &packet_type, &packet_cnt, &packet_reg);
 	  break;
 	default:
 	  assert (0);
 	  break;
 	}
 
-      assert (i + proc <= ring_tail);
+      /* the packet header itself must also be counted... */
+      proc = 1 + packet_cnt;
     }
+  printf ("done! ring_tail = %ld, i = %d\n", ring_tail, i);
 }
