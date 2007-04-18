@@ -57,6 +57,8 @@ analyze_ring_packet0_ib (int ring_ptr, unsigned long *packet_type,
   ib_size = ring_mem_map[ring_ptr + 2];
 
   printf ("indirect buffer! addr = 0x%08lx, size = %ld\n", ib_addr, ib_size);
+
+  /* TODO: dump the indirect buffer. */
 }
 
 static void
