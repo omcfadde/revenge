@@ -51,7 +51,7 @@ static int
 analyze_ring_packet0_ib (int ring_ptr, unsigned long *packet_type,
 			 unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 3;
+  int proc = 2;
   unsigned long ib_addr, ib_size;
 
   ib_addr = ring_mem_map[ring_ptr + 1];
@@ -66,16 +66,17 @@ static int
 analyze_ring_packet0 (int ring_ptr, unsigned long *packet_type,
 		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 1;
+  int proc = 0;
 
   switch (*packet_reg)
     {
     case RADEON_CP_IB_BASE:
-      proc = analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, packet_reg);
+      proc =
+	analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt,
+				 packet_reg);
       break;
     default:
-      /* TODO: warning? */
-      proc = 1;
+      /* empty */
       break;
     }
 
@@ -86,7 +87,7 @@ static int
 analyze_ring_packet1 (int ring_ptr, unsigned long *packet_type,
 		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 1;
+  int proc = 0;
 
   return proc;
 }
@@ -95,7 +96,7 @@ static int
 analyze_ring_packet2 (int ring_ptr, unsigned long *packet_type,
 		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 1;
+  int proc = 0;
 
   return proc;
 }
@@ -104,7 +105,7 @@ static int
 analyze_ring_packet3 (int ring_ptr, unsigned long *packet_type,
 		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
-  int proc = 1;
+  int proc = 0;
 
   return proc;
 }
@@ -112,7 +113,7 @@ analyze_ring_packet3 (int ring_ptr, unsigned long *packet_type,
 void
 analyze_ring (void)
 {
-  int i = 0, proc = 1;
+  int i = 0, proc = 0;
   unsigned long packet_type = 0, packet_cnt = 0, packet_reg = 0;
 
   for (i = ring_head; i < ring_tail; i += proc, i &= ring_size - 1)
@@ -139,19 +140,23 @@ analyze_ring (void)
 	{
 	case REVENGE_CP_PACKET_TYPE0:
 	  proc =
-	    analyze_ring_packet0 (i, &packet_type, &packet_cnt, &packet_reg);
+	    1 + analyze_ring_packet0 (i, &packet_type, &packet_cnt,
+				      &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE1:
 	  proc =
-	    analyze_ring_packet1 (i, &packet_type, &packet_cnt, &packet_reg);
+	    1 + analyze_ring_packet1 (i, &packet_type, &packet_cnt,
+				      &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE2:
 	  proc =
-	    analyze_ring_packet2 (i, &packet_type, &packet_cnt, &packet_reg);
+	    1 + analyze_ring_packet2 (i, &packet_type, &packet_cnt,
+				      &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE3:
 	  proc =
-	    analyze_ring_packet3 (i, &packet_type, &packet_cnt, &packet_reg);
+	    1 + analyze_ring_packet3 (i, &packet_type, &packet_cnt,
+				      &packet_reg);
 	  break;
 	default:
 	  assert (0);
