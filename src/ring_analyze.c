@@ -133,7 +133,7 @@ analyze_ring (void)
       packet_reg = packet_reg << 2;
 
       printf
-	("packet_type = 0x%08lx packet_cnt = 0x%08lx packet_reg = 0x%08lx\n",
+	("packet_type = %d, packet_cnt = %d, packet_reg = 0x%08lx\n",
 	 packet_type, packet_cnt, packet_reg);
 
       switch (packet_type)
