@@ -160,7 +160,7 @@ pretty_drm_ioctl_radeon_surf_free (struct ioctl_t *ioctl, int *ioctl_ptr)
 {
 }
 
-/* commit 1b3a6d47751018c75e4333ee3ab8ba21dbd55bdd */
+/* commit 2df2c70e20caa3d6d1a1ac12da6fe3cc0689d51f */
 struct ioctl_t radeon_ioctls[] = {
   {"DRM_IOCTL_RADEON_CP_INIT", pretty_drm_ioctl_radeon_cp_init,
    _IOC_DIR (DRM_IOCTL_RADEON_CP_INIT), _IOC_TYPE (DRM_IOCTL_RADEON_CP_INIT),
