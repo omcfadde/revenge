@@ -29,12 +29,6 @@
 #include "test.h"
 
 static void
-test_null (void)
-{
-  /* empty */
-}
-
-static void
 test_tri (void)
 {
   glBegin (GL_TRIANGLES);
@@ -48,7 +42,6 @@ test_tri (void)
 }
 
 static struct test_t tests[] = {
-  {"test_null", test_null},
   {"test_tri", test_tri},
   {NULL, NULL}
 };
@@ -84,18 +77,15 @@ test (void)
 
   for (test = tests; test->name; test++)
     {
-      for (i = 0; i < 3; i++)
-	{
-	  printf ("%s %d\n", test->name, i);
-	  snprintf (buf, BUFSIZ, "%s_%d", test->name, i);
-	  open_fd (buf);
+      printf ("%s\n", test->name);
+      snprintf (buf, BUFSIZ, "%s", test->name);
+      open_fd (buf);
 
-	  before ();
-	  test->func ();
-	  after ();
+      before ();
+      test->func ();
+      after ();
 
-	  close_fd ();
-	  printf ("\n");
-	}
+      close_fd ();
+      printf ("\n");
     }
 }
