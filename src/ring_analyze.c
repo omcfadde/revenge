@@ -48,17 +48,30 @@
 #define REVENGE_CP_PACKET_REG_MASK 0xffff
 
 static int
-analyze_ring_packet0 (unsigned long *packet_type, unsigned long *packet_cnt,
-		      unsigned long *packet_reg)
+analyze_ring_packet0_ib (int ring_ptr, unsigned long *packet_type,
+			 unsigned long *packet_cnt, unsigned long *packet_reg)
+{
+  int proc = 3;
+  unsigned long ib_addr, ib_size;
+
+  ib_addr = ring_mem_map[ring_ptr + 1];
+  ib_size = ring_mem_map[ring_ptr + 2];
+
+  printf ("indirect buffer! addr = 0x%08lx, size = 0x%08lx\n", ib_addr,
+	  ib_size);
+
+  return proc;
+}
+static int
+analyze_ring_packet0 (int ring_ptr, unsigned long *packet_type,
+		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
   int proc = 1;
 
   switch (*packet_reg)
     {
     case RADEON_CP_IB_BASE:
-      printf ("ib!\n");
-      /* TODO */
-      proc = 3;
+      proc = analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, packet_reg);
       break;
     default:
       /* TODO: warning? */
@@ -70,8 +83,8 @@ analyze_ring_packet0 (unsigned long *packet_type, unsigned long *packet_cnt,
 }
 
 static int
-analyze_ring_packet1 (unsigned long *packet_type, unsigned long *packet_cnt,
-		      unsigned long *packet_reg)
+analyze_ring_packet1 (int ring_ptr, unsigned long *packet_type,
+		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
   int proc = 1;
 
@@ -79,8 +92,8 @@ analyze_ring_packet1 (unsigned long *packet_type, unsigned long *packet_cnt,
 }
 
 static int
-analyze_ring_packet2 (unsigned long *packet_type, unsigned long *packet_cnt,
-		      unsigned long *packet_reg)
+analyze_ring_packet2 (int ring_ptr, unsigned long *packet_type,
+		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
   int proc = 1;
 
@@ -88,8 +101,8 @@ analyze_ring_packet2 (unsigned long *packet_type, unsigned long *packet_cnt,
 }
 
 static int
-analyze_ring_packet3 (unsigned long *packet_type, unsigned long *packet_cnt,
-		      unsigned long *packet_reg)
+analyze_ring_packet3 (int ring_ptr, unsigned long *packet_type,
+		      unsigned long *packet_cnt, unsigned long *packet_reg)
 {
   int proc = 1;
 
@@ -126,19 +139,19 @@ analyze_ring (void)
 	{
 	case REVENGE_CP_PACKET_TYPE0:
 	  proc =
-	    analyze_ring_packet0 (&packet_type, &packet_cnt, &packet_reg);
+	    analyze_ring_packet0 (i, &packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE1:
 	  proc =
-	    analyze_ring_packet1 (&packet_type, &packet_cnt, &packet_reg);
+	    analyze_ring_packet1 (i, &packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE2:
 	  proc =
-	    analyze_ring_packet2 (&packet_type, &packet_cnt, &packet_reg);
+	    analyze_ring_packet2 (i, &packet_type, &packet_cnt, &packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE3:
 	  proc =
-	    analyze_ring_packet3 (&packet_type, &packet_cnt, &packet_reg);
+	    analyze_ring_packet3 (i, &packet_type, &packet_cnt, &packet_reg);
 	  break;
 	default:
 	  assert (0);
