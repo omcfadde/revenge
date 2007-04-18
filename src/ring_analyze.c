@@ -141,7 +141,6 @@ analyze_ring (void)
 	    analyze_ring_packet3 (&packet_type, &packet_cnt, &packet_reg);
 	  break;
 	default:
-	  proc = 1;
 	  assert (0);
 	  break;
 	}
