@@ -162,5 +162,7 @@ analyze_ring (void)
 	  assert (0);
 	  break;
 	}
+
+      assert (i + proc <= ring_tail);
     }
 }
