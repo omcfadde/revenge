@@ -68,7 +68,7 @@ analyze_ring_packet0 (int ring_ptr, unsigned long *packet_type,
 
   for (i = 0; i < *packet_cnt; i++)
     {
-      reg = *packet_reg + i;
+      reg = *packet_reg + (i * 4);
 
       /* the + 1 is to skip over the packet header */
       printf ("reg 0x%04lx <- 0x%08lx\n", reg, ring_mem_map[ring_ptr + i + 1]);
