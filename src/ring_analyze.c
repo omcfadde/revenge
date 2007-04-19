@@ -67,7 +67,7 @@
  * \todo Support PCI-E.
  */
 static int
-analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
+analyze_indirect_buffer (int ring_ptr, unsigned long packet_type,
 			 unsigned long packet_cnt, unsigned long packet_reg)
 {
   int i;
@@ -114,7 +114,7 @@ analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
 	{
 	case RADEON_CP_IB_BASE:
 	  proc =
-	    analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt,
+	    analyze_indirect_buffer (ring_ptr, packet_type, packet_cnt,
 				     mapped_reg);
 	  break;
 	default:
