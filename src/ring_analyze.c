@@ -71,8 +71,8 @@ analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
 			 unsigned long packet_cnt, unsigned long packet_reg)
 {
   int i;
+  unsigned long *ib_mapped_addr;
   unsigned long ib_addr, ib_size;
-  unsigned long ib_mapped_addr;
 
   ib_addr = ring_mem_map[ring_ptr + 1];
   ib_size = ring_mem_map[ring_ptr + 2];
