@@ -159,6 +159,8 @@ analyze_ring (void)
 	  assert (0);
 	  break;
 	}
+
+      printf ("\n");
     }
 
   printf ("done! ring_head = %08lx, ring_tail = %80lx, i = %08x\n",
