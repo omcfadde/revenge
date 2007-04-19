@@ -50,7 +50,7 @@
 /* TODO: Document the packet format in detail; there isn't any existing
  * documentaton. */
 
-static void
+static int
 analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
 			 unsigned long packet_cnt, unsigned long packet_reg)
 {
@@ -62,16 +62,18 @@ analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
   printf ("indirect buffer! addr = 0x%08lx, size = %ld\n", ib_addr, ib_size);
 
   /* TODO: dump the indirect buffer. */
+
+  return 2;
 }
 
 static void
 analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
 {
-  int i;
+  int i, proc;
   unsigned long reg;
 
-  for (i = 0; i < packet_cnt; i++)
+  for (i = 0; i < packet_cnt; i += proc)
     {
       reg = packet_reg + (i * 4);
 
@@ -82,10 +84,10 @@ analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
       switch (reg)
 	{
 	case RADEON_CP_IB_BASE:
-	  analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, reg);
+	  proc = analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, reg);
 	  break;
 	default:
-	  /* empty */
+	  proc = 1;
 	  break;
 	}
     }
