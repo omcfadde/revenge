@@ -82,7 +82,7 @@ analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
 
   printf
     ("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
-     ib_addr, ib_mapped_addr, ib_size);
+     ib_addr, (unsigned long) ib_mapped_addr, ib_size);
 
   for (i = 0; i < ib_size; i++)
     {
