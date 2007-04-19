@@ -67,15 +67,16 @@
  * \todo Support PCI-E.
  */
 static int
-analyze_indirect_buffer (int ring_ptr, unsigned long packet_type,
-			 unsigned long packet_cnt, unsigned long packet_reg)
+analyze_indirect_buffer (unsigned long packet_type, unsigned long packet_cnt,
+			 unsigned long packet_reg, int mem_ptr,
+			 unsigned long *mem_map)
 {
   int i;
   unsigned long *ib_mapped_addr;
   unsigned long ib_addr, ib_size;
 
-  ib_addr = ring_mem_map[ring_ptr + 1];
-  ib_size = ring_mem_map[ring_ptr + 2];
+  ib_addr = mem_map[mem_ptr + 1];
+  ib_size = mem_map[mem_ptr + 2];
 
   ib_mapped_addr =
     (unsigned long *) ((char *) agp_mem_map + (ib_addr - AGP_ADDR));
@@ -96,8 +97,9 @@ analyze_indirect_buffer (int ring_ptr, unsigned long packet_type,
  * \brief Analyze a type 0 packet.
  */
 static void
-analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
-		      unsigned long packet_cnt, unsigned long packet_reg)
+analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
+		 unsigned long packet_reg, int mem_ptr,
+		 unsigned long *mem_map)
 {
   int i, proc;
   unsigned long mapped_reg;
@@ -107,15 +109,14 @@ analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
       mapped_reg = packet_reg + (i * 4);
 
       /* the + 1 is to skip over the packet header */
-      printf ("0x%04lx <- 0x%08lx\n", mapped_reg,
-	      ring_mem_map[ring_ptr + i + 1]);
+      printf ("0x%04lx <- 0x%08lx\n", mapped_reg, mem_map[mem_ptr + i + 1]);
 
       switch (mapped_reg)
 	{
 	case RADEON_CP_IB_BASE:
 	  proc =
-	    analyze_indirect_buffer (ring_ptr, packet_type, packet_cnt,
-				     mapped_reg);
+	    analyze_indirect_buffer (packet_type, packet_cnt, mapped_reg,
+				     mem_ptr, mem_map);
 	  break;
 	default:
 	  proc = 1;
@@ -128,8 +129,9 @@ analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
  * \brief Analyze a type 1 packet.
  */
 static void
-analyze_ring_packet1 (int ring_ptr, unsigned long packet_type,
-		      unsigned long packet_cnt, unsigned long packet_reg)
+analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
+		 unsigned long packet_reg, int mem_ptr,
+		 unsigned long *mem_map)
 {
   assert (0);
 }
@@ -141,8 +143,9 @@ analyze_ring_packet1 (int ring_ptr, unsigned long packet_type,
  * actually write any registers.
  */
 static void
-analyze_ring_packet2 (int ring_ptr, unsigned long packet_type,
-		      unsigned long packet_cnt, unsigned long packet_reg)
+analyze_packet2 (unsigned long packet_type, unsigned long packet_cnt,
+		 unsigned long packet_reg, int mem_ptr,
+		 unsigned long *mem_map)
 {
   /* empty */
 }
@@ -151,8 +154,9 @@ analyze_ring_packet2 (int ring_ptr, unsigned long packet_type,
  * \brief Analyze a type 3 packet.
  */
 static void
-analyze_ring_packet3 (int ring_ptr, unsigned long packet_type,
-		      unsigned long packet_cnt, unsigned long packet_reg)
+analyze_packet3 (unsigned long packet_type, unsigned long packet_cnt,
+		 unsigned long packet_reg, int mem_ptr,
+		 unsigned long *mem_map)
 {
   assert (0);
 }
@@ -195,16 +199,20 @@ analyze_ring (void)
       switch (packet_type)
 	{
 	case REVENGE_CP_PACKET_TYPE0:
-	  analyze_ring_packet0 (i, packet_type, packet_cnt, packet_reg);
+	  analyze_packet0 (packet_type, packet_cnt, packet_reg, i,
+			   ring_mem_map);
 	  break;
 	case REVENGE_CP_PACKET_TYPE1:
-	  analyze_ring_packet1 (i, packet_type, packet_cnt, packet_reg);
+	  analyze_packet1 (packet_type, packet_cnt, packet_reg, i,
+			   ring_mem_map);
 	  break;
 	case REVENGE_CP_PACKET_TYPE2:
-	  analyze_ring_packet2 (i, packet_type, packet_cnt, packet_reg);
+	  analyze_packet2 (packet_type, packet_cnt, packet_reg, i,
+			   ring_mem_map);
 	  break;
 	case REVENGE_CP_PACKET_TYPE3:
-	  analyze_ring_packet3 (i, packet_type, packet_cnt, packet_reg);
+	  analyze_packet3 (packet_type, packet_cnt, packet_reg, i,
+			   ring_mem_map);
 	  break;
 	default:
 	  assert (0);
