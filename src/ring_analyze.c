@@ -17,6 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  */
 
+/**
+ * \file
+ *
+ * \brief Analyze the Radeon ring buffer.
+ *
+ * \todo Document the packet format in detail; there isn't any existing
+ * documentation
+ */
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,9 +56,12 @@
 #define REVENGE_CP_PACKET_REG_SHIFT 0
 #define REVENGE_CP_PACKET_REG_MASK 0xffff
 
-/* TODO: Document the packet format in detail; there isn't any existing
- * documentaton. */
-
+/**
+ * \brief Analyze a indirect buffer.
+ *
+ * \todo This function is incomplete; it doesn't dump the indirect buffer
+ * contents.
+ */
 static int
 analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
 			 unsigned long packet_cnt, unsigned long packet_reg)
@@ -66,6 +78,9 @@ analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
   return 2;
 }
 
+/**
+ * \brief Analyze a type 0 packet.
+ */
 static void
 analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
@@ -84,7 +99,8 @@ analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
       switch (reg)
 	{
 	case RADEON_CP_IB_BASE:
-	  proc = analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, reg);
+	  proc =
+	    analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, reg);
 	  break;
 	default:
 	  proc = 1;
@@ -93,24 +109,36 @@ analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
     }
 }
 
+/**
+ * \brief Analyze a type 1 packet.
+ */
 static void
 analyze_ring_packet1 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
 {
 }
 
+/**
+ * \brief Analyze a type 2 packet.
+ */
 static void
 analyze_ring_packet2 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
 {
 }
 
+/**
+ * \brief Analyze a type 3 packet.
+ */
 static void
 analyze_ring_packet3 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
 {
 }
 
+/**
+ * \brief Analyze the Radeon ring buffer.
+ */
 void
 analyze_ring (void)
 {
@@ -165,6 +193,6 @@ analyze_ring (void)
       printf ("\n");
     }
 
-  printf ("done! ring_head = %08lx, ring_tail = %80lx, i = %08x\n",
-	  ring_head, ring_tail, i);
+  printf ("done! ring_head = %08lx, ring_tail = %80lx, i = %08x\n", ring_head,
+	  ring_tail, i);
 }
