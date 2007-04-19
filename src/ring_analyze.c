@@ -47,6 +47,9 @@
 #define REVENGE_CP_PACKET_REG_SHIFT 0
 #define REVENGE_CP_PACKET_REG_MASK 0xffff
 
+/* TODO: Document the packet format in detail; there isn't any existing
+ * documentaton. */
+
 static void
 analyze_ring_packet0_ib (int ring_ptr, unsigned long *packet_type,
 			 unsigned long *packet_cnt, unsigned long *packet_reg)
