@@ -131,6 +131,7 @@ static void
 analyze_ring_packet1 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
 {
+  assert (0);
 }
 
 /**
@@ -153,6 +154,7 @@ static void
 analyze_ring_packet3 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
 {
+  assert (0);
 }
 
 /**
