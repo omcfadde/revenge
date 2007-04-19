@@ -77,7 +77,8 @@ analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
   ib_addr = ring_mem_map[ring_ptr + 1];
   ib_size = ring_mem_map[ring_ptr + 2];
 
-  ib_mapped_addr = (char *) agp_mem_map + (ib_addr - AGP_ADDR);
+  ib_mapped_addr =
+    (unsigned long *) ((char *) agp_mem_map + (ib_addr - AGP_ADDR));
 
   printf
     ("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
