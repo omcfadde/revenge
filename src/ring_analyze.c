@@ -61,17 +61,26 @@
  *
  * \todo This function is incomplete; it doesn't dump the indirect buffer
  * contents.
+ *
+ * \todo Dynamically calculate the AGP address.
+ *
+ * \todo Support PCI-E.
  */
 static int
 analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
 			 unsigned long packet_cnt, unsigned long packet_reg)
 {
   unsigned long ib_addr, ib_size;
+  unsigned long ib_mapped_addr;
 
   ib_addr = ring_mem_map[ring_ptr + 1];
   ib_size = ring_mem_map[ring_ptr + 2];
 
-  printf ("indirect buffer! addr = 0x%08lx, size = %ld\n", ib_addr, ib_size);
+  ib_mapped_addr = (char *) agp_mem_map + (ib_addr - AGP_ADDR);
+
+  printf
+    ("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
+     ib_addr, ib_mapped_addr, ib_size);
 
   /* TODO: dump the indirect buffer. */
 

@@ -28,14 +28,6 @@
 
 #include "ring.h"
 
-/* TODO: get these values dynamically! */
-
-#define REG_ADDR 0xe5000000	/* lspci */
-#define REG_SIZE 0x7d4		/* ??? */
-
-#define AGP_ADDR 0xe0000000	/* dmesg | grep 'AGP aperture' */
-#define AGP_SIZE 64*1024*1024
-
 int mem_fd;
 unsigned long *agp_mem_map, *mem_map, *ring_mem_map;
 unsigned long ring_head, ring_size, ring_tail;
