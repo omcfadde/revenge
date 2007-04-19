@@ -76,13 +76,13 @@ analyze_ring_packet0 (int ring_ptr, unsigned long *packet_type,
       reg = *packet_reg + (i * 4);
 
       /* the + 1 is to skip over the packet header */
-      printf ("reg 0x%04lx <- 0x%08lx\n", reg, ring_mem_map[ring_ptr + i + 1]);
+      printf ("reg 0x%04lx <- 0x%08lx\n", reg,
+	      ring_mem_map[ring_ptr + i + 1]);
 
       switch (reg)
 	{
 	case RADEON_CP_IB_BASE:
-	  analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt,
-				   &reg);
+	  analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, &reg);
 	  break;
 	default:
 	  /* empty */
@@ -112,10 +112,11 @@ analyze_ring_packet3 (int ring_ptr, unsigned long *packet_type,
 void
 analyze_ring (void)
 {
-  int i = 0, proc = 0;
-  unsigned long packet_type = 0, packet_cnt = 0, packet_reg = 0;
+  int i;
+  unsigned long packet_type, packet_cnt, packet_reg;
 
-  for (i = ring_head; i < ring_tail; i += proc, i &= ring_size - 1)
+  /* the packet words and the packet header must be counted... */
+  for (i = ring_head; i < ring_tail; i += packet_cnt + 1, i &= ring_size - 1)
     {
       /* ??? */
       packet_type =
@@ -155,9 +156,6 @@ analyze_ring (void)
 	  assert (0);
 	  break;
 	}
-
-      /* the packet header itself must also be counted... */
-      proc = 1 + packet_cnt;
     }
   printf ("done! ring_tail = %ld, i = %d\n", ring_tail, i);
 }
