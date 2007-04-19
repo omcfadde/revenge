@@ -52,11 +52,33 @@ alloc_opengl (void)
 {
   SDL_Surface *Surface;
 
-  SDL_Init (SDL_INIT_VIDEO);
+  if (SDL_Init (SDL_INIT_VIDEO) < 0)
+    {
+      printf ("%s\n", SDL_GetError ());
+      SDL_Quit ();
+      return 1;
+    }
 
-  SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, 16);
-  SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, 0);
-  SDL_GL_SetAttribute (SDL_GL_STENCIL_SIZE, 8);
+  if (SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, 16) < 0)
+    {
+      printf ("%s\n", SDL_GetError ());
+      SDL_Quit ();
+      return 1;
+    }
+
+  if (SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, 0) < 0)
+    {
+      printf ("%s\n", SDL_GetError ());
+      SDL_Quit ();
+      return 1;
+    }
+
+  if (SDL_GL_SetAttribute (SDL_GL_STENCIL_SIZE, 8) < 0)
+    {
+      printf ("%s\n", SDL_GetError ());
+      SDL_Quit ();
+      return 1;
+    }
 
   if (!(Surface = SDL_SetVideoMode (640, 480, 0, SDL_OPENGL | SDL_NOFRAME)))
     {
