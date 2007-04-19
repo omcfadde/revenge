@@ -51,8 +51,8 @@
  * documentaton. */
 
 static void
-analyze_ring_packet0_ib (int ring_ptr, unsigned long *packet_type,
-			 unsigned long *packet_cnt, unsigned long *packet_reg)
+analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
+			 unsigned long packet_cnt, unsigned long packet_reg)
 {
   unsigned long ib_addr, ib_size;
 
@@ -65,15 +65,15 @@ analyze_ring_packet0_ib (int ring_ptr, unsigned long *packet_type,
 }
 
 static void
-analyze_ring_packet0 (int ring_ptr, unsigned long *packet_type,
-		      unsigned long *packet_cnt, unsigned long *packet_reg)
+analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
+		      unsigned long packet_cnt, unsigned long packet_reg)
 {
   int i;
   unsigned long reg;
 
-  for (i = 0; i < *packet_cnt; i++)
+  for (i = 0; i < packet_cnt; i++)
     {
-      reg = *packet_reg + (i * 4);
+      reg = packet_reg + (i * 4);
 
       /* the + 1 is to skip over the packet header */
       printf ("reg 0x%04lx <- 0x%08lx\n", reg,
@@ -82,7 +82,7 @@ analyze_ring_packet0 (int ring_ptr, unsigned long *packet_type,
       switch (reg)
 	{
 	case RADEON_CP_IB_BASE:
-	  analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, &reg);
+	  analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, reg);
 	  break;
 	default:
 	  /* empty */
@@ -92,20 +92,20 @@ analyze_ring_packet0 (int ring_ptr, unsigned long *packet_type,
 }
 
 static void
-analyze_ring_packet1 (int ring_ptr, unsigned long *packet_type,
-		      unsigned long *packet_cnt, unsigned long *packet_reg)
+analyze_ring_packet1 (int ring_ptr, unsigned long packet_type,
+		      unsigned long packet_cnt, unsigned long packet_reg)
 {
 }
 
 static void
-analyze_ring_packet2 (int ring_ptr, unsigned long *packet_type,
-		      unsigned long *packet_cnt, unsigned long *packet_reg)
+analyze_ring_packet2 (int ring_ptr, unsigned long packet_type,
+		      unsigned long packet_cnt, unsigned long packet_reg)
 {
 }
 
 static void
-analyze_ring_packet3 (int ring_ptr, unsigned long *packet_type,
-		      unsigned long *packet_cnt, unsigned long *packet_reg)
+analyze_ring_packet3 (int ring_ptr, unsigned long packet_type,
+		      unsigned long packet_cnt, unsigned long packet_reg)
 {
 }
 
@@ -144,16 +144,16 @@ analyze_ring (void)
       switch (packet_type)
 	{
 	case REVENGE_CP_PACKET_TYPE0:
-	  analyze_ring_packet0 (i, &packet_type, &packet_cnt, &packet_reg);
+	  analyze_ring_packet0 (i, packet_type, packet_cnt, packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE1:
-	  analyze_ring_packet1 (i, &packet_type, &packet_cnt, &packet_reg);
+	  analyze_ring_packet1 (i, packet_type, packet_cnt, packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE2:
-	  analyze_ring_packet2 (i, &packet_type, &packet_cnt, &packet_reg);
+	  analyze_ring_packet2 (i, packet_type, packet_cnt, packet_reg);
 	  break;
 	case REVENGE_CP_PACKET_TYPE3:
-	  analyze_ring_packet3 (i, &packet_type, &packet_cnt, &packet_reg);
+	  analyze_ring_packet3 (i, packet_type, packet_cnt, packet_reg);
 	  break;
 	default:
 	  assert (0);
