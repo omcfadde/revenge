@@ -70,6 +70,7 @@ static int
 analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
 			 unsigned long packet_cnt, unsigned long packet_reg)
 {
+  int i;
   unsigned long ib_addr, ib_size;
   unsigned long ib_mapped_addr;
 
@@ -82,7 +83,10 @@ analyze_ring_packet0_ib (int ring_ptr, unsigned long packet_type,
     ("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
      ib_addr, ib_mapped_addr, ib_size);
 
-  /* TODO: dump the indirect buffer. */
+  for (i = 0; i < ib_size; i++)
+    {
+      printf ("0x%08lx\n", ib_mapped_addr[i]);
+    }
 
   return 2;
 }
@@ -102,7 +106,7 @@ analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
       mapped_reg = packet_reg + (i * 4);
 
       /* the + 1 is to skip over the packet header */
-      printf ("mapped_reg 0x%04lx <- 0x%08lx\n", mapped_reg,
+      printf ("0x%04lx <- 0x%08lx\n", mapped_reg,
 	      ring_mem_map[ring_ptr + i + 1]);
 
       switch (mapped_reg)
