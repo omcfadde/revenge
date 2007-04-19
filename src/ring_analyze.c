@@ -135,11 +135,15 @@ analyze_ring_packet1 (int ring_ptr, unsigned long packet_type,
 
 /**
  * \brief Analyze a type 2 packet.
+ *
+ * \note A type 2 packet is just a padding packet used for alignment; it doesn't
+ * actually write any registers.
  */
 static void
 analyze_ring_packet2 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
 {
+  /* empty */
 }
 
 /**
