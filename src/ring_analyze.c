@@ -86,21 +86,22 @@ analyze_ring_packet0 (int ring_ptr, unsigned long packet_type,
 		      unsigned long packet_cnt, unsigned long packet_reg)
 {
   int i, proc;
-  unsigned long reg;
+  unsigned long mapped_reg;
 
   for (i = 0; i < packet_cnt; i += proc)
     {
-      reg = packet_reg + (i * 4);
+      mapped_reg = packet_reg + (i * 4);
 
       /* the + 1 is to skip over the packet header */
-      printf ("reg 0x%04lx <- 0x%08lx\n", reg,
+      printf ("mapped_reg 0x%04lx <- 0x%08lx\n", mapped_reg,
 	      ring_mem_map[ring_ptr + i + 1]);
 
-      switch (reg)
+      switch (mapped_reg)
 	{
 	case RADEON_CP_IB_BASE:
 	  proc =
-	    analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt, reg);
+	    analyze_ring_packet0_ib (ring_ptr, packet_type, packet_cnt,
+				     mapped_reg);
 	  break;
 	default:
 	  proc = 1;
