@@ -67,9 +67,7 @@
  * \todo Support PCI-E.
  */
 static int
-analyze_indirect_buffer (unsigned long packet_type, unsigned long packet_cnt,
-			 unsigned long packet_reg, int mem_ptr,
-			 unsigned long *mem_map)
+analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 {
   int i;
   unsigned long *ib_mapped_addr;
@@ -94,6 +92,30 @@ analyze_indirect_buffer (unsigned long packet_type, unsigned long packet_cnt,
 }
 
 /**
+ * \brief Analyze a register write.
+ */
+static int
+analyze_register (unsigned long key, unsigned long val, int mem_ptr,
+		  unsigned long *mem_map)
+{
+  int proc;
+
+  printf ("reg 0x%04lx <- 0x%08lx\n", key, val);
+
+  switch (key)
+    {
+    case RADEON_CP_IB_BASE:
+      proc = analyze_indirect_buffer (mem_ptr, mem_map);
+      break;
+    default:
+      proc = 1;
+      break;
+    }
+
+  return proc;
+}
+
+/**
  * \brief Analyze a type 0 packet.
  *
  * \note A type 0 packet may write many consecutive registers; the register
@@ -106,26 +128,14 @@ analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
 		 unsigned long *mem_map)
 {
   int i, proc;
-  unsigned long mapped_reg;
+  unsigned long mapped_reg, mapped_val;
 
   for (i = 0; i < packet_cnt; i += proc)
     {
-      mapped_reg = packet_reg + (i * 4);
-
       /* the + 1 is to skip over the packet header */
-      printf ("0x%04lx <- 0x%08lx\n", mapped_reg, mem_map[mem_ptr + i + 1]);
-
-      switch (mapped_reg)
-	{
-	case RADEON_CP_IB_BASE:
-	  proc =
-	    analyze_indirect_buffer (packet_type, packet_cnt, mapped_reg,
-				     mem_ptr, mem_map);
-	  break;
-	default:
-	  proc = 1;
-	  break;
-	}
+      mapped_reg = packet_reg + (i * 4);
+      mapped_val = mem_map[mem_ptr + i + 1];
+      proc = analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
     }
 }
 
@@ -175,6 +185,10 @@ analyze_packet3 (unsigned long packet_type, unsigned long packet_cnt,
 
 /**
  * \brief Analyze the Radeon ring buffer.
+ *
+ * \warning It is the responsibility of the packet analysis functions to ensure
+ * parsing of all of the packet data; the main loop in this function simply
+ * reads the packet header and skips over the data.
  */
 void
 analyze_ring (void)
