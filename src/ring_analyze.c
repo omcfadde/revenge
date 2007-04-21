@@ -32,30 +32,6 @@
 
 #include "ring.h"
 
-/*
- * Radeon Packets
- *
- * 11000000000000000000000000000000 Type
- * 00111111111111110000000000000000 Count
- *
- * ???
- */
-
-#define REVENGE_CP_PACKET_TYPE_SHIFT 30
-#define REVENGE_CP_PACKET_TYPE_MASK 0x3
-
-#define REVENGE_CP_PACKET_TYPE0 0x0
-#define REVENGE_CP_PACKET_TYPE1 0x1
-#define REVENGE_CP_PACKET_TYPE2 0x2
-#define REVENGE_CP_PACKET_TYPE3 0x3
-
-#define REVENGE_CP_PACKET_CNT_SHIFT 16
-#define REVENGE_CP_PACKET_CNT_MASK 0x3fff
-
-/* not sure about these... */
-#define REVENGE_CP_PACKET_REG_SHIFT 0
-#define REVENGE_CP_PACKET_REG_MASK 0xffff
-
 /**
  * \brief Analyze a indirect buffer.
  *
@@ -206,15 +182,9 @@ analyze_ring (void)
   for (i = ring_head; i < ring_tail; i += packet_cnt + 1, i &= ring_size - 1)
     {
       /* ??? */
-      packet_type =
-	(ring_mem_map[i] >> REVENGE_CP_PACKET_TYPE_SHIFT) &
-	REVENGE_CP_PACKET_TYPE_MASK;
-      packet_cnt =
-	(ring_mem_map[i] >> REVENGE_CP_PACKET_CNT_SHIFT) &
-	REVENGE_CP_PACKET_CNT_MASK;
-      packet_reg =
-	(ring_mem_map[i] >> REVENGE_CP_PACKET_REG_SHIFT) &
-	REVENGE_CP_PACKET_REG_MASK;
+      packet_type = (ring_mem_map[i] >> 30) & 0x3;
+      packet_cnt = (ring_mem_map[i] >> 16) & 0x3fff;
+      packet_reg = (ring_mem_map[i] >> 0) & 0xffff;
 
       /* a count of 0 actually means a count of 1... */
       packet_cnt = packet_cnt + 1;
@@ -227,19 +197,19 @@ analyze_ring (void)
 
       switch (packet_type)
 	{
-	case REVENGE_CP_PACKET_TYPE0:
+	case 0x0:
 	  analyze_packet0 (packet_type, packet_cnt, packet_reg, i,
 			   ring_mem_map);
 	  break;
-	case REVENGE_CP_PACKET_TYPE1:
+	case 0x1:
 	  analyze_packet1 (packet_type, packet_cnt, packet_reg, i,
 			   ring_mem_map);
 	  break;
-	case REVENGE_CP_PACKET_TYPE2:
+	case 0x2:
 	  analyze_packet2 (packet_type, packet_cnt, packet_reg, i,
 			   ring_mem_map);
 	  break;
-	case REVENGE_CP_PACKET_TYPE3:
+	case 0x3:
 	  analyze_packet3 (packet_type, packet_cnt, packet_reg, i,
 			   ring_mem_map);
 	  break;
