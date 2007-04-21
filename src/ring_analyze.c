@@ -146,7 +146,8 @@ analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
  * registers; both registers are specified in the packet header. The packet
  * header will be followed by the data for the first and second registers.
  *
- * \note I believe type 1 packets are deprecated.
+ * \note I believe type 1 packets are deprecated, however there is some existing
+ * code in other projects for handling them...
  *
  * \todo Currently type 1 packets are not supported.
  */
@@ -174,6 +175,8 @@ analyze_packet2 (unsigned long packet_type, unsigned long packet_cnt,
 
 /**
  * \brief Analyze a type 3 packet.
+ *
+ * \todo Currently type 1 packets are not supported.
  */
 static void
 analyze_packet3 (unsigned long packet_type, unsigned long packet_cnt,
