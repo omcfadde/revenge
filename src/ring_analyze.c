@@ -32,40 +32,7 @@
 
 #include "ring.h"
 
-/**
- * \brief Analyze a indirect buffer.
- *
- * \todo This function is incomplete; it doesn't dump the indirect buffer
- * contents.
- *
- * \todo Dynamically calculate the AGP address.
- *
- * \todo Support PCI-E.
- */
-static int
-analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
-{
-  int i;
-  unsigned long *ib_mapped_addr;
-  unsigned long ib_addr, ib_size;
-
-  ib_addr = mem_map[mem_ptr + 1];
-  ib_size = mem_map[mem_ptr + 2];
-
-  ib_mapped_addr =
-    (unsigned long *) ((char *) agp_mem_map + (ib_addr - AGP_ADDR));
-
-  printf
-    ("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
-     ib_addr, (unsigned long) ib_mapped_addr, ib_size);
-
-  for (i = 0; i < ib_size; i++)
-    {
-      printf ("0x%08lx\n", ib_mapped_addr[i]);
-    }
-
-  return 2;
-}
+static int analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map);
 
 /**
  * \brief Analyze a register write.
@@ -99,9 +66,8 @@ analyze_register (unsigned long key, unsigned long val, int mem_ptr,
  * the packet header is the number of consecutive registers to be written.
  */
 static void
-analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
-		 unsigned long packet_reg, int mem_ptr,
-		 unsigned long *mem_map)
+analyze_packet0 (unsigned long packet_cnt, unsigned long packet_reg,
+		 int mem_ptr, unsigned long *mem_map)
 {
   int i, proc;
   unsigned long mapped_reg, mapped_val;
@@ -128,9 +94,8 @@ analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
  * \todo Currently type 1 packets are not supported.
  */
 static void
-analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
-		 unsigned long packet_reg, int mem_ptr,
-		 unsigned long *mem_map)
+analyze_packet1 (unsigned long packet_cnt, unsigned long packet_reg,
+		 int mem_ptr, unsigned long *mem_map)
 {
   assert (0);
 }
@@ -142,9 +107,8 @@ analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
  * actually write any registers.
  */
 static void
-analyze_packet2 (unsigned long packet_type, unsigned long packet_cnt,
-		 unsigned long packet_reg, int mem_ptr,
-		 unsigned long *mem_map)
+analyze_packet2 (unsigned long packet_cnt, unsigned long packet_reg,
+		 int mem_ptr, unsigned long *mem_map)
 {
   /* empty */
 }
@@ -155,11 +119,45 @@ analyze_packet2 (unsigned long packet_type, unsigned long packet_cnt,
  * \todo Currently type 3 packets are not supported.
  */
 static void
-analyze_packet3 (unsigned long packet_type, unsigned long packet_cnt,
-		 unsigned long packet_reg, int mem_ptr,
-		 unsigned long *mem_map)
+analyze_packet3 (unsigned long packet_cnt, unsigned long packet_reg,
+		 int mem_ptr, unsigned long *mem_map)
 {
   assert (0);
+}
+
+/**
+ * \brief Analyze a indirect buffer.
+ *
+ * \todo This function is incomplete; it doesn't dump the indirect buffer
+ * contents.
+ *
+ * \todo Dynamically calculate the AGP address.
+ *
+ * \todo Support PCI-E.
+ */
+static int
+analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
+{
+  int i;
+  unsigned long *ib_mapped_addr;
+  unsigned long ib_addr, ib_size;
+
+  ib_addr = mem_map[mem_ptr + 1];
+  ib_size = mem_map[mem_ptr + 2];
+
+  ib_mapped_addr =
+    (unsigned long *) ((char *) agp_mem_map + (ib_addr - AGP_ADDR));
+
+  printf
+    ("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
+     ib_addr, (unsigned long) ib_mapped_addr, ib_size);
+
+  for (i = 0; i < ib_size; i++)
+    {
+      printf ("0x%08lx\n", ib_mapped_addr[i]);
+    }
+
+  return 2;
 }
 
 /**
@@ -198,20 +196,16 @@ analyze_ring (void)
       switch (packet_type)
 	{
 	case 0x0:
-	  analyze_packet0 (packet_type, packet_cnt, packet_reg, i,
-			   ring_mem_map);
+	  analyze_packet0 (packet_cnt, packet_reg, i, ring_mem_map);
 	  break;
 	case 0x1:
-	  analyze_packet1 (packet_type, packet_cnt, packet_reg, i,
-			   ring_mem_map);
+	  analyze_packet1 (packet_cnt, packet_reg, i, ring_mem_map);
 	  break;
 	case 0x2:
-	  analyze_packet2 (packet_type, packet_cnt, packet_reg, i,
-			   ring_mem_map);
+	  analyze_packet2 (packet_cnt, packet_reg, i, ring_mem_map);
 	  break;
 	case 0x3:
-	  analyze_packet3 (packet_type, packet_cnt, packet_reg, i,
-			   ring_mem_map);
+	  analyze_packet3 (packet_cnt, packet_reg, i, ring_mem_map);
 	  break;
 	default:
 	  assert (0);
