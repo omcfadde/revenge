@@ -176,7 +176,7 @@ analyze_packet2 (unsigned long packet_type, unsigned long packet_cnt,
 /**
  * \brief Analyze a type 3 packet.
  *
- * \todo Currently type 1 packets are not supported.
+ * \todo Currently type 3 packets are not supported.
  */
 static void
 analyze_packet3 (unsigned long packet_type, unsigned long packet_cnt,
