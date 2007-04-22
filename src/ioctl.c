@@ -297,20 +297,20 @@ pretty_ioctl_dir (int ioctl_dir)
 }
 
 static void
-pretty_generic_ioctl (struct ioctl_t *ioctl, int *ioctl_ptr)
+pretty_generic_ioctl (int ioctl_size, int *ioctl_ptr)
 {
   int i;
 
-  if (ioctl->size > 0)
+  if (ioctl_size > 0)
     {
-      for (i = 0; i < ioctl->size / 4; i++)
+      for (i = 0; i < ioctl_size / 4; i++)
 	{
 	  if (i % 8 == 0 && i > 0)
 	    {
 	      printf ("\n");
 	    }
 	  printf ("%08x", ioctl_ptr[i]);
-	  if ((i + 1) % 8 != 0 && i + 1 < ioctl->size / 4)
+	  if ((i + 1) % 8 != 0 && i + 1 < ioctl_size / 4)
 	    {
 	      printf (" ");
 	    }
@@ -320,8 +320,8 @@ pretty_generic_ioctl (struct ioctl_t *ioctl, int *ioctl_ptr)
 }
 
 static void
-pretty_ioctl (int ioctl_dir, int ioctl_type, int ioctl_nr,
-	      int ioctl_size, int *ioctl_ptr)
+pretty_ioctl (int ioctl_dir, int ioctl_type, int ioctl_nr, int ioctl_size,
+	      int *ioctl_ptr)
 {
   struct ioctl_t *ioctl;
 
@@ -337,17 +337,14 @@ pretty_ioctl (int ioctl_dir, int ioctl_type, int ioctl_nr,
 	}
       else
 	{
-	  pretty_generic_ioctl (ioctl, ioctl_ptr);
+	  pretty_generic_ioctl (ioctl->size, ioctl_ptr);
 	}
     }
   else
     {
-      /*
-       * TODO: do something better than just giving up, for example, check if
-       * the ioctl is within the device specific range and make a big warning
-       * about this, as it should probably be added to the blob's ioctls.
-       */
-      printf ("warning: unknown ioctl %d!\n", ioctl_nr);
+      printf ("??? (%s) %d %d %d\n", pretty_ioctl_dir (ioctl_dir), ioctl_type,
+	      ioctl_nr, ioctl_size);
+      pretty_generic_ioctl (ioctl_size, ioctl_ptr);
     }
 }
 
