@@ -24,8 +24,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "analyze.h"
 #include "ring.h"
-#include "ring_analyze.h"
 #include "test.h"
 
 static void

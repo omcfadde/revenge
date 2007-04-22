@@ -14,7 +14,7 @@ revenge_SOURCES = \
 		  main.c \
 		  ring.c \
 		  ring.h \
-		  ring_analyze.c \
-		  ring_analyze.h \
+		  analyze.c \
+		  analyze.h \
 		  test.c \
 		  test.h
