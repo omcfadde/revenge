@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "misc.h"
 #include "ring.h"
 #include "ring_analyze.h"
 #include "test.h"
@@ -71,20 +70,14 @@ after (void)
 void
 test (void)
 {
-  char buf[BUFSIZ];
   struct test_t *test;
 
   for (test = tests; test->name; test++)
     {
       printf ("%s\n", test->name);
-      snprintf (buf, BUFSIZ, "%s", test->name);
-      open_fd (buf);
-
       before ();
       test->func ();
       after ();
-
-      close_fd ();
       printf ("\n");
     }
 }
