@@ -31,6 +31,7 @@
 #include <stdlib.h>
 
 #include "ring.h"
+#include "main.h"
 
 static int analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map);
 
@@ -148,9 +149,12 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
   ib_mapped_addr =
     (unsigned long *) ((char *) agp_mem_map + (ib_addr - AGP_ADDR));
 
-  printf
-    ("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
-     ib_addr, (unsigned long) ib_mapped_addr, ib_size);
+  if (option_verbose)
+    {
+      printf
+	("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
+	 ib_addr, (unsigned long) ib_mapped_addr, ib_size);
+    }
 
   for (i = 0; i < ib_size; i++)
     {
@@ -173,8 +177,11 @@ analyze_ring (void)
   int i;
   unsigned long packet_type, packet_cnt, packet_reg;
 
-  printf ("ring buffer! ring_head = 0x%08lx, ring_tail = 0x%08lx\n",
-	  ring_head, ring_tail);
+  if (option_verbose)
+    {
+      printf ("ring buffer! ring_head = 0x%08lx, ring_tail = 0x%08lx\n",
+	      ring_head, ring_tail);
+    }
 
   /* the packet words and the packet header must be counted... */
   for (i = ring_head; i < ring_tail; i += packet_cnt + 1, i &= ring_size - 1)
@@ -215,6 +222,9 @@ analyze_ring (void)
       printf ("\n");
     }
 
-  printf ("done! ring_head = 0x%08lx, ring_tail = 0x%08lx, i = 0x%08x\n",
-	  ring_head, ring_tail, i);
+  if (option_verbose)
+    {
+      printf ("done! ring_head = 0x%08lx, ring_tail = 0x%08lx, i = 0x%08x\n",
+	      ring_head, ring_tail, i);
+    }
 }

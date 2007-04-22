@@ -195,8 +195,8 @@ pretty_drm_ioctl_radeon_free (struct ioctl_t *ioctl, int *ioctl_ptr)
   drm_radeon_mem_free_t *drm_radeon_mem_free =
     (drm_radeon_mem_free_t *) ioctl_ptr;
 
-  printf ("{region = %d, region_offset = %d}\n",
-	  drm_radeon_mem_free->region, drm_radeon_mem_free->region_offset);
+  printf ("{region = %d, region_offset = %d}\n", drm_radeon_mem_free->region,
+	  drm_radeon_mem_free->region_offset);
 }
 
 static void

@@ -22,6 +22,7 @@
 
 extern int option_blob;
 extern int option_ioctl;
+extern int option_verbose;
 extern int option_ioctl_before;
 void quiescent (void);
 int main (int argc, char **argv);
