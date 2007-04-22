@@ -173,8 +173,8 @@ analyze_ring (void)
   int i;
   unsigned long packet_type, packet_cnt, packet_reg;
 
-  printf ("ring buffer! ring_head = %08lx, ring_tail = %08lx\n", ring_head,
-	  ring_tail);
+  printf ("ring buffer! ring_head = 0x%08lx, ring_tail = 0x%08lx\n",
+	  ring_head, ring_tail);
 
   /* the packet words and the packet header must be counted... */
   for (i = ring_head; i < ring_tail; i += packet_cnt + 1, i &= ring_size - 1)
@@ -215,6 +215,6 @@ analyze_ring (void)
       printf ("\n");
     }
 
-  printf ("done! ring_head = %08lx, ring_tail = %08lx, i = %08x\n", ring_head,
-	  ring_tail, i);
+  printf ("done! ring_head = 0x%08lx, ring_tail = 0x%08lx, i = 0x%08x\n",
+	  ring_head, ring_tail, i);
 }
