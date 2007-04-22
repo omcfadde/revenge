@@ -28,6 +28,12 @@
 #include "test.h"
 
 static void
+test_null (void)
+{
+  /* empty */
+}
+
+static void
 test_tri (void)
 {
   glBegin (GL_TRIANGLES);
@@ -41,6 +47,7 @@ test_tri (void)
 }
 
 static struct test_t tests[] = {
+  {"test_null", test_null},
   {"test_tri", test_tri},
   {NULL, NULL}
 };
@@ -74,9 +81,11 @@ test (void)
 
   for (test = tests; test->name; test++)
     {
-      printf ("--------------------------------------------------------------------------------\n");
+      printf
+	("--------------------------------------------------------------------------------\n");
       printf ("%s\n", test->name);
-      printf ("--------------------------------------------------------------------------------\n");
+      printf
+	("--------------------------------------------------------------------------------\n");
 
       before ();
       test->func ();
