@@ -156,10 +156,14 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 	 ib_addr, (unsigned long) ib_mapped_addr, ib_size);
     }
 
+  printf
+    ("--------------------------------------------------------------------------------\n");
   for (i = 0; i < ib_size; i++)
     {
       printf ("0x%08lx\n", ib_mapped_addr[i]);
     }
+  printf
+    ("--------------------------------------------------------------------------------\n");
 
   return 2;
 }
