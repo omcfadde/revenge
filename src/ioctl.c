@@ -303,7 +303,7 @@ pretty_generic_ioctl (int ioctl_size, int *ioctl_ptr)
 
   for (i = 0; i < ioctl_size / 4; i++)
     {
-      printf ("0x%08x", ioctl_ptr[i]);
+      printf ("0x%08x\n", ioctl_ptr[i]);
     }
 }
 
