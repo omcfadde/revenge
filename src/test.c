@@ -21,6 +21,7 @@
 #include <GL/glext.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 #include "ring.h"
@@ -46,9 +47,43 @@ test_tri (void)
   glEnd ();
 }
 
+static void
+test_frag_mov (void)
+{
+  GLuint arbfp;
+
+  /* *INDENT-OFF* */
+  char *arbfptxt =
+    "!!ARBfp1.0\n"
+    "MOV result.color, fragment.color;\n"
+    "END\n";
+  /* *INDENT-ON* */
+
+  glGenProgramsARB (1, &arbfp);
+  glBindProgramARB (GL_FRAGMENT_PROGRAM_ARB, arbfp);
+  glProgramStringARB (GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB,
+		      strlen (arbfptxt), (const GLubyte *) arbfptxt);
+
+  glEnable (GL_FRAGMENT_PROGRAM_ARB);
+
+  glBegin (GL_TRIANGLES);
+  glColor3f (1.0, 0.0, 0.0);
+  glVertex3f (1.0, 0.0, 0.0);
+  glColor3f (0.0, 1.0, 0.0);
+  glVertex3f (0.0, 1.0, 0.0);
+  glColor3f (0.0, 0.0, 1.0);
+  glVertex3f (0.0, 0.0, 1.0);
+  glEnd ();
+
+  glDisable (GL_FRAGMENT_PROGRAM_ARB);
+}
+
 static struct test_t tests[] = {
   {"test_null", test_null},
   {"test_tri", test_tri},
+
+  {"test_frag_mov", test_frag_mov},
+
   {NULL, NULL}
 };
 
