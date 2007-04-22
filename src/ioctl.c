@@ -301,21 +301,9 @@ pretty_generic_ioctl (int ioctl_size, int *ioctl_ptr)
 {
   int i;
 
-  if (ioctl_size > 0)
+  for (i = 0; i < ioctl_size / 4; i++)
     {
-      for (i = 0; i < ioctl_size / 4; i++)
-	{
-	  if (i % 8 == 0 && i > 0)
-	    {
-	      printf ("\n");
-	    }
-	  printf ("%08x", ioctl_ptr[i]);
-	  if ((i + 1) % 8 != 0 && i + 1 < ioctl_size / 4)
-	    {
-	      printf (" ");
-	    }
-	}
-      printf ("\n");
+      printf ("0x%08x", ioctl_ptr[i]);
     }
 }
 
