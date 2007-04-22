@@ -29,65 +29,6 @@
 #include "test.h"
 
 static void
-test_null (void)
-{
-  /* empty */
-}
-
-static void
-test_tri (void)
-{
-  glBegin (GL_TRIANGLES);
-  glColor3f (1.0, 0.0, 0.0);
-  glVertex3f (1.0, 0.0, 0.0);
-  glColor3f (0.0, 1.0, 0.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glColor3f (0.0, 0.0, 1.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
-}
-
-static void
-test_frag_mov (void)
-{
-  GLuint arbfp;
-
-  /* *INDENT-OFF* */
-  char *arbfptxt =
-    "!!ARBfp1.0\n"
-    "MOV result.color, fragment.color;\n"
-    "END\n";
-  /* *INDENT-ON* */
-
-  glGenProgramsARB (1, &arbfp);
-  glBindProgramARB (GL_FRAGMENT_PROGRAM_ARB, arbfp);
-  glProgramStringARB (GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB,
-		      strlen (arbfptxt), (const GLubyte *) arbfptxt);
-
-  glEnable (GL_FRAGMENT_PROGRAM_ARB);
-
-  glBegin (GL_TRIANGLES);
-  glColor3f (1.0, 0.0, 0.0);
-  glVertex3f (1.0, 0.0, 0.0);
-  glColor3f (0.0, 1.0, 0.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glColor3f (0.0, 0.0, 1.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
-
-  glDisable (GL_FRAGMENT_PROGRAM_ARB);
-}
-
-static struct test_t tests[] = {
-  {"test_null", test_null},
-  {"test_tri", test_tri},
-
-  {"test_frag_mov", test_frag_mov},
-
-  {NULL, NULL}
-};
-
-static void
 quiescent (void)
 {
   glFlush ();
@@ -109,6 +50,72 @@ after (void)
   analyze_ring ();
 }
 
+static void
+test_null (void)
+{
+  before ();
+  after ();
+}
+
+static void
+test_tri (void)
+{
+  before ();
+  glBegin (GL_TRIANGLES);
+  glColor3f (1.0, 0.0, 0.0);
+  glVertex3f (1.0, 0.0, 0.0);
+  glColor3f (0.0, 1.0, 0.0);
+  glVertex3f (0.0, 1.0, 0.0);
+  glColor3f (0.0, 0.0, 1.0);
+  glVertex3f (0.0, 0.0, 1.0);
+  glEnd ();
+  after ();
+}
+
+static void
+test_frag_mov (void)
+{
+  GLuint arbfp;
+
+  /* *INDENT-OFF* */
+  char *arbfptxt =
+    "!!ARBfp1.0\n"
+    "MOV result.color, fragment.color;\n"
+    "END\n";
+  /* *INDENT-ON* */
+
+  before ();
+
+  glGenProgramsARB (1, &arbfp);
+  glBindProgramARB (GL_FRAGMENT_PROGRAM_ARB, arbfp);
+  glProgramStringARB (GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB,
+		      strlen (arbfptxt), (const GLubyte *) arbfptxt);
+
+  glEnable (GL_FRAGMENT_PROGRAM_ARB);
+
+  glBegin (GL_TRIANGLES);
+  glColor3f (1.0, 0.0, 0.0);
+  glVertex3f (1.0, 0.0, 0.0);
+  glColor3f (0.0, 1.0, 0.0);
+  glVertex3f (0.0, 1.0, 0.0);
+  glColor3f (0.0, 0.0, 1.0);
+  glVertex3f (0.0, 0.0, 1.0);
+  glEnd ();
+
+  after ();
+
+  glDisable (GL_FRAGMENT_PROGRAM_ARB);
+}
+
+static struct test_t tests[] = {
+  {"test_null", test_null},
+  {"test_tri", test_tri},
+
+  {"test_frag_mov", test_frag_mov},
+
+  {NULL, NULL}
+};
+
 void
 test (void)
 {
@@ -121,11 +128,7 @@ test (void)
       printf ("%s\n", test->name);
       printf
 	("--------------------------------------------------------------------------------\n");
-
-      before ();
       test->func ();
-      after ();
-
       printf
 	("--------------------------------------------------------------------------------\n");
       printf ("\n");
