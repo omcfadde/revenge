@@ -192,8 +192,6 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 	  assert (0);
 	  break;
 	}
-
-      printf ("\n");
     }
 
   if (option_verbose)
@@ -258,8 +256,6 @@ analyze_ring (void)
 	  assert (0);
 	  break;
 	}
-
-      printf ("\n");
     }
 
   if (option_verbose)
