@@ -160,7 +160,6 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
   /* the packet words and the packet header must be counted... */
   for (i = 0; i < ib_size; i += packet_cnt + 1)
     {
-      /* ??? */
       packet_type = (ib_mapped_addr[i] >> 30) & 0x3;
       packet_cnt = (ib_mapped_addr[i] >> 16) & /* 0x3fff */ 0x3ff;
       packet_reg = (ib_mapped_addr[i] >> 0) & /* 0xffff */ 0x1fff;
@@ -168,7 +167,7 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
       /* a count of 0 actually means a count of 1... */
       packet_cnt = packet_cnt + 1;
 
-      /* ??? */
+      /* multiply by 4 */
       packet_reg = packet_reg << 2;
 
       printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
@@ -224,7 +223,6 @@ analyze_ring (void)
   /* the packet words and the packet header must be counted... */
   for (i = ring_head; i < ring_tail; i += packet_cnt + 1, i &= ring_size - 1)
     {
-      /* ??? */
       packet_type = (ring_mem_map[i] >> 30) & 0x3;
       packet_cnt = (ring_mem_map[i] >> 16) & 0x3fff;
       packet_reg = (ring_mem_map[i] >> 0) & 0xffff;
@@ -232,7 +230,7 @@ analyze_ring (void)
       /* a count of 0 actually means a count of 1... */
       packet_cnt = packet_cnt + 1;
 
-      /* ??? */
+      /* multiply by 4 */
       packet_reg = packet_reg << 2;
 
       printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
