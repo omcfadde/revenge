@@ -142,6 +142,7 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
   int i;
   unsigned long *ib_mapped_addr;
   unsigned long ib_addr, ib_size;
+  unsigned long packet_type, packet_cnt, packet_reg;
 
   ib_addr = mem_map[mem_ptr + 1];
   ib_size = mem_map[mem_ptr + 2];
@@ -156,14 +157,49 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 	 ib_addr, (unsigned long) ib_mapped_addr, ib_size);
     }
 
-  printf
-    ("--------------------------------------------------------------------------------\n");
-  for (i = 0; i < ib_size; i++)
+  /* the packet words and the packet header must be counted... */
+  for (i = 0; i < ib_size; i += packet_cnt + 1)
     {
-      printf ("0x%08lx\n", ib_mapped_addr[i]);
+      /* ??? */
+      packet_type = (ib_mapped_addr[i] >> 30) & 0x3;
+      packet_cnt = (ib_mapped_addr[i] >> 16) & /* 0x3fff */ 0x3ff;
+      packet_reg = (ib_mapped_addr[i] >> 0) & /* 0xffff */ 0x1fff;
+
+      /* a count of 0 actually means a count of 1... */
+      packet_cnt = packet_cnt + 1;
+
+      /* ??? */
+      packet_reg = packet_reg << 2;
+
+      printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+	      packet_type, packet_cnt, packet_reg);
+
+      switch (packet_type)
+	{
+	case 0x0:
+	  analyze_packet0 (packet_cnt, packet_reg, i, ib_mapped_addr);
+	  break;
+	case 0x1:
+	  analyze_packet1 (packet_cnt, packet_reg, i, ib_mapped_addr);
+	  break;
+	case 0x2:
+	  analyze_packet2 (packet_cnt, packet_reg, i, ib_mapped_addr);
+	  break;
+	case 0x3:
+	  analyze_packet3 (packet_cnt, packet_reg, i, ib_mapped_addr);
+	  break;
+	default:
+	  assert (0);
+	  break;
+	}
+
+      printf ("\n");
     }
-  printf
-    ("--------------------------------------------------------------------------------\n");
+
+  if (option_verbose)
+    {
+      printf ("done!\n");
+    }
 
   return 2;
 }
