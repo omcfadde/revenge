@@ -98,7 +98,7 @@ static void
 analyze_packet1 (unsigned long packet_cnt, unsigned long packet_reg,
 		 int mem_ptr, unsigned long *mem_map)
 {
-  assert (0);
+  /* assert (0); */
 }
 
 /**
@@ -123,7 +123,7 @@ static void
 analyze_packet3 (unsigned long packet_cnt, unsigned long packet_reg,
 		 int mem_ptr, unsigned long *mem_map)
 {
-  assert (0);
+  /* assert (0); */
 }
 
 /**
