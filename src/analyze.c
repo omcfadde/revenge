@@ -142,7 +142,7 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
   int i;
   unsigned long *ib_mapped_addr;
   unsigned long ib_addr, ib_size;
-  unsigned long packet_type, packet_cnt, packet_reg;
+  unsigned long packet, packet_type, packet_cnt, packet_reg;
 
   ib_addr = mem_map[mem_ptr + 1];
   ib_size = mem_map[mem_ptr + 2];
@@ -160,9 +160,10 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
   /* the packet words and the packet header must be counted... */
   for (i = 0; i < ib_size; i += packet_cnt + 1)
     {
-      packet_type = (ib_mapped_addr[i] >> 30) & 0x3;
-      packet_cnt = (ib_mapped_addr[i] >> 16) & /* 0x3fff */ 0x3ff;
-      packet_reg = (ib_mapped_addr[i] >> 0) & /* 0xffff */ 0x1fff;
+      packet = ib_mapped_addr[i];
+      packet_type = (packet >> 30) & 0x3;
+      packet_cnt = (packet >> 16) & /* 0x3fff */ 0x3ff;
+      packet_reg = (packet >> 0) & /* 0xffff */ 0x1fff;
 
       /* a count of 0 actually means a count of 1... */
       packet_cnt = packet_cnt + 1;
@@ -173,22 +174,29 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
       printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
 	      packet_type, packet_cnt, packet_reg);
 
-      switch (packet_type)
+      if (packet)
 	{
-	case 0x0:
-	  analyze_packet0 (packet_cnt, packet_reg, i, ib_mapped_addr);
-	  break;
-	case 0x1:
-	  analyze_packet1 (packet_cnt, packet_reg, i, ib_mapped_addr);
-	  break;
-	case 0x2:
-	  analyze_packet2 (packet_cnt, packet_reg, i, ib_mapped_addr);
-	  break;
-	case 0x3:
-	  analyze_packet3 (packet_cnt, packet_reg, i, ib_mapped_addr);
-	  break;
-	default:
-	  assert (0);
+	  switch (packet_type)
+	    {
+	    case 0x0:
+	      analyze_packet0 (packet_cnt, packet_reg, i, ib_mapped_addr);
+	      break;
+	    case 0x1:
+	      analyze_packet1 (packet_cnt, packet_reg, i, ib_mapped_addr);
+	      break;
+	    case 0x2:
+	      analyze_packet2 (packet_cnt, packet_reg, i, ib_mapped_addr);
+	      break;
+	    case 0x3:
+	      analyze_packet3 (packet_cnt, packet_reg, i, ib_mapped_addr);
+	      break;
+	    default:
+	      assert (0);
+	      break;
+	    }
+	}
+      else
+	{
 	  break;
 	}
     }
@@ -212,7 +220,7 @@ void
 analyze_ring (void)
 {
   int i;
-  unsigned long packet_type, packet_cnt, packet_reg;
+  unsigned long packet, packet_type, packet_cnt, packet_reg;
 
   if (option_verbose)
     {
@@ -223,9 +231,10 @@ analyze_ring (void)
   /* the packet words and the packet header must be counted... */
   for (i = ring_head; i < ring_tail; i += packet_cnt + 1, i &= ring_size - 1)
     {
-      packet_type = (ring_mem_map[i] >> 30) & 0x3;
-      packet_cnt = (ring_mem_map[i] >> 16) & 0x3fff;
-      packet_reg = (ring_mem_map[i] >> 0) & 0xffff;
+      packet = ring_mem_map[i];
+      packet_type = (packet >> 30) & 0x3;
+      packet_cnt = (packet >> 16) & 0x3fff;
+      packet_reg = (packet >> 0) & 0xffff;
 
       /* a count of 0 actually means a count of 1... */
       packet_cnt = packet_cnt + 1;
@@ -236,22 +245,29 @@ analyze_ring (void)
       printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
 	      packet_type, packet_cnt, packet_reg);
 
-      switch (packet_type)
+      if (packet)
 	{
-	case 0x0:
-	  analyze_packet0 (packet_cnt, packet_reg, i, ring_mem_map);
-	  break;
-	case 0x1:
-	  analyze_packet1 (packet_cnt, packet_reg, i, ring_mem_map);
-	  break;
-	case 0x2:
-	  analyze_packet2 (packet_cnt, packet_reg, i, ring_mem_map);
-	  break;
-	case 0x3:
-	  analyze_packet3 (packet_cnt, packet_reg, i, ring_mem_map);
-	  break;
-	default:
-	  assert (0);
+	  switch (packet_type)
+	    {
+	    case 0x0:
+	      analyze_packet0 (packet_cnt, packet_reg, i, ring_mem_map);
+	      break;
+	    case 0x1:
+	      analyze_packet1 (packet_cnt, packet_reg, i, ring_mem_map);
+	      break;
+	    case 0x2:
+	      analyze_packet2 (packet_cnt, packet_reg, i, ring_mem_map);
+	      break;
+	    case 0x3:
+	      analyze_packet3 (packet_cnt, packet_reg, i, ring_mem_map);
+	      break;
+	    default:
+	      assert (0);
+	      break;
+	    }
+	}
+      else
+	{
 	  break;
 	}
     }
