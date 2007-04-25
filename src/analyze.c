@@ -162,8 +162,8 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
     {
       packet = ib_mapped_addr[i];
       packet_type = (packet >> 30) & 0x3;
-      packet_cnt = (packet >> 16) & /* 0x3fff */ 0x3ff;
-      packet_reg = (packet >> 0) & /* 0xffff */ 0x1fff;
+      packet_cnt = (packet >> 16) & 0x3fff;
+      packet_reg = (packet >> 0) & 0xffff;
 
       /* a count of 0 actually means a count of 1... */
       packet_cnt = packet_cnt + 1;
