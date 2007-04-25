@@ -20,10 +20,10 @@
 /**
  * \file
  *
- * \brief Analyze the Radeon ring buffer.
+ * \brief Radeon Analysis.
  *
  * \todo Document the packet format in detail; there isn't any existing
- * documentation
+ * documentation.
  */
 
 #include <assert.h>
@@ -58,9 +58,9 @@ analyze_register (unsigned long key, unsigned long val, int mem_ptr,
 /**
  * \brief Analyze a type 0 packet.
  *
- * \note A type 0 packet may write many consecutive registers; the register
- * specified in the packet header is the first register. The count specified in
- * the packet header is the number of consecutive registers to be written.
+ * A type 0 packet may write many consecutive registers; the register specified
+ * in the packet header is the first register. The count specified in the packet
+ * header is the number of consecutive registers to be written.
  */
 static void
 analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
@@ -85,9 +85,9 @@ analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
 /**
  * \brief Analyze a type 1 packet.
  *
- * \note A type 1 packet may write any two consecutive or non consecutive
- * registers; both registers are specified in the packet header. The packet
- * header will be followed by the data for the first and second registers.
+ * A type 1 packet may write any two consecutive or non consecutive registers;
+ * both registers are specified in the packet header. The packet header will be
+ * followed by the data for the first and second registers.
  */
 static void
 analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
@@ -114,7 +114,7 @@ analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
 /**
  * \brief Analyze a type 2 packet.
  *
- * \note A type 2 packet is just a padding packet used for alignment; it doesn't
+ * A type 2 packet is just a padding packet used for alignment; it doesn't
  * actually write any registers.
  */
 static void
