@@ -42,7 +42,7 @@ static int
 analyze_register (unsigned long key, unsigned long val, int mem_ptr,
 		  unsigned long *mem_map)
 {
-  int proc;
+  int proc = 1;
 
   printf ("reg 0x%04lx <- 0x%08lx\n", key, val);
 
@@ -70,7 +70,7 @@ static void
 analyze_packet0 (unsigned long packet_cnt, unsigned long packet_reg,
 		 int mem_ptr, unsigned long *mem_map)
 {
-  int i, proc;
+  int i, proc = 1;
   unsigned long mapped_reg, mapped_val;
 
   for (i = 0; i < packet_cnt; i += proc)
