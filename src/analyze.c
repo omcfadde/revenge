@@ -87,11 +87,6 @@ analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
  * \note A type 1 packet may write any two consecutive or non consecutive
  * registers; both registers are specified in the packet header. The packet
  * header will be followed by the data for the first and second registers.
- *
- * \note I believe type 1 packets are deprecated, however there is some existing
- * code in other projects for handling them...
- *
- * \todo Currently type 1 packets are not supported.
  */
 static void
 analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
