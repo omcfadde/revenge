@@ -145,8 +145,8 @@ analyze_packets (unsigned long head, unsigned long tail,
     {
       packet = mem_map[i];
       packet_type = (packet >> 30) & 0x3;
-      packet_cnt = (packet >> 16) & 0x3fff;
-      packet_reg = (packet >> 0) & 0xffff;
+      packet_cnt = (packet >> 16) & 0x3ff;
+      packet_reg = (packet >> 0) & 0x1fff;
 
       /* a count of 0 actually means a count of 1... */
       packet_cnt = packet_cnt + 1;
