@@ -67,11 +67,15 @@ analyze_register (unsigned long key, unsigned long val, int mem_ptr,
  * the packet header is the number of consecutive registers to be written.
  */
 static void
-analyze_packet0 (unsigned long packet_cnt, unsigned long packet_reg,
-		 int mem_ptr, unsigned long *mem_map)
+analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
+		 unsigned long packet_reg, int mem_ptr,
+		 unsigned long *mem_map)
 {
   int i, proc = 1;
   unsigned long mapped_reg, mapped_val;
+
+  printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+	  packet_type, packet_cnt, packet_reg);
 
   for (i = 0; i < packet_cnt; i += proc)
     {
@@ -95,10 +99,17 @@ analyze_packet0 (unsigned long packet_cnt, unsigned long packet_reg,
  * \todo Currently type 1 packets are not supported.
  */
 static void
-analyze_packet1 (unsigned long packet_cnt, unsigned long packet_reg,
+analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
+		 unsigned long packet_rega, unsigned long packet_regb,
 		 int mem_ptr, unsigned long *mem_map)
 {
-  /* assert (0); */
+  printf
+    ("packet_type = %ld, packet_cnt = %ld, packet_rega = 0x%08lx, packet_regb = 0x%08lx\n",
+     packet_type, packet_cnt, packet_rega, packet_regb);
+
+#if 0
+  assert (0);
+#endif
 }
 
 /**
@@ -108,9 +119,13 @@ analyze_packet1 (unsigned long packet_cnt, unsigned long packet_reg,
  * actually write any registers.
  */
 static void
-analyze_packet2 (unsigned long packet_cnt, unsigned long packet_reg,
-		 int mem_ptr, unsigned long *mem_map)
+analyze_packet2 (unsigned long packet_type, unsigned long packet_cnt,
+		 unsigned long packet_reg, int mem_ptr,
+		 unsigned long *mem_map)
 {
+  printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+	  packet_type, packet_cnt, packet_reg);
+
   /* empty */
 }
 
@@ -120,10 +135,16 @@ analyze_packet2 (unsigned long packet_cnt, unsigned long packet_reg,
  * \todo Currently type 3 packets are not supported.
  */
 static void
-analyze_packet3 (unsigned long packet_cnt, unsigned long packet_reg,
-		 int mem_ptr, unsigned long *mem_map)
+analyze_packet3 (unsigned long packet_type, unsigned long packet_cnt,
+		 unsigned long packet_reg, int mem_ptr,
+		 unsigned long *mem_map)
 {
-  /* assert (0); */
+  printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+	  packet_type, packet_cnt, packet_reg);
+
+#if 0
+  assert (0);
+#endif
 }
 
 /**
@@ -138,40 +159,40 @@ analyze_packets (unsigned long head, unsigned long tail,
 		 unsigned long *mem_map)
 {
   int i;
-  unsigned long packet, packet_type, packet_cnt, packet_reg;
+  unsigned long packet, packet_type, packet_cnt, packet_reg, packet_rega,
+    packet_regb;
 
   /* the packet words and the packet header must be counted... */
   for (i = head; i < tail; i += packet_cnt + 1)
     {
       packet = mem_map[i];
+
       packet_type = (packet >> 30) & 0x3;
-      packet_cnt = (packet >> 16) & 0x3ff;
-      packet_reg = (packet >> 0) & 0x1fff;
+      packet_cnt = ((packet >> 16) & 0x3ff) + 1;
+      packet_reg = ((packet >> 0) & 0x1fff) << 2;
 
-      /* a count of 0 actually means a count of 1... */
-      packet_cnt = packet_cnt + 1;
-
-      /* multiply by 4 */
-      packet_reg = packet_reg << 2;
-
-      printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
-	      packet_type, packet_cnt, packet_reg);
+      packet_rega = ((packet >> 0) & 0x7ff) << 2;
+      packet_regb = ((packet >> 11) & 0x7ff) << 2;
 
       if (packet)
 	{
 	  switch (packet_type)
 	    {
 	    case 0x0:
-	      analyze_packet0 (packet_cnt, packet_reg, i, mem_map);
+	      analyze_packet0 (packet_type, packet_cnt, packet_reg, i,
+			       mem_map);
 	      break;
 	    case 0x1:
-	      analyze_packet1 (packet_cnt, packet_reg, i, mem_map);
+	      analyze_packet1 (packet_type, packet_cnt, packet_rega,
+			       packet_regb, i, mem_map);
 	      break;
 	    case 0x2:
-	      analyze_packet2 (packet_cnt, packet_reg, i, mem_map);
+	      analyze_packet2 (packet_type, packet_cnt, packet_reg, i,
+			       mem_map);
 	      break;
 	    case 0x3:
-	      analyze_packet3 (packet_cnt, packet_reg, i, mem_map);
+	      analyze_packet3 (packet_type, packet_cnt, packet_reg, i,
+			       mem_map);
 	      break;
 	    default:
 	      assert (0);
