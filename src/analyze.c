@@ -198,10 +198,6 @@ analyze_packets (unsigned long head, unsigned long tail,
 	      break;
 	    }
 	}
-      else
-	{
-	  break;
-	}
     }
 }
 
