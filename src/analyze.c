@@ -76,7 +76,7 @@ analyze_packet0 (unsigned long packet_cnt, unsigned long packet_reg,
   for (i = 0; i < packet_cnt; i += proc)
     {
       /* the + 1 is to skip over the packet header */
-      mapped_reg = packet_reg + (i * 4);
+      mapped_reg = packet_reg + (i << 2);
       mapped_val = mem_map[mem_ptr + i + 1];
       proc = analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
     }
