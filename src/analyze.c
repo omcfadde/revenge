@@ -103,13 +103,20 @@ analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
 		 unsigned long packet_rega, unsigned long packet_regb,
 		 int mem_ptr, unsigned long *mem_map)
 {
+  unsigned long mapped_reg, mapped_val;
+
   printf
     ("packet_type = %ld, packet_cnt = %ld, packet_rega = 0x%08lx, packet_regb = 0x%08lx\n",
      packet_type, packet_cnt, packet_rega, packet_regb);
 
-#if 0
-  assert (0);
-#endif
+  /* the + 1 is to skip over the packet header */
+  mapped_reg = packet_rega;
+  mapped_val = mem_map[mem_ptr + packet_rega + 1];
+  analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
+
+  mapped_reg = packet_regb;
+  mapped_val = mem_map[mem_ptr + packet_regb + 1];
+  analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
 }
 
 /**
