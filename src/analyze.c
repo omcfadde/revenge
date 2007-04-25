@@ -33,30 +33,25 @@
 #include "ring.h"
 #include "main.h"
 
-static int analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map);
+static void analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map);
 
 /**
  * \brief Analyze a register write.
  */
-static int
+static void
 analyze_register (unsigned long key, unsigned long val, int mem_ptr,
 		  unsigned long *mem_map)
 {
-  int proc = 1;
-
   printf ("reg 0x%04lx <- 0x%08lx\n", key, val);
 
   switch (key)
     {
     case RADEON_CP_IB_BASE:
-      proc = analyze_indirect_buffer (mem_ptr, mem_map);
+      analyze_indirect_buffer (mem_ptr, mem_map);
       break;
     default:
-      proc = 1;
       break;
     }
-
-  return proc;
 }
 
 /**
@@ -71,18 +66,18 @@ analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
 		 unsigned long packet_reg, int mem_ptr,
 		 unsigned long *mem_map)
 {
-  int i, proc = 1;
+  int i;
   unsigned long mapped_reg, mapped_val;
 
   printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
 	  packet_type, packet_cnt, packet_reg);
 
-  for (i = 0; i < packet_cnt; i += proc)
+  for (i = 0; i < packet_cnt; i++)
     {
       /* the + 1 is to skip over the packet header */
       mapped_reg = packet_reg + (i << 2);
       mapped_val = mem_map[mem_ptr + i + 1];
-      proc = analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
+      analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
     }
 }
 
@@ -223,7 +218,7 @@ analyze_packets (unsigned long head, unsigned long tail,
  *
  * \todo Support PCI-E.
  */
-static int
+static void
 analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 {
   unsigned long *ib_mapped_addr;
@@ -248,8 +243,6 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
     {
       printf ("done!\n");
     }
-
-  return 2;
 }
 
 /**
