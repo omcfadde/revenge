@@ -127,7 +127,66 @@ analyze_packet3 (unsigned long packet_cnt, unsigned long packet_reg,
 }
 
 /**
- * \brief Analyze a indirect buffer.
+ * \brief Analyze the Radeon packets.
+ *
+ * \warning It is the responsibility of the packet analysis functions to ensure
+ * parsing of all of the packet data; the main loop in this function simply
+ * reads the packet header and skips over the data.
+ */
+static void
+analyze_packets (unsigned long head, unsigned long tail,
+		 unsigned long *mem_map)
+{
+  int i;
+  unsigned long packet, packet_type, packet_cnt, packet_reg;
+
+  /* the packet words and the packet header must be counted... */
+  for (i = head; i < tail; i += packet_cnt + 1)
+    {
+      packet = mem_map[i];
+      packet_type = (packet >> 30) & 0x3;
+      packet_cnt = (packet >> 16) & 0x3fff;
+      packet_reg = (packet >> 0) & 0xffff;
+
+      /* a count of 0 actually means a count of 1... */
+      packet_cnt = packet_cnt + 1;
+
+      /* multiply by 4 */
+      packet_reg = packet_reg << 2;
+
+      printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+	      packet_type, packet_cnt, packet_reg);
+
+      if (packet)
+	{
+	  switch (packet_type)
+	    {
+	    case 0x0:
+	      analyze_packet0 (packet_cnt, packet_reg, i, mem_map);
+	      break;
+	    case 0x1:
+	      analyze_packet1 (packet_cnt, packet_reg, i, mem_map);
+	      break;
+	    case 0x2:
+	      analyze_packet2 (packet_cnt, packet_reg, i, mem_map);
+	      break;
+	    case 0x3:
+	      analyze_packet3 (packet_cnt, packet_reg, i, mem_map);
+	      break;
+	    default:
+	      assert (0);
+	      break;
+	    }
+	}
+      else
+	{
+	  break;
+	}
+    }
+}
+
+/**
+ * \brief Analyze the Radeon indirect buffer.
  *
  * \todo This function is incomplete; it doesn't dump the indirect buffer
  * contents.
@@ -139,10 +198,8 @@ analyze_packet3 (unsigned long packet_cnt, unsigned long packet_reg,
 static int
 analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 {
-  int i;
   unsigned long *ib_mapped_addr;
   unsigned long ib_addr, ib_size;
-  unsigned long packet, packet_type, packet_cnt, packet_reg;
 
   ib_addr = mem_map[mem_ptr + 1];
   ib_size = mem_map[mem_ptr + 2];
@@ -157,49 +214,7 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 	 ib_addr, (unsigned long) ib_mapped_addr, ib_size);
     }
 
-  /* the packet words and the packet header must be counted... */
-  for (i = 0; i < ib_size; i += packet_cnt + 1)
-    {
-      packet = ib_mapped_addr[i];
-      packet_type = (packet >> 30) & 0x3;
-      packet_cnt = (packet >> 16) & 0x3fff;
-      packet_reg = (packet >> 0) & 0xffff;
-
-      /* a count of 0 actually means a count of 1... */
-      packet_cnt = packet_cnt + 1;
-
-      /* multiply by 4 */
-      packet_reg = packet_reg << 2;
-
-      printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
-	      packet_type, packet_cnt, packet_reg);
-
-      if (packet)
-	{
-	  switch (packet_type)
-	    {
-	    case 0x0:
-	      analyze_packet0 (packet_cnt, packet_reg, i, ib_mapped_addr);
-	      break;
-	    case 0x1:
-	      analyze_packet1 (packet_cnt, packet_reg, i, ib_mapped_addr);
-	      break;
-	    case 0x2:
-	      analyze_packet2 (packet_cnt, packet_reg, i, ib_mapped_addr);
-	      break;
-	    case 0x3:
-	      analyze_packet3 (packet_cnt, packet_reg, i, ib_mapped_addr);
-	      break;
-	    default:
-	      assert (0);
-	      break;
-	    }
-	}
-      else
-	{
-	  break;
-	}
-    }
+  analyze_packets (0, ib_size, ib_mapped_addr);
 
   if (option_verbose)
     {
@@ -211,70 +226,21 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 
 /**
  * \brief Analyze the Radeon ring buffer.
- *
- * \warning It is the responsibility of the packet analysis functions to ensure
- * parsing of all of the packet data; the main loop in this function simply
- * reads the packet header and skips over the data.
  */
 void
 analyze_ring (void)
 {
-  int i;
-  unsigned long packet, packet_type, packet_cnt, packet_reg;
-
   if (option_verbose)
     {
       printf ("ring buffer! ring_head = 0x%08lx, ring_tail = 0x%08lx\n",
 	      ring_head, ring_tail);
     }
 
-  /* the packet words and the packet header must be counted... */
-  for (i = ring_head; i < ring_tail; i += packet_cnt + 1, i &= ring_size - 1)
-    {
-      packet = ring_mem_map[i];
-      packet_type = (packet >> 30) & 0x3;
-      packet_cnt = (packet >> 16) & 0x3fff;
-      packet_reg = (packet >> 0) & 0xffff;
-
-      /* a count of 0 actually means a count of 1... */
-      packet_cnt = packet_cnt + 1;
-
-      /* multiply by 4 */
-      packet_reg = packet_reg << 2;
-
-      printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
-	      packet_type, packet_cnt, packet_reg);
-
-      if (packet)
-	{
-	  switch (packet_type)
-	    {
-	    case 0x0:
-	      analyze_packet0 (packet_cnt, packet_reg, i, ring_mem_map);
-	      break;
-	    case 0x1:
-	      analyze_packet1 (packet_cnt, packet_reg, i, ring_mem_map);
-	      break;
-	    case 0x2:
-	      analyze_packet2 (packet_cnt, packet_reg, i, ring_mem_map);
-	      break;
-	    case 0x3:
-	      analyze_packet3 (packet_cnt, packet_reg, i, ring_mem_map);
-	      break;
-	    default:
-	      assert (0);
-	      break;
-	    }
-	}
-      else
-	{
-	  break;
-	}
-    }
+  analyze_packets (ring_head, ring_tail, ring_mem_map);
 
   if (option_verbose)
     {
-      printf ("done! ring_head = 0x%08lx, ring_tail = 0x%08lx, i = 0x%08x\n",
-	      ring_head, ring_tail, i);
+      printf ("done! ring_head = 0x%08lx, ring_tail = 0x%08lx", ring_head,
+	      ring_tail);
     }
 }
