@@ -50,6 +50,7 @@ analyze_register (unsigned long key, unsigned long val, int mem_ptr,
       analyze_indirect_buffer (mem_ptr, mem_map);
       break;
     default:
+      /* empty */
       break;
     }
 }
@@ -104,6 +105,7 @@ analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
   mapped_val = mem_map[mem_ptr + packet_rega + 1];
   analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
 
+  /* the + 1 is to skip over the packet header */
   mapped_reg = packet_regb;
   mapped_val = mem_map[mem_ptr + packet_regb + 1];
   analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
