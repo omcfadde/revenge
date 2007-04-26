@@ -204,9 +204,6 @@ analyze_packets (unsigned long head, unsigned long tail,
 /**
  * \brief Analyze the Radeon indirect buffer.
  *
- * \todo This function is incomplete; it doesn't dump the indirect buffer
- * contents.
- *
  * \todo Dynamically calculate the AGP address.
  *
  * \todo Support PCI-E.
