@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "detect.h"
 #include "main.h"
 #include "ring.h"
 #include "test.h"
@@ -118,6 +119,7 @@ main (int argc, char **argv)
       return 1;
     }
 
+  alloc_agp_aperture ();
   alloc_ring ();
   test ();
   free_ring ();

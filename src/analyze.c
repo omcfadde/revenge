@@ -30,8 +30,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ring.h"
+#include "detect.h"
 #include "main.h"
+#include "ring.h"
 
 static void analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map);
 
@@ -218,7 +219,7 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
   ib_size = mem_map[mem_ptr + 2];
 
   ib_mapped_addr =
-    (unsigned long *) ((char *) agp_mem_map + (ib_addr - AGP_ADDR));
+    (unsigned long *) ((char *) agp_mem_map + (ib_addr - agp_addr));
 
   if (option_verbose)
     {

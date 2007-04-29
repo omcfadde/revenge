@@ -26,6 +26,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "detect.h"
 #include "main.h"
 #include "ring.h"
 
@@ -36,7 +37,7 @@ unsigned long ring_head, ring_size, ring_tail;
 void
 free_ring (void)
 {
-  if (munmap (agp_mem_map, AGP_SIZE) < 0)
+  if (munmap (agp_mem_map, agp_size) < 0)
     {
       assert (0);
     }
@@ -67,8 +68,8 @@ alloc_ring (void)
     }
 
   if ((agp_mem_map =
-       mmap (NULL, AGP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-	     AGP_ADDR)) < 0)
+       mmap (NULL, agp_size, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+	     agp_addr)) < 0)
     {
       assert (0);
     }

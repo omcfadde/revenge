@@ -23,8 +23,6 @@
 /* TODO: get these values dynamically! */
 #define REG_ADDR 0xe5000000	/* lspci */
 #define REG_SIZE 0x7d4		/* ??? */
-#define AGP_ADDR 0xe0000000	/* dmesg | grep 'AGP aperture' */
-#define AGP_SIZE 64*1024*1024
 
 #define RADEON_MC_AGP_LOCATION		0x014c
 #define RADEON_CP_RB_BASE		0x0700

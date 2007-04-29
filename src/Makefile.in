@@ -43,9 +43,10 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_revenge_OBJECTS = ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) \
-	ioctl_drm.$(OBJEXT) ioctl_radeon.$(OBJEXT) main.$(OBJEXT) \
-	ring.$(OBJEXT) analyze.$(OBJEXT) test.$(OBJEXT)
+am_revenge_OBJECTS = analyze.$(OBJEXT) detect.$(OBJEXT) \
+	ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) ioctl_drm.$(OBJEXT) \
+	ioctl_radeon.$(OBJEXT) main.$(OBJEXT) ring.$(OBJEXT) \
+	test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -146,6 +147,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -DGL_GLEXT_PROTOTYPES -Wall `sdl-config --cflags`
 revenge_SOURCES = \
+		  analyze.c \
+		  analyze.h \
+		  detect.c \
+		  detect.h \
 		  ioctl.c \
 		  ioctl.h \
 		  ioctl_blob.c \
@@ -157,8 +162,6 @@ revenge_SOURCES = \
 		  main.c \
 		  ring.c \
 		  ring.h \
-		  analyze.c \
-		  analyze.h \
 		  test.c \
 		  test.h
 
@@ -229,6 +232,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_blob.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_drm.Po@am__quote@
