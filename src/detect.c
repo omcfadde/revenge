@@ -27,12 +27,6 @@
 
 unsigned long agp_addr, agp_size;
 
-struct pci_resource_t
-{
-  unsigned long start;
-  unsigned long len;
-};
-
 static int
 is_agp_iomem (int level, char *name)
 {
@@ -44,8 +38,8 @@ is_agp_iomem (int level, char *name)
   return 0;
 }
 
-static int
-find_agp_aperture (struct pci_resource_t *res)
+void
+alloc_agp_aperture (void)
 {
   char buf[BUFSIZ];
   FILE *file;
@@ -76,26 +70,20 @@ find_agp_aperture (struct pci_resource_t *res)
       p += n;
       n = strlen (p);
       if (p[n - 1] == '\n')
-	p[n - 1] = '\0';
+	{
+	  p[n - 1] = '\0';
+	}
 
       if (is_agp_iomem (level, p))
 	{
-	  res->start = start;
-	  res->len = end - start + 1;
+	  agp_addr = start;
+	  agp_size = end - start + 1;
 	  fclose (file);
-	  break;
+	  return;
 	}
     }
 
   fclose (file);
-}
 
-void
-alloc_agp_aperture (void)
-{
-  struct pci_resource_t res;
-
-  find_agp_aperture (&res);
-  agp_addr = res.start;
-  agp_size = res.len;
+  assert (0);
 }
