@@ -1,0 +1,29 @@
+1. Build a linked list for each test (test_null, test_tri, ...); the list
+contains packets and register writes.
+	enum
+	{
+		type_packet,
+		type_register,
+	}
+
+2. Save linked list in some kind of hash table.
+
+3. Support dumping the linked list out to a file (*.revenge) in binary format.
+
+4. Support diffing between two lists in the hash table; test_null vs test_tri,
+for example.
+
+5. Support loading two *.revenge files and performing a diff on them. Support
+options such as "ignore where register write came from; don't care if it's from
+indirect or ring buffer", etc. Maybe make this an external program?
+
+---
+
+6. Support tracing MMIO register access (read and write) from the kernel by
+having the kernel report MMIO register access to this tool. See mmio-trace for
+some code that could be used as a starting point.
+
+7. Support tracing MMIO register access (read and write) from user space.
+Perhaps intercept mmap and munmap in the same way as ioctl. See ioctl.c. This
+could probably be done from the kernel too, and might be more reliable this
+way...
