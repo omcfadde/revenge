@@ -43,7 +43,7 @@ static void
 analyze_register (unsigned long key, unsigned long val, int mem_ptr,
 		  unsigned long *mem_map)
 {
-  printf ("reg 0x%04lx <- 0x%08lx\n", key, val);
+  printf ("0x%04lx <- 0x%08lx\n", key, val);
 
   switch (key)
     {
