@@ -30,7 +30,7 @@ unsigned long agp_addr, agp_size;
 static int
 is_agp_iomem (int level, char *name)
 {
-  if (strcmp (name, "0000:00:00.0") == 0 && strcmp (name, "GART") == 0)
+  if (strcmp (name, "0000:00:00.0") == 0 || strcmp (name, "GART") == 0)
     {
       return 1;
     }
