@@ -252,7 +252,7 @@ analyze_ring (void)
 
   if (option_verbose)
     {
-      printf ("done! ring_head = 0x%08lx, ring_tail = 0x%08lx", ring_head,
+      printf ("done! ring_head = 0x%08lx, ring_tail = 0x%08lx\n", ring_head,
 	      ring_tail);
     }
 }
