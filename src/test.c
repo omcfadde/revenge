@@ -51,6 +51,16 @@ after (void)
 }
 
 static void
+tri (void)
+{
+  glBegin (GL_TRIANGLES);
+  glVertex3f (1.0, 0.0, 0.0);
+  glVertex3f (0.0, 1.0, 0.0);
+  glVertex3f (0.0, 0.0, 1.0);
+  glEnd ();
+}
+
+static void
 test_null (void)
 {
   before ();
@@ -61,14 +71,59 @@ static void
 test_tri (void)
 {
   before ();
-  glBegin (GL_TRIANGLES);
-  glColor3f (1.0, 0.0, 0.0);
-  glVertex3f (1.0, 0.0, 0.0);
-  glColor3f (0.0, 1.0, 0.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glColor3f (0.0, 0.0, 1.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
+  tri ();
+  after ();
+}
+
+static void
+test_polygon_offset (void)
+{
+  before ();
+  printf ("glPolygonOffset\n");
+  glPolygonOffset (0.1, 0.2);
+  tri ();
+  after ();
+
+
+
+  before ();
+  printf ("Enable GL_POLYGON_OFFSET_FILL\n");
+  glEnable (GL_POLYGON_OFFSET_FILL);
+  tri ();
+  after ();
+
+  before ();
+  printf ("Disable GL_POLYGON_OFFSET_FILL\n");
+  glDisable (GL_POLYGON_OFFSET_FILL);
+  tri ();
+  after ();
+
+
+
+  before ();
+  printf ("Enable GL_POLYGON_OFFSET_LINE\n");
+  glEnable (GL_POLYGON_OFFSET_LINE);
+  tri ();
+  after ();
+
+  before ();
+  printf ("Disable GL_POLYGON_OFFSET_LINE\n");
+  glDisable (GL_POLYGON_OFFSET_LINE);
+  tri ();
+  after ();
+
+
+
+  before ();
+  printf ("Enable GL_POLYGON_OFFSET_POINT\n");
+  glEnable (GL_POLYGON_OFFSET_POINT);
+  tri ();
+  after ();
+
+  before ();
+  printf ("Disable GL_POLYGON_OFFSET_POINT\n");
+  glDisable (GL_POLYGON_OFFSET_POINT);
+  tri ();
   after ();
 }
 
@@ -110,6 +165,7 @@ test_frag_mov (void)
 static struct test_t tests[] = {
   {"test_null", test_null},
   {"test_tri", test_tri},
+  {"test_polygon_offset", test_polygon_offset},
 
   {"test_frag_mov", test_frag_mov},
 
