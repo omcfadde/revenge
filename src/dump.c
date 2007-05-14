@@ -20,10 +20,22 @@
 /**
  * \file
  *
- * \brief Radeon Analysis.
+ * \brief Radeon Dumping.
  *
  * \todo Document the packet format in detail; there isn't any existing
  * documentation.
+ *
+ * \todo Build a linked list of everything important (packets, reg writes,
+ * indirect buffers, etc) to be passed to the analysis code. The analysis code
+ * can then do something interesting like standard analysis, final state
+ * analysis, etc.
+ *
+ * The analysis code should use rules-ng to print the register names and values
+ * in human readable format.
+ *
+ * It should be possible to add a dummy analysis pass that simply emits the same
+ * values to the card (see glxtest for an example) for manual testing and
+ * verification.
  */
 
 #include <assert.h>
@@ -150,7 +162,7 @@ dump_packet3 (unsigned long packet_type, unsigned long packet_cnt,
 /**
  * \brief Dump the Radeon packets.
  *
- * \warning It is the responsibility of the packet analysis functions to ensure
+ * \warning It is the responsibility of the packet dumping functions to ensure
  * parsing of all of the packet data; the main loop in this function simply
  * reads the packet header and skips over the data.
  */
