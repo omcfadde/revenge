@@ -43,10 +43,10 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_revenge_OBJECTS = analyze.$(OBJEXT) detect.$(OBJEXT) \
-	ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) ioctl_drm.$(OBJEXT) \
-	ioctl_radeon.$(OBJEXT) main.$(OBJEXT) ring.$(OBJEXT) \
-	test.$(OBJEXT)
+am_revenge_OBJECTS = detect.$(OBJEXT) dump.$(OBJEXT) ioctl.$(OBJEXT) \
+	ioctl_blob.$(OBJEXT) ioctl_drm.$(OBJEXT) \
+	ioctl_radeon.$(OBJEXT) main.$(OBJEXT) misc.$(OBJEXT) \
+	ring.$(OBJEXT) test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -147,10 +147,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -DGL_GLEXT_PROTOTYPES -Wall `sdl-config --cflags`
 revenge_SOURCES = \
-		  analyze.c \
-		  analyze.h \
 		  detect.c \
 		  detect.h \
+		  dump.c \
+		  dump.h \
 		  ioctl.c \
 		  ioctl.h \
 		  ioctl_blob.c \
@@ -160,6 +160,8 @@ revenge_SOURCES = \
 		  ioctl_radeon.c \
 		  ioctl_radeon.h \
 		  main.c \
+		  misc.c \
+		  misc.h \
 		  ring.c \
 		  ring.h \
 		  test.c \
@@ -231,13 +233,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_blob.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_drm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_radeon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ring.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
 

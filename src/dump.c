@@ -34,13 +34,13 @@
 #include "main.h"
 #include "ring.h"
 
-static void analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map);
+static void dump_indirect_buffer (int mem_ptr, unsigned long *mem_map);
 
 /**
- * \brief Analyze a register write.
+ * \brief Dump a register write.
  */
 static void
-analyze_register (unsigned long key, unsigned long val, int mem_ptr,
+dump_register (unsigned long key, unsigned long val, int mem_ptr,
 		  unsigned long *mem_map)
 {
   printf ("0x%04lx <- 0x%08lx\n", key, val);
@@ -48,7 +48,7 @@ analyze_register (unsigned long key, unsigned long val, int mem_ptr,
   switch (key)
     {
     case RADEON_CP_IB_BASE:
-      analyze_indirect_buffer (mem_ptr, mem_map);
+      dump_indirect_buffer (mem_ptr, mem_map);
       break;
     default:
       /* empty */
@@ -57,14 +57,14 @@ analyze_register (unsigned long key, unsigned long val, int mem_ptr,
 }
 
 /**
- * \brief Analyze a type 0 packet.
+ * \brief Dump a type 0 packet.
  *
  * A type 0 packet may write many consecutive registers; the register specified
  * in the packet header is the first register. The count specified in the packet
  * header is the number of consecutive registers to be written.
  */
 static void
-analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
+dump_packet0 (unsigned long packet_type, unsigned long packet_cnt,
 		 unsigned long packet_reg, int mem_ptr,
 		 unsigned long *mem_map)
 {
@@ -79,19 +79,19 @@ analyze_packet0 (unsigned long packet_type, unsigned long packet_cnt,
       /* the + 1 is to skip over the packet header */
       mapped_reg = packet_reg + (i << 2);
       mapped_val = mem_map[mem_ptr + i + 1];
-      analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
+      dump_register (mapped_reg, mapped_val, mem_ptr, mem_map);
     }
 }
 
 /**
- * \brief Analyze a type 1 packet.
+ * \brief Dump a type 1 packet.
  *
  * A type 1 packet may write any two consecutive or non consecutive registers;
  * both registers are specified in the packet header. The packet header will be
  * followed by the data for the first and second registers.
  */
 static void
-analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
+dump_packet1 (unsigned long packet_type, unsigned long packet_cnt,
 		 unsigned long packet_rega, unsigned long packet_regb,
 		 int mem_ptr, unsigned long *mem_map)
 {
@@ -104,22 +104,22 @@ analyze_packet1 (unsigned long packet_type, unsigned long packet_cnt,
   /* the + 1 is to skip over the packet header */
   mapped_reg = packet_rega;
   mapped_val = mem_map[mem_ptr + packet_rega + 1];
-  analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
+  dump_register (mapped_reg, mapped_val, mem_ptr, mem_map);
 
   /* the + 1 is to skip over the packet header */
   mapped_reg = packet_regb;
   mapped_val = mem_map[mem_ptr + packet_regb + 1];
-  analyze_register (mapped_reg, mapped_val, mem_ptr, mem_map);
+  dump_register (mapped_reg, mapped_val, mem_ptr, mem_map);
 }
 
 /**
- * \brief Analyze a type 2 packet.
+ * \brief Dump a type 2 packet.
  *
  * A type 2 packet is just a padding packet used for alignment; it doesn't
  * actually write any registers.
  */
 static void
-analyze_packet2 (unsigned long packet_type, unsigned long packet_cnt,
+dump_packet2 (unsigned long packet_type, unsigned long packet_cnt,
 		 unsigned long packet_reg, int mem_ptr,
 		 unsigned long *mem_map)
 {
@@ -130,12 +130,12 @@ analyze_packet2 (unsigned long packet_type, unsigned long packet_cnt,
 }
 
 /**
- * \brief Analyze a type 3 packet.
+ * \brief Dump a type 3 packet.
  *
  * \todo Currently type 3 packets are not supported.
  */
 static void
-analyze_packet3 (unsigned long packet_type, unsigned long packet_cnt,
+dump_packet3 (unsigned long packet_type, unsigned long packet_cnt,
 		 unsigned long packet_reg, int mem_ptr,
 		 unsigned long *mem_map)
 {
@@ -148,14 +148,14 @@ analyze_packet3 (unsigned long packet_type, unsigned long packet_cnt,
 }
 
 /**
- * \brief Analyze the Radeon packets.
+ * \brief Dump the Radeon packets.
  *
  * \warning It is the responsibility of the packet analysis functions to ensure
  * parsing of all of the packet data; the main loop in this function simply
  * reads the packet header and skips over the data.
  */
 static void
-analyze_packets (unsigned long head, unsigned long tail,
+dump_packets (unsigned long head, unsigned long tail,
 		 unsigned long *mem_map)
 {
   int i;
@@ -179,19 +179,19 @@ analyze_packets (unsigned long head, unsigned long tail,
 	  switch (packet_type)
 	    {
 	    case 0x0:
-	      analyze_packet0 (packet_type, packet_cnt, packet_reg, i,
+	      dump_packet0 (packet_type, packet_cnt, packet_reg, i,
 			       mem_map);
 	      break;
 	    case 0x1:
-	      analyze_packet1 (packet_type, packet_cnt, packet_rega,
+	      dump_packet1 (packet_type, packet_cnt, packet_rega,
 			       packet_regb, i, mem_map);
 	      break;
 	    case 0x2:
-	      analyze_packet2 (packet_type, packet_cnt, packet_reg, i,
+	      dump_packet2 (packet_type, packet_cnt, packet_reg, i,
 			       mem_map);
 	      break;
 	    case 0x3:
-	      analyze_packet3 (packet_type, packet_cnt, packet_reg, i,
+	      dump_packet3 (packet_type, packet_cnt, packet_reg, i,
 			       mem_map);
 	      break;
 	    default:
@@ -203,14 +203,14 @@ analyze_packets (unsigned long head, unsigned long tail,
 }
 
 /**
- * \brief Analyze the Radeon indirect buffer.
+ * \brief Dump the Radeon indirect buffer.
  *
  * \todo Dynamically calculate the AGP address.
  *
  * \todo Support PCI-E.
  */
 static void
-analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
+dump_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 {
   unsigned long *ib_mapped_addr;
   unsigned long ib_addr, ib_size;
@@ -228,7 +228,7 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 	 ib_addr, (unsigned long) ib_mapped_addr, ib_size);
     }
 
-  analyze_packets (0, ib_size, ib_mapped_addr);
+  dump_packets (0, ib_size, ib_mapped_addr);
 
   if (option_verbose)
     {
@@ -237,10 +237,10 @@ analyze_indirect_buffer (int mem_ptr, unsigned long *mem_map)
 }
 
 /**
- * \brief Analyze the Radeon ring buffer.
+ * \brief Dump the Radeon ring buffer.
  */
 void
-analyze_ring (void)
+dump (void)
 {
   if (option_verbose)
     {
@@ -248,7 +248,7 @@ analyze_ring (void)
 	      ring_head, ring_tail);
     }
 
-  analyze_packets (ring_head, ring_tail, ring_mem_map);
+  dump_packets (ring_head, ring_tail, ring_mem_map);
 
   if (option_verbose)
     {

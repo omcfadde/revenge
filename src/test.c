@@ -24,7 +24,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "analyze.h"
+#include "dump.h"
 #include "misc.h"
 #include "ring.h"
 #include "test.h"
@@ -48,7 +48,7 @@ after (void)
 {
   quiescent ();
   after_ring ();
-  analyze_ring ();
+  dump ();
 }
 
 static void
@@ -182,84 +182,20 @@ static struct test_t tests[] = {
 
   /* order is important! */
   {"test_polygon_offset", test_polygon_offset},
+
   {"test_polygon_offset_point_enable", test_polygon_offset_fill_enable},
   {"test_polygon_offset_point_disable", test_polygon_offset_point_disable},
-
-  /*
-     {"test_polygon_offset", test_polygon_offset},
-     {"test_polygon_offset_fill_enable", test_polygon_offset_fill_enable},
-     {"test_polygon_offset_fill_disable", test_polygon_offset_fill_disable},
-   */
-
-  /*
-     {"test_polygon_offset", test_polygon_offset},
-     {"test_polygon_offset_line_enable", test_polygon_offset_line_enable},
-     {"test_polygon_offset_line_disable", test_polygon_offset_line_disable},
-   */
-
-  /*
-     {"test_polygon_offset", test_polygon_offset},
-     {"test_polygon_offset_point_enable", test_polygon_offset_point_enable},
-     {"test_polygon_offset_point_disable", test_polygon_offset_point_disable},
-   */
+  {"test_polygon_offset_fill_enable", test_polygon_offset_fill_enable},
+  {"test_polygon_offset_fill_disable", test_polygon_offset_fill_disable},
+  {"test_polygon_offset_line_enable", test_polygon_offset_line_enable},
+  {"test_polygon_offset_line_disable", test_polygon_offset_line_disable},
+  {"test_polygon_offset_point_enable", test_polygon_offset_point_enable},
+  {"test_polygon_offset_point_disable", test_polygon_offset_point_disable},
 
   {"test_frag_mov", test_frag_mov},
 
   {NULL, NULL}
 };
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-static int _old_fd = -1;
-static fpos_t _old_fpos;
-
-void
-open_fd (const char *name)
-{
-  char buf[BUFSIZ];
-
-  fflush (stdout);
-
-  fgetpos (stdout, &_old_fpos);
-  _old_fd = dup (fileno (stdout));
-
-  snprintf (buf, BUFSIZ, "revenge_%s.txt", name);
-
-  if (!freopen (buf, "w", stdout))
-    {
-      /* ERR_PRINT ("Opening '%s' failed: %s\n", buf, strerror (errno)); */
-    }
-}
-
-/* NOTE: This can be called only once after a redirect_output(),
- * they do not really nest.
- */
-void
-close_fd (void)
-{
-  fflush (stdout);
-  if (_old_fd == -1)
-    {
-      /* ERR_PRINT("no previous stream to return output to, continuing with the current output.\n"); */
-      return;
-    }
-
-  /* return the previous output file */
-  if (dup2 (_old_fd, fileno (stdout)) == -1)
-    {
-      /* ERR_PRINT ("Redirecting to previous file failed: %s\n", strerror (errno)); */
-    }
-  else
-    {
-      close (_old_fd);
-    }
-
-  _old_fd = -1;
-  clearerr (stdout);
-  fsetpos (stdout, &_old_fpos);
-}
 
 void
 test (void)

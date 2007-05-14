@@ -17,9 +17,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __RING_ANALYZE_H__
-#define __RING_ANALYZE_H__
+#ifndef __DUMP_H__
+#define __DUMP_H__
 
-void analyze_ring (void);
+void dump (void);
 
 #endif

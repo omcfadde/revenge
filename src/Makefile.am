@@ -3,10 +3,10 @@ AM_CFLAGS = -DGL_GLEXT_PROTOTYPES -Wall `sdl-config --cflags`
 bin_PROGRAMS = revenge
 
 revenge_SOURCES = \
-		  analyze.c \
-		  analyze.h \
 		  detect.c \
 		  detect.h \
+		  dump.c \
+		  dump.h \
 		  ioctl.c \
 		  ioctl.h \
 		  ioctl_blob.c \
