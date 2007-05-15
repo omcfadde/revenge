@@ -176,7 +176,54 @@ test_frag_mov (void)
   glDisable (GL_FRAGMENT_PROGRAM_ARB);
 }
 
+static void
+test_smooth_line (void)
+{
+  GLint ci, i;
+  int enable = 1;
+  float pntA[3] = {
+    -160.0, 0.0, 0.0
+  };
+  float pntB[3] = {
+    -130.0, 0.0, 0.0
+  };
+  float pntC[3] = {
+    -40.0, -50.0, 0.0
+  };
+  float pntD[3] = {
+    30.0, 60.0, 0.0
+  };
+
+  glClear (GL_COLOR_BUFFER_BIT);
+
+  before ();
+
+  if (enable)
+    {
+      glEnable (GL_LINE_SMOOTH);
+      glEnable (GL_BLEND);
+    }
+  else
+    {
+      glDisable (GL_LINE_SMOOTH);
+      glDisable (GL_BLEND);
+    }
+
+  for (i = 0; i < 360; i += 5)
+    {
+      glRotatef (5.0, 0, 0, 1);
+      glBegin (GL_LINE_STRIP);
+      glVertex3fv (pntA);
+      glVertex3fv (pntB);
+      glEnd ();
+    }
+
+  after ();
+}
+
 static struct test_t tests[] = {
+  {"test_smooth_line", test_smooth_line},
+
   {"test_null", test_null},
   {"test_tri", test_tri},
 
