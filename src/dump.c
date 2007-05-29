@@ -42,6 +42,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "analyze.h"
 #include "detect.h"
 #include "main.h"
 #include "ring.h"
@@ -56,6 +57,8 @@ dump_reg (unsigned int key, unsigned int val, int mem_ptr,
 	  unsigned int *mem_map)
 {
   printf ("0x%04x <- 0x%08x\n", key, val);
+
+  analyze_reg (key, val);
 
   switch (key)
     {
@@ -251,7 +254,11 @@ dump (void)
 	      ring_head, ring_tail);
     }
 
+  analyze_begin ();
+
   dump_packets (ring_head, ring_tail, ring_mem_map);
+
+  analyze_end ();
 
   if (option_verbose)
     {
