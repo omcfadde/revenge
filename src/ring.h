@@ -21,8 +21,8 @@
 #define __RING_H__
 
 extern int mem_fd;
-extern unsigned long *agp_mem_map, *mem_map, *ring_mem_map;
-extern unsigned long ring_head, ring_size, ring_tail;
+extern unsigned int *agp_mem_map, *mem_map, *ring_mem_map;
+extern unsigned int ring_head, ring_size, ring_tail;
 void free_ring (void);
 void alloc_ring (void);
 void before_ring (void);

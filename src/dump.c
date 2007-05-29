@@ -46,16 +46,16 @@
 #include "main.h"
 #include "ring.h"
 
-static void dump_indirect_buffer (int mem_ptr, unsigned long *mem_map);
+static void dump_indirect_buffer (int mem_ptr, unsigned int *mem_map);
 
 /**
  * \brief Dump a register write.
  */
 static void
-dump_reg (unsigned long key, unsigned long val, int mem_ptr,
-		  unsigned long *mem_map)
+dump_reg (unsigned int key, unsigned int val, int mem_ptr,
+	  unsigned int *mem_map)
 {
-  printf ("0x%04lx <- 0x%08lx\n", key, val);
+  printf ("0x%04x <- 0x%08x\n", key, val);
 
   switch (key)
     {
@@ -76,14 +76,13 @@ dump_reg (unsigned long key, unsigned long val, int mem_ptr,
  * header is the number of consecutive registers to be written.
  */
 static void
-dump_packet0 (unsigned long packet_type, unsigned long packet_cnt,
-		 unsigned long packet_reg, int mem_ptr,
-		 unsigned long *mem_map)
+dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
+	      unsigned int packet_reg, int mem_ptr, unsigned int *mem_map)
 {
   int i;
-  unsigned long mapped_reg, mapped_val;
+  unsigned int mapped_reg, mapped_val;
 
-  printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+  printf ("packet_type = %d, packet_cnt = %d, packet_reg = 0x%08x\n",
 	  packet_type, packet_cnt, packet_reg);
 
   for (i = 0; i < packet_cnt; i++)
@@ -103,14 +102,14 @@ dump_packet0 (unsigned long packet_type, unsigned long packet_cnt,
  * followed by the data for the first and second registers.
  */
 static void
-dump_packet1 (unsigned long packet_type, unsigned long packet_cnt,
-		 unsigned long packet_rega, unsigned long packet_regb,
-		 int mem_ptr, unsigned long *mem_map)
+dump_packet1 (unsigned int packet_type, unsigned int packet_cnt,
+	      unsigned int packet_rega, unsigned int packet_regb,
+	      int mem_ptr, unsigned int *mem_map)
 {
-  unsigned long mapped_reg, mapped_val;
+  unsigned int mapped_reg, mapped_val;
 
   printf
-    ("packet_type = %ld, packet_cnt = %ld, packet_rega = 0x%08lx, packet_regb = 0x%08lx\n",
+    ("packet_type = %d, packet_cnt = %d, packet_rega = 0x%08x, packet_regb = 0x%08x\n",
      packet_type, packet_cnt, packet_rega, packet_regb);
 
   /* the + 1 is to skip over the packet header */
@@ -131,11 +130,10 @@ dump_packet1 (unsigned long packet_type, unsigned long packet_cnt,
  * actually write any registers.
  */
 static void
-dump_packet2 (unsigned long packet_type, unsigned long packet_cnt,
-		 unsigned long packet_reg, int mem_ptr,
-		 unsigned long *mem_map)
+dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
+	      unsigned int packet_reg, int mem_ptr, unsigned int *mem_map)
 {
-  printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+  printf ("packet_type = %d, packet_cnt = %d, packet_reg = 0x%08x\n",
 	  packet_type, packet_cnt, packet_reg);
 
   /* empty */
@@ -147,11 +145,10 @@ dump_packet2 (unsigned long packet_type, unsigned long packet_cnt,
  * \todo Currently type 3 packets are not supported.
  */
 static void
-dump_packet3 (unsigned long packet_type, unsigned long packet_cnt,
-		 unsigned long packet_reg, int mem_ptr,
-		 unsigned long *mem_map)
+dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
+	      unsigned int packet_reg, int mem_ptr, unsigned int *mem_map)
 {
-  printf ("packet_type = %ld, packet_cnt = %ld, packet_reg = 0x%08lx\n",
+  printf ("packet_type = %d, packet_cnt = %d, packet_reg = 0x%08x\n",
 	  packet_type, packet_cnt, packet_reg);
 
 #if 0
@@ -167,11 +164,10 @@ dump_packet3 (unsigned long packet_type, unsigned long packet_cnt,
  * reads the packet header and skips over the data.
  */
 static void
-dump_packets (unsigned long head, unsigned long tail,
-		 unsigned long *mem_map)
+dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 {
   int i;
-  unsigned long packet, packet_type, packet_cnt, packet_reg, packet_rega,
+  unsigned int packet, packet_type, packet_cnt, packet_reg, packet_rega,
     packet_regb;
 
   /* the packet words and the packet header must be counted... */
@@ -191,20 +187,17 @@ dump_packets (unsigned long head, unsigned long tail,
 	  switch (packet_type)
 	    {
 	    case 0x0:
-	      dump_packet0 (packet_type, packet_cnt, packet_reg, i,
-			       mem_map);
+	      dump_packet0 (packet_type, packet_cnt, packet_reg, i, mem_map);
 	      break;
 	    case 0x1:
 	      dump_packet1 (packet_type, packet_cnt, packet_rega,
-			       packet_regb, i, mem_map);
+			    packet_regb, i, mem_map);
 	      break;
 	    case 0x2:
-	      dump_packet2 (packet_type, packet_cnt, packet_reg, i,
-			       mem_map);
+	      dump_packet2 (packet_type, packet_cnt, packet_reg, i, mem_map);
 	      break;
 	    case 0x3:
-	      dump_packet3 (packet_type, packet_cnt, packet_reg, i,
-			       mem_map);
+	      dump_packet3 (packet_type, packet_cnt, packet_reg, i, mem_map);
 	      break;
 	    default:
 	      assert (0);
@@ -222,22 +215,20 @@ dump_packets (unsigned long head, unsigned long tail,
  * \todo Support PCI-E.
  */
 static void
-dump_indirect_buffer (int mem_ptr, unsigned long *mem_map)
+dump_indirect_buffer (int mem_ptr, unsigned int *mem_map)
 {
-  unsigned long *ib_mapped_addr;
-  unsigned long ib_addr, ib_size;
+  unsigned int *ib_mapped_addr;
+  unsigned int ib_addr, ib_size;
 
   ib_addr = mem_map[mem_ptr + 1];
   ib_size = mem_map[mem_ptr + 2];
 
   ib_mapped_addr =
-    (unsigned long *) ((char *) agp_mem_map + (ib_addr - agp_addr));
+    (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
 
   if (option_verbose)
     {
-      printf
-	("indirect buffer! addr = 0x%08lx, mapped_addr = 0x%08lx size = %ld\n",
-	 ib_addr, (unsigned long) ib_mapped_addr, ib_size);
+      printf ("indirect buffer! addr = 0x%08x size = %d\n", ib_addr, ib_size);
     }
 
   dump_packets (0, ib_size, ib_mapped_addr);
@@ -256,7 +247,7 @@ dump (void)
 {
   if (option_verbose)
     {
-      printf ("ring buffer! ring_head = 0x%08lx, ring_tail = 0x%08lx\n",
+      printf ("ring buffer! ring_head = 0x%08x, ring_tail = 0x%08x\n",
 	      ring_head, ring_tail);
     }
 
@@ -264,7 +255,7 @@ dump (void)
 
   if (option_verbose)
     {
-      printf ("done! ring_head = 0x%08lx, ring_tail = 0x%08lx\n", ring_head,
+      printf ("done! ring_head = 0x%08x, ring_tail = 0x%08x\n", ring_head,
 	      ring_tail);
     }
 }

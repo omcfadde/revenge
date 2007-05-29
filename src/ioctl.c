@@ -41,7 +41,7 @@
  */
 #define __syscall_return(type, res) \
 do { \
-	if ((unsigned long)(res) >= (unsigned long)(-MAX_ERRNO)) { \
+	if ((unsigned int)(res) >= (unsigned int)(-MAX_ERRNO)) { \
 		errno = -(res); \
 		res = -1; \
 	} \
@@ -140,7 +140,7 @@ __syscall_return(type,__res); \
 
 #define __syscall_return(type, res) \
 do { \
-	if ((unsigned long)(res) >= (unsigned long)(-MAX_ERRNO)) { \
+	if ((unsigned int)(res) >= (unsigned int)(-MAX_ERRNO)) { \
 		errno = -(res); \
 		res = -1; \
 	} \

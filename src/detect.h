@@ -20,7 +20,7 @@
 #ifndef __DETECT_H__
 #define __DETECT_H__
 
-extern unsigned long agp_addr, agp_size;
+extern unsigned int agp_addr, agp_size;
 void alloc_agp_aperture (void);
 
 #endif

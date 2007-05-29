@@ -25,7 +25,7 @@
 
 #include "detect.h"
 
-unsigned long agp_addr, agp_size;
+unsigned int agp_addr, agp_size;
 
 static int
 is_agp_iomem (int level, char *name)
@@ -59,9 +59,9 @@ alloc_agp_aperture (void)
 	  p++;
 	}
 
-      unsigned long start, end;
+      unsigned int start, end;
       int n, ret;
-      ret = sscanf (p, "%lx-%lx : %n", &start, &end, &n);
+      ret = sscanf (p, "%x-%x : %n", &start, &end, &n);
       if (ret < 2)
 	{
 	  continue;

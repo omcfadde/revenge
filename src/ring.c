@@ -31,8 +31,8 @@
 #include "ring.h"
 
 int mem_fd;
-unsigned long *agp_mem_map, *mem_map, *ring_mem_map;
-unsigned long ring_head, ring_size, ring_tail;
+unsigned int *agp_mem_map, *mem_map, *ring_mem_map;
+unsigned int ring_head, ring_size, ring_tail;
 
 void
 free_ring (void)
@@ -53,7 +53,7 @@ free_ring (void)
 void
 alloc_ring (void)
 {
-  unsigned long ring_offset;
+  unsigned int ring_offset;
 
   if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
     {
@@ -78,44 +78,19 @@ alloc_ring (void)
     mem_map[RADEON_CP_RB_BASE >> 2] -
     ((mem_map[RADEON_MC_AGP_LOCATION >> 2] & 0xffff) << 16);
 
-  if (option_verbose)
-    {
-      printf ("ring_offset = 0x%lx\n", ring_offset);
-    }
-
-  ring_mem_map = (unsigned long *) ((char *) agp_mem_map + ring_offset);
-
-  if (option_verbose)
-    {
-      printf ("ring_mem_map = 0x%lx\n", (unsigned long) ring_mem_map);
-    }
+  ring_mem_map = (unsigned int *) ((char *) agp_mem_map + ring_offset);
 
   ring_size = (1 << ((mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
-
-  if (option_verbose)
-    {
-      printf ("ring_size = 0x%lx\n", ring_size);
-    }
 }
 
 void
 before_ring (void)
 {
   ring_head = ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
-
-  if (option_verbose)
-    {
-      printf ("ring_head = ring_tail = 0x%lx\n", ring_head);
-    }
 }
 
 void
 after_ring (void)
 {
   ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
-
-  if (option_verbose)
-    {
-      printf ("ring_tail = 0x%lx\n", ring_tail);
-    }
 }
