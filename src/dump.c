@@ -52,7 +52,7 @@ static void dump_indirect_buffer (int mem_ptr, unsigned long *mem_map);
  * \brief Dump a register write.
  */
 static void
-dump_register (unsigned long key, unsigned long val, int mem_ptr,
+dump_reg (unsigned long key, unsigned long val, int mem_ptr,
 		  unsigned long *mem_map)
 {
   printf ("0x%04lx <- 0x%08lx\n", key, val);
@@ -91,7 +91,7 @@ dump_packet0 (unsigned long packet_type, unsigned long packet_cnt,
       /* the + 1 is to skip over the packet header */
       mapped_reg = packet_reg + (i << 2);
       mapped_val = mem_map[mem_ptr + i + 1];
-      dump_register (mapped_reg, mapped_val, mem_ptr, mem_map);
+      dump_reg (mapped_reg, mapped_val, mem_ptr, mem_map);
     }
 }
 
@@ -116,12 +116,12 @@ dump_packet1 (unsigned long packet_type, unsigned long packet_cnt,
   /* the + 1 is to skip over the packet header */
   mapped_reg = packet_rega;
   mapped_val = mem_map[mem_ptr + packet_rega + 1];
-  dump_register (mapped_reg, mapped_val, mem_ptr, mem_map);
+  dump_reg (mapped_reg, mapped_val, mem_ptr, mem_map);
 
   /* the + 1 is to skip over the packet header */
   mapped_reg = packet_regb;
   mapped_val = mem_map[mem_ptr + packet_regb + 1];
-  dump_register (mapped_reg, mapped_val, mem_ptr, mem_map);
+  dump_reg (mapped_reg, mapped_val, mem_ptr, mem_map);
 }
 
 /**
