@@ -26,15 +26,18 @@
 #include "analyze_final.h"
 
 /*
- * this is a horrible quick and dirty hack!
+ * this is a horrible quick and dirty hack! it can miss a lot of writes, and
+ * generally sucks.
  */
 
 static int regs[0xffff];
+static int regs_cnt[0xffff];
 
 static void
 analyze_final_begin (void)
 {
-  memset (regs, -1, sizeof (int) * 0xffff);
+  memset (regs, 0, sizeof (int) * 0xffff);
+  memset (regs_cnt, 0, sizeof (int) * 0xffff);
 }
 
 static void
@@ -44,9 +47,19 @@ analyze_final_end (void)
 
   for (i = 0; i < 0xffff; i++)
     {
-      if (regs[i] < -1)
+      if (regs_cnt[i] > 0)
 	{
 	  printf ("%s: 0x%04x <- 0x%08x\n", __FUNCTION__, i, regs[i]);
+	}
+    }
+
+
+  for (i = 0; i < 0xffff; i++)
+    {
+      if (regs_cnt[i] > 1)
+	{
+	  printf ("%s: warning: 0x%04x has %d writes!\n", __FUNCTION__, i,
+		  regs_cnt[i]);
 	}
     }
 }
@@ -56,6 +69,7 @@ analyze_final_reg (unsigned int key, unsigned int val)
 {
   assert (key < 0xffff);
   regs[key] = val;
+  regs_cnt[key] = regs_cnt[key] + 1;
 }
 
 const struct analyze_t analyze_final = {

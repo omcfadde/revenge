@@ -56,8 +56,6 @@ static void
 dump_reg (unsigned int key, unsigned int val, int mem_ptr,
 	  unsigned int *mem_map)
 {
-  printf ("0x%04x <- 0x%08x\n", key, val);
-
   analyze_reg (key, val);
 
   switch (key)
@@ -85,9 +83,6 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
   int i;
   unsigned int mapped_reg, mapped_val;
 
-  printf ("packet_type = %d, packet_cnt = %d, packet_reg = 0x%08x\n",
-	  packet_type, packet_cnt, packet_reg);
-
   for (i = 0; i < packet_cnt; i++)
     {
       /* the + 1 is to skip over the packet header */
@@ -111,10 +106,6 @@ dump_packet1 (unsigned int packet_type, unsigned int packet_cnt,
 {
   unsigned int mapped_reg, mapped_val;
 
-  printf
-    ("packet_type = %d, packet_cnt = %d, packet_rega = 0x%08x, packet_regb = 0x%08x\n",
-     packet_type, packet_cnt, packet_rega, packet_regb);
-
   /* the + 1 is to skip over the packet header */
   mapped_reg = packet_rega;
   mapped_val = mem_map[mem_ptr + packet_rega + 1];
@@ -136,9 +127,6 @@ static void
 dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_reg, int mem_ptr, unsigned int *mem_map)
 {
-  printf ("packet_type = %d, packet_cnt = %d, packet_reg = 0x%08x\n",
-	  packet_type, packet_cnt, packet_reg);
-
   /* empty */
 }
 
@@ -151,12 +139,7 @@ static void
 dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_reg, int mem_ptr, unsigned int *mem_map)
 {
-  printf ("packet_type = %d, packet_cnt = %d, packet_reg = 0x%08x\n",
-	  packet_type, packet_cnt, packet_reg);
-
-#if 0
-  assert (0);
-#endif
+  /* empty */
 }
 
 /**
@@ -229,17 +212,7 @@ dump_indirect_buffer (int mem_ptr, unsigned int *mem_map)
   ib_mapped_addr =
     (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
 
-  if (option_verbose)
-    {
-      printf ("indirect buffer! addr = 0x%08x size = %d\n", ib_addr, ib_size);
-    }
-
   dump_packets (0, ib_size, ib_mapped_addr);
-
-  if (option_verbose)
-    {
-      printf ("done!\n");
-    }
 }
 
 /**
@@ -248,21 +221,9 @@ dump_indirect_buffer (int mem_ptr, unsigned int *mem_map)
 void
 dump (void)
 {
-  if (option_verbose)
-    {
-      printf ("ring buffer! ring_head = 0x%08x, ring_tail = 0x%08x\n",
-	      ring_head, ring_tail);
-    }
-
   analyze_begin ();
 
   dump_packets (ring_head, ring_tail, ring_mem_map);
 
   analyze_end ();
-
-  if (option_verbose)
-    {
-      printf ("done! ring_head = 0x%08x, ring_tail = 0x%08x\n", ring_head,
-	      ring_tail);
-    }
 }
