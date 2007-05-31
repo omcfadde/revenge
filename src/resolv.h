@@ -17,30 +17,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#ifndef __RESOLV_H__
+#define __RESOLV_H__
 
-#include "analyze.h"
-#include "analyze_raw.h"
-#include "resolv.h"
+char *resolv_reg (unsigned int key);
 
-static void
-analyze_raw_reg (unsigned int key, unsigned int val)
-{
-  char *resolv;
-
-  if ((resolv = resolv_reg (key)))
-    {
-      printf ("%32s <- 0x%08x\n", resolv, val);
-    }
-  else
-    {
-      printf ("                          0x%04x <- 0x%08x\n", key, val);
-    }
-}
-
-const struct analyze_t analyze_raw = {
-  .reg = analyze_raw_reg,
-};
+#endif

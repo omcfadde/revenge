@@ -17,30 +17,54 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "analyze.h"
-#include "analyze_raw.h"
-#include "resolv.h"
-
-static void
-analyze_raw_reg (unsigned int key, unsigned int val)
+/*
+ * horrible hack. will leak memory!
+ */
+char *
+resolv_reg (unsigned int key)
 {
-  char *resolv;
+  FILE *file;
+  char *delim = " \t";
+  char *line = NULL;
+  char *token;
+  char keystr[BUFSIZ];
+  size_t len = 0;
 
-  if ((resolv = resolv_reg (key)))
+  if (!(file = fopen ("r300_reg.h", "r")))
     {
-      printf ("%32s <- 0x%08x\n", resolv, val);
+      return NULL;
     }
-  else
+
+  /* loop over all the lines */
+  while (getline (&line, &len, file) != -1)
     {
-      printf ("                          0x%04x <- 0x%08x\n", key, val);
+      snprintf (keystr, BUFSIZ, "0x%04x", key);
+      /* find one that has 0xdead on it */
+      if (strcasestr (line, keystr))
+	{
+	  /* now find the R300_* token in the line... */
+	  for (token = strtok (line, delim); token != NULL;
+	       token = strtok (NULL, delim))
+	    {
+	      /* found it. return it. */
+	      if (strcasestr (token, "R300_"))
+		{
+		  return token;
+		}
+	    }
+	}
     }
+
+  if (line)
+    {
+      free (line);
+    }
+
+  fclose (file);
+
+  return NULL;
 }
-
-const struct analyze_t analyze_raw = {
-  .reg = analyze_raw_reg,
-};

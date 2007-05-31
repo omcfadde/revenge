@@ -24,6 +24,7 @@
 
 #include "analyze.h"
 #include "analyze_final.h"
+#include "resolv.h"
 
 /*
  * this is a horrible quick and dirty hack! it can miss a lot of writes, and
@@ -44,22 +45,20 @@ static void
 analyze_final_end (void)
 {
   int i;
+  char *resolv;
 
   for (i = 0; i < 0xffff; i++)
     {
       if (regs_cnt[i] > 0)
 	{
-	  printf ("%s: 0x%04x <- 0x%08x\n", __FUNCTION__, i, regs[i]);
-	}
-    }
-
-
-  for (i = 0; i < 0xffff; i++)
-    {
-      if (regs_cnt[i] > 1)
-	{
-	  printf ("%s: warning: 0x%04x has %d writes!\n", __FUNCTION__, i,
-		  regs_cnt[i]);
+	  if ((resolv = resolv_reg (i)))
+	    {
+	      printf ("%32s <- 0x%08x\n", resolv, regs[i]);
+	    }
+	  else
+	    {
+	      printf ("                          0x%04x <- 0x%08x\n", i, regs[i]);
+	    }
 	}
     }
 }

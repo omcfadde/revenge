@@ -87,8 +87,6 @@ dump_packet0 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
   packet_cnt = ((packet >> 16) & 0x3ff) + 1;
   packet_reg = ((packet >> 0) & 0x1fff) << 2;
 
-  printf ("packet0 cnt=%d reg=0x%04x\n", packet_cnt, packet_reg);
-
   for (i = 0; i < packet_cnt; i++)
     {
       /* the + 1 is to skip over the packet header */
@@ -116,8 +114,6 @@ dump_packet1 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
   packet_reg_0 = ((packet >> 0) & 0x7ff) << 2;
   packet_reg_1 = ((packet >> 11) & 0x7ff) << 2;
 
-  printf ("packet0 cnt=%d reg_0=0x%04x reg_0=0x%04x\n", packet_cnt, packet_reg_0, packet_reg_1);
-
   /* the + 1 is to skip over the packet header */
   mapped_reg = packet_reg_0;
   mapped_val = mem_map[mem_ptr + mapped_reg + 1];
@@ -138,7 +134,6 @@ dump_packet1 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 static void
 dump_packet2 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 {
-  printf ("packet2\n");
   /* empty */
 }
 
@@ -150,7 +145,6 @@ dump_packet2 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 static void
 dump_packet3 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 {
-  printf ("packet3\n");
   /* empty */
 }
 
