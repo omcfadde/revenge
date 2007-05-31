@@ -77,11 +77,17 @@ dump_reg (unsigned int key, unsigned int val, int mem_ptr,
  * header is the number of consecutive registers to be written.
  */
 static void
-dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
-	      unsigned int packet_reg, int mem_ptr, unsigned int *mem_map)
+dump_packet0 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 {
   int i;
   unsigned int mapped_reg, mapped_val;
+  unsigned int packet_type, packet_cnt, packet_reg;
+
+  packet_type = (packet >> 30) & 0x3;
+  packet_cnt = ((packet >> 16) & 0x3ff) + 1;
+  packet_reg = ((packet >> 0) & 0x1fff) << 2;
+
+  printf ("packet0 cnt=%d reg=0x%04x\n", packet_cnt, packet_reg);
 
   for (i = 0; i < packet_cnt; i++)
     {
@@ -100,20 +106,26 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
  * followed by the data for the first and second registers.
  */
 static void
-dump_packet1 (unsigned int packet_type, unsigned int packet_cnt,
-	      unsigned int packet_rega, unsigned int packet_regb,
-	      int mem_ptr, unsigned int *mem_map)
+dump_packet1 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 {
   unsigned int mapped_reg, mapped_val;
+  unsigned int packet_type, packet_cnt, packet_reg_0, packet_reg_1;
+
+  packet_type = (packet >> 30) & 0x3;
+  packet_cnt = ((packet >> 16) & 0x3ff) + 1;
+  packet_reg_0 = ((packet >> 0) & 0x7ff) << 2;
+  packet_reg_1 = ((packet >> 11) & 0x7ff) << 2;
+
+  printf ("packet0 cnt=%d reg_0=0x%04x reg_0=0x%04x\n", packet_cnt, packet_reg_0, packet_reg_1);
 
   /* the + 1 is to skip over the packet header */
-  mapped_reg = packet_rega;
-  mapped_val = mem_map[mem_ptr + packet_rega + 1];
+  mapped_reg = packet_reg_0;
+  mapped_val = mem_map[mem_ptr + mapped_reg + 1];
   dump_reg (mapped_reg, mapped_val, mem_ptr, mem_map);
 
   /* the + 1 is to skip over the packet header */
-  mapped_reg = packet_regb;
-  mapped_val = mem_map[mem_ptr + packet_regb + 1];
+  mapped_reg = packet_reg_0;
+  mapped_val = mem_map[mem_ptr + mapped_reg + 1];
   dump_reg (mapped_reg, mapped_val, mem_ptr, mem_map);
 }
 
@@ -124,9 +136,9 @@ dump_packet1 (unsigned int packet_type, unsigned int packet_cnt,
  * actually write any registers.
  */
 static void
-dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
-	      unsigned int packet_reg, int mem_ptr, unsigned int *mem_map)
+dump_packet2 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 {
+  printf ("packet2\n");
   /* empty */
 }
 
@@ -136,9 +148,9 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
  * \todo Currently type 3 packets are not supported.
  */
 static void
-dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
-	      unsigned int packet_reg, int mem_ptr, unsigned int *mem_map)
+dump_packet3 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 {
+  printf ("packet3\n");
   /* empty */
 }
 
@@ -153,42 +165,41 @@ static void
 dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 {
   int i;
-  unsigned int packet, packet_type, packet_cnt, packet_reg, packet_rega,
-    packet_regb;
+  unsigned int packet, packet_type, packet_cnt;
 
   /* the packet words and the packet header must be counted... */
   for (i = head; i < tail; i += packet_cnt + 1)
     {
       packet = mem_map[i];
-
       packet_type = (packet >> 30) & 0x3;
       packet_cnt = ((packet >> 16) & 0x3ff) + 1;
-      packet_reg = ((packet >> 0) & 0x1fff) << 2;
-
-      packet_rega = ((packet >> 0) & 0x7ff) << 2;
-      packet_regb = ((packet >> 11) & 0x7ff) << 2;
 
       if (packet)
 	{
 	  switch (packet_type)
 	    {
 	    case 0x0:
-	      dump_packet0 (packet_type, packet_cnt, packet_reg, i, mem_map);
+	      dump_packet0 (packet, i, mem_map);
 	      break;
 	    case 0x1:
-	      dump_packet1 (packet_type, packet_cnt, packet_rega,
-			    packet_regb, i, mem_map);
+	      dump_packet1 (packet, i, mem_map);
 	      break;
 	    case 0x2:
-	      dump_packet2 (packet_type, packet_cnt, packet_reg, i, mem_map);
+	      dump_packet2 (packet, i, mem_map);
 	      break;
 	    case 0x3:
-	      dump_packet3 (packet_type, packet_cnt, packet_reg, i, mem_map);
+	      dump_packet3 (packet, i, mem_map);
 	      break;
 	    default:
 	      assert (0);
 	      break;
 	    }
+	}
+      else
+	{
+	  printf ("warning: early truncation at %d/%d\n", i - head,
+		  tail - head);
+	  break;
 	}
     }
 }
