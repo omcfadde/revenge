@@ -17,38 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef __ANALYZE_RAW_H__
+#define __ANALYZE_RAW_H__
 
 #include "analyze.h"
-#include "analyze_final.h"
-#include "analyze_raw.h"
 
-static struct analyze_t *analyze = &analyze_raw;
+extern const struct analyze_t analyze_raw;
 
-void
-analyze_begin (void)
-{
-  if (analyze->begin)
-    {
-      analyze->begin ();
-    }
-}
-
-void
-analyze_end (void)
-{
-  if (analyze->end)
-    {
-      analyze->end ();
-    }
-}
-
-void
-analyze_reg (unsigned int key, unsigned int val)
-{
-  if (analyze->reg)
-    {
-      analyze->reg (key, val);
-    }
-}
+#endif

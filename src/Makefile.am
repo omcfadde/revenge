@@ -7,6 +7,8 @@ revenge_SOURCES = \
 		  analyze.h \
 		  analyze_final.c \
 		  analyze_final.h \
+		  analyze_raw.c \
+		  analyze_raw.h \
 		  detect.c \
 		  detect.h \
 		  dump.c \

@@ -17,38 +17,20 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "analyze.h"
-#include "analyze_final.h"
 #include "analyze_raw.h"
 
-static struct analyze_t *analyze = &analyze_raw;
-
-void
-analyze_begin (void)
+static void
+analyze_raw_reg (unsigned int key, unsigned int val)
 {
-  if (analyze->begin)
-    {
-      analyze->begin ();
-    }
+  printf ("0x%04x <- 0x%08x\n", key, val);
 }
 
-void
-analyze_end (void)
-{
-  if (analyze->end)
-    {
-      analyze->end ();
-    }
-}
-
-void
-analyze_reg (unsigned int key, unsigned int val)
-{
-  if (analyze->reg)
-    {
-      analyze->reg (key, val);
-    }
-}
+const struct analyze_t analyze_raw = {
+  .reg = analyze_raw_reg,
+};

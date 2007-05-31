@@ -44,8 +44,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = analyze.$(OBJEXT) analyze_final.$(OBJEXT) \
-	detect.$(OBJEXT) dump.$(OBJEXT) ioctl.$(OBJEXT) \
-	ioctl_blob.$(OBJEXT) ioctl_drm.$(OBJEXT) \
+	analyze_raw.$(OBJEXT) detect.$(OBJEXT) dump.$(OBJEXT) \
+	ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) ioctl_drm.$(OBJEXT) \
 	ioctl_radeon.$(OBJEXT) main.$(OBJEXT) misc.$(OBJEXT) \
 	ring.$(OBJEXT) test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
@@ -152,6 +152,8 @@ revenge_SOURCES = \
 		  analyze.h \
 		  analyze_final.c \
 		  analyze_final.h \
+		  analyze_raw.c \
+		  analyze_raw.h \
 		  detect.c \
 		  detect.h \
 		  dump.c \
@@ -241,6 +243,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze_final.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze_raw.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl.Po@am__quote@
