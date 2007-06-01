@@ -80,7 +80,6 @@ static void
 test_polygon_offset (void)
 {
   before ();
-  printf ("glPolygonOffset\n");
   glPolygonOffset (0.1, 0.2);
   tri ();
   after ();
@@ -222,10 +221,11 @@ test_smooth_line (void)
 }
 
 static struct test_t tests[] = {
-  {"test_smooth_line", test_smooth_line},
-
   {"test_null", test_null},
   {"test_tri", test_tri},
+
+#if 0
+  {"test_smooth_line", test_smooth_line},
 
   /* order is important! */
   {"test_polygon_offset", test_polygon_offset},
@@ -240,6 +240,7 @@ static struct test_t tests[] = {
   {"test_polygon_offset_point_disable", test_polygon_offset_point_disable},
 
   {"test_frag_mov", test_frag_mov},
+#endif
 
   {NULL, NULL}
 };

@@ -33,6 +33,8 @@ static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 static void
 dump_reg (unsigned int key, unsigned int val)
 {
+  printf ("0x%04x <- 0x%08x\n", key, val);
+
   switch (key)
     {
     case RADEON_CP_IB_BASE:
@@ -44,7 +46,7 @@ dump_reg (unsigned int key, unsigned int val)
       ib_addr = ib_size = 0;
       break;
     default:
-      analyze_reg (key, val);
+      //analyze_reg (key, val);
       break;
     }
 }
@@ -56,6 +58,8 @@ dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
   int i;
   unsigned int mapped_reg, mapped_val;
 
+  printf ("%s\n", __func__);
+
   for (i = 0; i <= packet_cnt; i++)
     {
       mapped_reg = packet_reg + (i << 2);
@@ -63,33 +67,39 @@ dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
       dump_reg (mapped_reg, mapped_val);
     }
 
-  return (packet_cnt + 1) + 1;
+  return packet_cnt + 1;
 }
 
 static int
 dump_packet2 (unsigned int packet_cnt)
 {
-  return packet_cnt + 1;
+  printf ("%s\n", __func__);
+
+  return 0;
 }
 
 static int
 dump_packet3 (unsigned int packet_cnt)
 {
+  printf ("%s\n", __func__);
+
   return -1;
 }
 
 static void
-dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
+dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 {
   int i;
   unsigned int packet_type, packet_cnt, packet_reg;
   unsigned int proc;
 
-  for (i = head; i < tail; i += proc, i &= ring_size - 1)
+  for (i = head; i < tail; i += proc + 1, i &= ring_size - 1)
     {
       packet_type = (mem_map[i] >> 30) & 0x3;
       packet_cnt = (mem_map[i] >> 16) & 0x3fff;
       packet_reg = ((mem_map[i] >> 0) & 0x1fff) << 2;
+
+      assert (mem_map[i]);
 
       switch (packet_type)
 	{
@@ -114,6 +124,8 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	}
     }
 
+  printf ("i = %d tail = %d\n", i, tail);
+
   assert (i == tail);
 }
 
@@ -125,7 +137,7 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
   ib_mapped_addr =
     (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
 
-  dump_packets (0, ib_size, ib_mapped_addr);
+  dump_packet (0, ib_size, ib_mapped_addr);
 }
 
 void
@@ -133,7 +145,7 @@ dump (void)
 {
   analyze_begin ();
 
-  dump_packets (ring_head, ring_tail, ring_mem_map);
+  dump_packet (ring_head, ring_tail, ring_mem_map);
 
   analyze_end ();
 }
