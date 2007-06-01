@@ -21,9 +21,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*
- * horrible hack. will leak memory!
- */
 char *
 resolv_reg (unsigned int key)
 {
@@ -52,7 +49,8 @@ resolv_reg (unsigned int key)
 	       token = strtok (NULL, delim))
 	    {
 	      /* found it. return it. */
-	      if (strcasestr (token, "R300_"))
+	      if (strcasestr (token, "R300_")
+		  || strcasestr (token, "RADEON_"))
 		{
 		  ret = strdup (token);
 		  if (line)

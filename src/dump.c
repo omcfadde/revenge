@@ -17,27 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-/**
- * \file
- *
- * \brief Radeon Dumping.
- *
- * \todo Document the packet format in detail; there isn't any existing
- * documentation.
- *
- * \todo Build a linked list of everything important (packets, reg writes,
- * indirect buffers, etc) to be passed to the analysis code. The analysis code
- * can then do something interesting like standard analysis, final state
- * analysis, etc.
- *
- * The analysis code should use rules-ng to print the register names and values
- * in human readable format.
- *
- * It should be possible to add a dummy analysis pass that simply emits the same
- * values to the card (see glxtest for an example) for manual testing and
- * verification.
- */
-
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,24 +26,13 @@
 #include "main.h"
 #include "ring.h"
 
-static unsigned int ib_addr = -1;
-static unsigned int ib_size = -1;
+static unsigned int ib_addr = 0, ib_size = 0;
 
 static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 
-/**
- * \brief Dump a register write.
- *
- * Indirect buffers are handled specially.
- */
 static void
-dump_reg (unsigned int key, unsigned int val, int mem_ptr,
-	  unsigned int *mem_map)
+dump_reg (unsigned int key, unsigned int val)
 {
-#if 1
-  printf ("%s: 0x%04x 0x%08x\n", __func__, key, val);
-#endif
-
   switch (key)
     {
     case RADEON_CP_IB_BASE:
@@ -72,149 +40,71 @@ dump_reg (unsigned int key, unsigned int val, int mem_ptr,
       break;
     case RADEON_CP_IB_BUFSZ:
       ib_size = val;
-      assert (ib_addr && ib_size);
       dump_ib (ib_addr, ib_size);
-      ib_addr = ib_size = -1;
+      ib_addr = ib_size = 0;
       break;
     default:
-      //analyze_reg (key, val);
+      analyze_reg (key, val);
       break;
     }
 }
 
-/**
- * \brief Dump a type 0 packet.
- *
- * A type 0 packet may write many consecutive registers; the register specified
- * in the packet header is the first register. The count specified in the packet
- * header is the number of consecutive registers to be written.
- */
-static void
-dump_packet0 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
+static int
+dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
+	      unsigned int *mem_map)
 {
   int i;
   unsigned int mapped_reg, mapped_val;
-  unsigned int packet_type, packet_cnt, packet_reg;
 
-  packet_type = (packet >> 30) & 0x3;
-  packet_cnt = ((packet >> 16) & 0x3ff) + 1;
-  packet_reg = ((packet >> 0) & 0x1fff) << 2;
-
-#if 1
-  printf ("%s: %d 0x%04x 0x%04x\n", __func__, packet_type, packet_cnt,
-	  packet_reg);
-#endif
-
-  for (i = 0; i < packet_cnt; i++)
+  for (i = 0; i <= packet_cnt; i++)
     {
-      /* the + 1 is to skip over the packet header */
       mapped_reg = packet_reg + (i << 2);
-      mapped_val = mem_map[mem_ptr + i + 1];
-      dump_reg (mapped_reg, mapped_val, mem_ptr, mem_map);
+      mapped_val = mem_map[i + 1];
+      dump_reg (mapped_reg, mapped_val);
     }
+
+  return (packet_cnt + 1) + 1;
 }
 
-/**
- * \brief Dump a type 1 packet.
- *
- * A type 1 packet may write any two consecutive or non consecutive registers;
- * both registers are specified in the packet header. The packet header will be
- * followed by the data for the first and second registers.
- */
-static void
-dump_packet1 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
+static int
+dump_packet2 (unsigned int packet_cnt)
 {
-  unsigned int mapped_reg, mapped_val;
-  unsigned int packet_type, packet_cnt, packet_reg_0, packet_reg_1;
-
-  packet_type = (packet >> 30) & 0x3;
-  packet_cnt = ((packet >> 16) & 0x3ff) + 1;
-  packet_reg_0 = ((packet >> 0) & 0x7ff) << 2;
-  packet_reg_1 = ((packet >> 11) & 0x7ff) << 2;
-
-#if 1
-  printf ("%s: %d 0x%04x 0x%04x 0x%04x\n", __func__, packet_type, packet_cnt,
-	  packet_reg_0, packet_reg_1);
-#endif
-
-  /* the + 1 is to skip over the packet header */
-  mapped_reg = packet_reg_0;
-  mapped_val = mem_map[mem_ptr + mapped_reg + 1];
-  dump_reg (mapped_reg, mapped_val, mem_ptr, mem_map);
-
-  /* the + 1 is to skip over the packet header */
-  mapped_reg = packet_reg_0;
-  mapped_val = mem_map[mem_ptr + mapped_reg + 1];
-  dump_reg (mapped_reg, mapped_val, mem_ptr, mem_map);
+  return packet_cnt + 1;
 }
 
-/**
- * \brief Dump a type 2 packet.
- *
- * A type 2 packet is just a padding packet used for alignment; it doesn't
- * actually write any registers.
- */
-static void
-dump_packet2 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
+static int
+dump_packet3 (void)
 {
-#if 1
-  printf ("%s\n", __func__);
-#endif
+  assert (0);
 }
 
-/**
- * \brief Dump a type 3 packet.
- *
- * \todo Currently type 3 packets are not supported.
- */
-static void
-dump_packet3 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
-{
-#if 1
-  printf ("%s\n", __func__);
-#endif
-}
-
-/**
- * \brief Dump the Radeon packets.
- *
- * \warning It is the responsibility of the packet dumping functions to ensure
- * parsing of all of the packet data; the main loop in this function simply
- * reads the packet header and skips over the data.
- */
 static void
 dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 {
   int i;
-  unsigned int packet, packet_type, packet_cnt;
+  unsigned int packet_type, packet_cnt, packet_reg;
   unsigned int proc;
 
-  /* the packet words and the packet header must be counted... */
   for (i = head; i < tail; i += proc, i &= ring_size - 1)
     {
-      packet = mem_map[i];
-      packet_type = (packet >> 30) & 0x3;
-      packet_cnt = ((packet >> 16) & 0x3ff) + 1;
-      proc = packet_cnt + 1;
+      packet_type = (mem_map[i] >> 30) & 0x3;
+      packet_cnt = (mem_map[i] >> 16) & 0x3fff;
+      packet_reg = ((mem_map[i] >> 0) & 0x1fff) << 2;
 
-      if (!packet)
-	{
-	  printf ("assert (0): i == %d, tail = %d\n", i - head, tail - head);
-	  assert (0);
-	}
       switch (packet_type)
 	{
 	case 0x0:
-	  dump_packet0 (packet, i, mem_map);
-	  break;
-	case 0x1:
-	  dump_packet1 (packet, i, mem_map);
+	  proc = dump_packet0 (packet_cnt, packet_reg, &mem_map[i]);
 	  break;
 	case 0x2:
-	  dump_packet2 (packet, i, mem_map);
+	  proc = dump_packet2 (packet_cnt);
 	  break;
 	case 0x3:
-	  dump_packet3 (packet, i, mem_map);
+#if 0
+	  proc = dump_packet3 ();
+#else
+	  return;
+#endif
 	  break;
 	default:
 	  assert (0);
@@ -222,17 +112,9 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	}
     }
 
-  printf ("i == %d, head = %d, tail = %d\n", i, head, tail);
-  assert (i - 1 == tail);
+  assert (i == tail);
 }
 
-/**
- * \brief Dump the Radeon indirect buffer.
- *
- * \todo Dynamically calculate the AGP address.
- *
- * \todo Support PCI-E.
- */
 static void
 dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
@@ -241,14 +123,9 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
   ib_mapped_addr =
     (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
 
-  printf ("XXXX: begin IB\n");
   dump_packets (0, ib_size, ib_mapped_addr);
-  printf ("XXXX: end IB\n");
 }
 
-/**
- * \brief Dump the Radeon ring buffer.
- */
 void
 dump (void)
 {
