@@ -26,6 +26,8 @@
 #include "main.h"
 #include "ring.h"
 
+#define DEBUG
+
 static unsigned int ib_addr = 0, ib_size = 0;
 
 static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
@@ -33,8 +35,6 @@ static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 static void
 dump_reg (unsigned int key, unsigned int val)
 {
-  printf ("0x%04x <- 0x%08x\n", key, val);
-
   switch (key)
     {
     case RADEON_CP_IB_BASE:
@@ -58,7 +58,9 @@ dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
   int i;
   unsigned int mapped_reg, mapped_val;
 
+#ifdef DEBUG
   printf ("%s\n", __func__);
+#endif
 
   for (i = 0; i <= packet_cnt; i++)
     {
@@ -73,7 +75,9 @@ dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
 static int
 dump_packet2 (unsigned int packet_cnt)
 {
+#ifdef DEBUG
   printf ("%s\n", __func__);
+#endif
 
   return 0;
 }
@@ -81,9 +85,13 @@ dump_packet2 (unsigned int packet_cnt)
 static int
 dump_packet3 (unsigned int packet_cnt)
 {
+#ifdef DEBUG
   printf ("%s\n", __func__);
+#endif
 
-  return -1;
+  assert (0);
+
+  return packet_cnt + 1;
 }
 
 static void
@@ -97,7 +105,7 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
     {
       packet_type = (mem_map[i] >> 30) & 0x3;
       packet_cnt = (mem_map[i] >> 16) & 0x3fff;
-      packet_reg = ((mem_map[i] >> 0) & 0x1fff) << 2;
+      packet_reg = ((mem_map[i] >> 0) & 0xffff) << 2;
 
       assert (mem_map[i]);
 
@@ -116,15 +124,7 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	  assert (0);
 	  break;
 	}
-
-      if (proc == -1)
-	{
-	  /* HACK */
-	  return;
-	}
     }
-
-  printf ("i = %d tail = %d\n", i, tail);
 
   assert (i == tail);
 }
@@ -133,6 +133,10 @@ static void
 dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
   unsigned int *ib_mapped_addr;
+
+#ifdef DEBUG
+  printf ("%s\n", __func__);
+#endif
 
   ib_mapped_addr =
     (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
