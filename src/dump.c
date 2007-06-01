@@ -52,8 +52,9 @@ dump_reg (unsigned int key, unsigned int val)
 }
 
 static int
-dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
-	      unsigned int packet_bit15, unsigned int *mem_map)
+dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
+	      unsigned int packet_bit15, unsigned int packet_reg,
+	      unsigned int *mem_map)
 {
   int i;
   unsigned int mapped_reg, mapped_val;
@@ -80,7 +81,9 @@ dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
 }
 
 static int
-dump_packet2 (unsigned int packet_cnt)
+dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
+	      unsigned int packet_bit15, unsigned int packet_reg,
+	      unsigned int *mem_map)
 {
 #ifdef DEBUG
   printf ("%s\n", __func__);
@@ -90,7 +93,7 @@ dump_packet2 (unsigned int packet_cnt)
 }
 
 static int
-dump_packet3 (unsigned int packet_cnt)
+dump_packet3 (unsigned int packet_type, unsigned int packet_cnt)
 {
 #ifdef DEBUG
   printf ("%s\n", __func__);
@@ -132,13 +135,16 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	{
 	case 0x0:
 	  proc =
-	    dump_packet0 (packet_cnt, packet_reg, packet_bit15, &mem_map[i]);
+	    dump_packet0 (packet_type, packet_cnt, packet_bit15, packet_reg,
+			  &mem_map[i]);
 	  break;
 	case 0x2:
-	  proc = dump_packet2 (packet_cnt);
+	  proc =
+	    dump_packet2 (packet_type, packet_cnt, packet_bit15, packet_reg,
+			  &mem_map[i]);
 	  break;
 	case 0x3:
-	  proc = dump_packet3 (packet_cnt);
+	  proc = dump_packet3 (packet_type, packet_cnt);
 	  break;
 	default:
 	  assert (0);
