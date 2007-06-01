@@ -73,9 +73,9 @@ dump_packet2 (unsigned int packet_cnt)
 }
 
 static int
-dump_packet3 (void)
+dump_packet3 (unsigned int packet_cnt)
 {
-  assert (0);
+  return -1;
 }
 
 static void
@@ -100,15 +100,17 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	  proc = dump_packet2 (packet_cnt);
 	  break;
 	case 0x3:
-#if 0
-	  proc = dump_packet3 ();
-#else
-	  return;
-#endif
+	  proc = dump_packet3 (packet_cnt);
 	  break;
 	default:
 	  assert (0);
 	  break;
+	}
+
+      if (proc == -1)
+	{
+	  /* HACK */
+	  return;
 	}
     }
 
