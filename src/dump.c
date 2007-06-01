@@ -47,24 +47,37 @@
 #include "main.h"
 #include "ring.h"
 
-static void dump_indirect_buffer (int mem_ptr, unsigned int *mem_map);
+static unsigned int ib_addr = -1;
+static unsigned int ib_size = -1;
+
+static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 
 /**
  * \brief Dump a register write.
+ *
+ * Indirect buffers are handled specially.
  */
 static void
 dump_reg (unsigned int key, unsigned int val, int mem_ptr,
 	  unsigned int *mem_map)
 {
-  analyze_reg (key, val);
+#if 1
+  printf ("%s: 0x%04x 0x%08x\n", __func__, key, val);
+#endif
 
   switch (key)
     {
     case RADEON_CP_IB_BASE:
-      dump_indirect_buffer (mem_ptr, mem_map);
+      ib_addr = val;
+      break;
+    case RADEON_CP_IB_BUFSZ:
+      ib_size = val;
+      assert (ib_addr && ib_size);
+      dump_ib (ib_addr, ib_size);
+      ib_addr = ib_size = -1;
       break;
     default:
-      /* empty */
+      //analyze_reg (key, val);
       break;
     }
 }
@@ -86,6 +99,11 @@ dump_packet0 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
   packet_type = (packet >> 30) & 0x3;
   packet_cnt = ((packet >> 16) & 0x3ff) + 1;
   packet_reg = ((packet >> 0) & 0x1fff) << 2;
+
+#if 1
+  printf ("%s: %d 0x%04x 0x%04x\n", __func__, packet_type, packet_cnt,
+	  packet_reg);
+#endif
 
   for (i = 0; i < packet_cnt; i++)
     {
@@ -114,6 +132,11 @@ dump_packet1 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
   packet_reg_0 = ((packet >> 0) & 0x7ff) << 2;
   packet_reg_1 = ((packet >> 11) & 0x7ff) << 2;
 
+#if 1
+  printf ("%s: %d 0x%04x 0x%04x 0x%04x\n", __func__, packet_type, packet_cnt,
+	  packet_reg_0, packet_reg_1);
+#endif
+
   /* the + 1 is to skip over the packet header */
   mapped_reg = packet_reg_0;
   mapped_val = mem_map[mem_ptr + mapped_reg + 1];
@@ -134,7 +157,9 @@ dump_packet1 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 static void
 dump_packet2 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 {
-  /* empty */
+#if 1
+  printf ("%s\n", __func__);
+#endif
 }
 
 /**
@@ -145,7 +170,9 @@ dump_packet2 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 static void
 dump_packet3 (unsigned int packet, int mem_ptr, unsigned int *mem_map)
 {
-  /* empty */
+#if 1
+  printf ("%s\n", __func__);
+#endif
 }
 
 /**
@@ -160,42 +187,43 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 {
   int i;
   unsigned int packet, packet_type, packet_cnt;
+  unsigned int proc;
 
   /* the packet words and the packet header must be counted... */
-  for (i = head; i < tail; i += packet_cnt + 1)
+  for (i = head; i < tail; i += proc, i &= ring_size - 1)
     {
       packet = mem_map[i];
       packet_type = (packet >> 30) & 0x3;
       packet_cnt = ((packet >> 16) & 0x3ff) + 1;
+      proc = packet_cnt + 1;
 
-      if (packet)
+      if (!packet)
 	{
-	  switch (packet_type)
-	    {
-	    case 0x0:
-	      dump_packet0 (packet, i, mem_map);
-	      break;
-	    case 0x1:
-	      dump_packet1 (packet, i, mem_map);
-	      break;
-	    case 0x2:
-	      dump_packet2 (packet, i, mem_map);
-	      break;
-	    case 0x3:
-	      dump_packet3 (packet, i, mem_map);
-	      break;
-	    default:
-	      assert (0);
-	      break;
-	    }
+	  printf ("assert (0): i == %d, tail = %d\n", i - head, tail - head);
+	  assert (0);
 	}
-      else
+      switch (packet_type)
 	{
-	  printf ("warning: early truncation at %d/%d\n", i - head,
-		  tail - head);
+	case 0x0:
+	  dump_packet0 (packet, i, mem_map);
+	  break;
+	case 0x1:
+	  dump_packet1 (packet, i, mem_map);
+	  break;
+	case 0x2:
+	  dump_packet2 (packet, i, mem_map);
+	  break;
+	case 0x3:
+	  dump_packet3 (packet, i, mem_map);
+	  break;
+	default:
+	  assert (0);
 	  break;
 	}
     }
+
+  printf ("i == %d, head = %d, tail = %d\n", i, head, tail);
+  assert (i - 1 == tail);
 }
 
 /**
@@ -206,18 +234,16 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
  * \todo Support PCI-E.
  */
 static void
-dump_indirect_buffer (int mem_ptr, unsigned int *mem_map)
+dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
   unsigned int *ib_mapped_addr;
-  unsigned int ib_addr, ib_size;
-
-  ib_addr = mem_map[mem_ptr + 1];
-  ib_size = mem_map[mem_ptr + 2];
 
   ib_mapped_addr =
     (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
 
+  printf ("XXXX: begin IB\n");
   dump_packets (0, ib_size, ib_mapped_addr);
+  printf ("XXXX: end IB\n");
 }
 
 /**

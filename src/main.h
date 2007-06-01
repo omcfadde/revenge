@@ -28,6 +28,7 @@
 #define RADEON_CP_RB_CNTL		0x0704
 #define RADEON_CP_RB_RPTR		0x0710
 #define RADEON_CP_IB_BASE		0x0738
+#define RADEON_CP_IB_BUFSZ		0x073c
 #define RADEON_CP_PACKET0		0x00000000
 #define CP_PACKET0( reg, n )						\
 	(RADEON_CP_PACKET0 | ((n) << 16) | ((reg) >> 2))

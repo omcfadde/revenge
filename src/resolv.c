@@ -33,6 +33,7 @@ resolv_reg (unsigned int key)
   char *token;
   char keystr[BUFSIZ];
   size_t len = 0;
+  char *ret;
 
   if (!(file = fopen ("r300_reg.h", "r")))
     {
@@ -53,7 +54,13 @@ resolv_reg (unsigned int key)
 	      /* found it. return it. */
 	      if (strcasestr (token, "R300_"))
 		{
-		  return token;
+		  ret = strdup (token);
+		  if (line)
+		    {
+		      free (line);
+		    }
+		  fclose (file);
+		  return ret;
 		}
 	    }
 	}

@@ -54,6 +54,7 @@ analyze_final_end (void)
 	  if ((resolv = resolv_reg (i)))
 	    {
 	      printf ("%32s <- 0x%08x\n", resolv, regs[i]);
+	      free (resolv);
 	    }
 	  else
 	    {

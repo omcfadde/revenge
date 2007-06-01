@@ -34,6 +34,7 @@ analyze_raw_reg (unsigned int key, unsigned int val)
   if ((resolv = resolv_reg (key)))
     {
       printf ("%32s <- 0x%08x\n", resolv, val);
+      free (resolv);
     }
   else
     {
