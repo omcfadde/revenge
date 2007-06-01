@@ -53,7 +53,7 @@ dump_reg (unsigned int key, unsigned int val)
 
 static int
 dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
-	      unsigned int *mem_map)
+	      unsigned int packet_bit15, unsigned int *mem_map)
 {
   int i;
   unsigned int mapped_reg, mapped_val;
@@ -64,7 +64,14 @@ dump_packet0 (unsigned int packet_cnt, unsigned int packet_reg,
 
   for (i = 0; i <= packet_cnt; i++)
     {
-      mapped_reg = packet_reg + (i << 2);
+      if (packet_bit15)
+	{
+	  mapped_reg = packet_reg;
+	}
+      else
+	{
+	  mapped_reg = packet_reg + (i << 2);
+	}
       mapped_val = mem_map[i + 1];
       dump_reg (mapped_reg, mapped_val);
     }
@@ -98,21 +105,34 @@ static void
 dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 {
   int i;
-  unsigned int packet_type, packet_cnt, packet_reg;
+  unsigned int packet_type, packet_cnt, packet_bit15, packet_reg;
   unsigned int proc;
+
+  /*
+   * (gdb) p/t 0x3 << 30
+   * $1 = 11000000000000000000000000000000
+   * (gdb) p/t 0x3 << 30 | 0x3fff << 16
+   * $2 = 11111111111111110000000000000000
+   * (gdb) p/t 0x3 << 30 | 0x3fff << 16 | 1 << 15
+   * $3 = 11111111111111111000000000000000
+   * (gdb) p/t 0x3 << 30 | 0x3fff << 16 | 1 << 15 | 0x1fff
+   * $4 = 11111111111111111001111111111111
+   */
 
   for (i = head; i < tail; i += proc + 1, i &= ring_size - 1)
     {
       packet_type = (mem_map[i] >> 30) & 0x3;
       packet_cnt = (mem_map[i] >> 16) & 0x3fff;
-      packet_reg = ((mem_map[i] >> 0) & 0xffff) << 2;
+      packet_bit15 = (mem_map[i] >> 15) & 0x1;
+      packet_reg = ((mem_map[i] >> 0) & 0x1fff) << 2;
 
       assert (mem_map[i]);
 
       switch (packet_type)
 	{
 	case 0x0:
-	  proc = dump_packet0 (packet_cnt, packet_reg, &mem_map[i]);
+	  proc =
+	    dump_packet0 (packet_cnt, packet_reg, packet_bit15, &mem_map[i]);
 	  break;
 	case 0x2:
 	  proc = dump_packet2 (packet_cnt);
