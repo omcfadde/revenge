@@ -57,7 +57,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int *mem_map)
 {
   int i;
-  unsigned int mapped_reg, mapped_val;
+  unsigned int mapped_reg;
 
 #ifdef DEBUG
   printf ("%s\n", __func__);
@@ -73,8 +73,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 	{
 	  mapped_reg = packet_reg + (i << 2);
 	}
-      mapped_val = mem_map[i + 1];
-      dump_reg (mapped_reg, mapped_val);
+      dump_reg (mapped_reg, mem_map[i]);
     }
 
   return packet_cnt + 1;
@@ -93,13 +92,21 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 }
 
 static int
-dump_packet3 (unsigned int packet_type, unsigned int packet_cnt)
+dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
+	      unsigned int packet_opcode)
 {
 #ifdef DEBUG
   printf ("%s\n", __func__);
 #endif
 
-  assert (0);
+  printf ("opcode = 0x%02x\n", packet_opcode);
+
+  switch (packet_opcode)
+    {
+    default:
+      assert (0);
+      break;
+    }
 
   return packet_cnt + 1;
 }
@@ -108,7 +115,8 @@ static void
 dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 {
   int i;
-  unsigned int packet_type, packet_cnt, packet_bit15, packet_reg;
+  unsigned int packet_type, packet_cnt, packet_bit15, packet_reg,
+    packet_opcode;
   unsigned int proc;
 
   /*
@@ -129,6 +137,8 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
       packet_bit15 = (mem_map[i] >> 15) & 0x1;
       packet_reg = ((mem_map[i] >> 0) & 0x1fff) << 2;
 
+      packet_opcode = (mem_map[i] >> 8) & 0xff;
+
       assert (mem_map[i]);
 
       switch (packet_type)
@@ -136,15 +146,15 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	case 0x0:
 	  proc =
 	    dump_packet0 (packet_type, packet_cnt, packet_bit15, packet_reg,
-			  &mem_map[i]);
+			  &mem_map[i + 1]);
 	  break;
 	case 0x2:
 	  proc =
 	    dump_packet2 (packet_type, packet_cnt, packet_bit15, packet_reg,
-			  &mem_map[i]);
+			  &mem_map[i + 1]);
 	  break;
 	case 0x3:
-	  proc = dump_packet3 (packet_type, packet_cnt);
+	  proc = dump_packet3 (packet_type, packet_cnt, packet_opcode);
 	  break;
 	default:
 	  assert (0);
@@ -158,16 +168,16 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 static void
 dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
-  unsigned int *ib_mapped_addr;
+  unsigned int *mapped_ib_addr;
 
 #ifdef DEBUG
   printf ("%s\n", __func__);
 #endif
 
-  ib_mapped_addr =
+  mapped_ib_addr =
     (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
 
-  dump_packet (0, ib_size, ib_mapped_addr);
+  dump_packet (0, ib_size, mapped_ib_addr);
 }
 
 void
