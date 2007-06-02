@@ -63,7 +63,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
   printf ("%s\n", __func__);
 #endif
 
-  for (i = 0; i <= packet_cnt; i++)
+  for (i = 0; i < packet_cnt + 1; i++)
     {
       if (packet_bit15)
 	{
@@ -92,23 +92,47 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 }
 
 static int
-dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
-	      unsigned int packet_opcode)
+dump_packet3_noop (unsigned int packet_type, unsigned int packet_cnt,
+		   unsigned int packet_opcode, unsigned int *mem_map)
 {
+  int i;
+
 #ifdef DEBUG
   printf ("%s\n", __func__);
 #endif
 
-  printf ("opcode = 0x%02x\n", packet_opcode);
+  for (i = 0; i < packet_cnt + 1; i++)
+    {
+      assert (mem_map[i] == 0x0);
+    }
+
+  return packet_cnt + 1;
+}
+
+static int
+dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
+	      unsigned int packet_opcode, unsigned int *mem_map)
+{
+  int i;
+  unsigned int proc;
+
+#ifdef DEBUG
+  printf ("%s\n", __func__);
+#endif
 
   switch (packet_opcode)
     {
+    case RADEON_CP_NOP:
+      proc =
+	dump_packet3_noop (packet_type, packet_cnt, packet_opcode, mem_map);
+      break;
     default:
+      printf ("opcode = 0x%02x\n", packet_opcode);
       assert (0);
       break;
     }
 
-  return packet_cnt + 1;
+  return proc;
 }
 
 static void
@@ -154,7 +178,9 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 			  &mem_map[i + 1]);
 	  break;
 	case 0x3:
-	  proc = dump_packet3 (packet_type, packet_cnt, packet_opcode);
+	  proc =
+	    dump_packet3 (packet_type, packet_cnt, packet_opcode,
+			  &mem_map[i + 1]);
 	  break;
 	default:
 	  assert (0);
@@ -162,6 +188,7 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	}
     }
 
+  printf ("i = %d tail = %d\n", i - head, tail - head);
   assert (i == tail);
 }
 
