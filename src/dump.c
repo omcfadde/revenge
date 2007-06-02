@@ -27,7 +27,7 @@
 #include "main.h"
 #include "ring.h"
 
-#define DEBUG
+/* #define DEBUG */
 
 static unsigned int ib_addr = 0, ib_size = 0;
 
@@ -53,7 +53,9 @@ dump_reg (unsigned int key, unsigned int val)
       ib_addr = ib_size = 0;
       break;
     default:
-      //analyze_reg (key, val);
+#ifndef DEBUG
+      analyze_reg (key, val);
+#endif
       break;
     }
 }
@@ -258,9 +260,13 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 void
 dump (void)
 {
+#ifndef DEBUG
   analyze_begin ();
+#endif
 
   dump_packet (ring_head, ring_tail, ring_mem_map);
 
+#ifndef DEBUG
   analyze_end ();
+#endif
 }
