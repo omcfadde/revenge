@@ -67,13 +67,16 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 {
   int i;
   unsigned int mapped_reg;
+  unsigned int proc;
 
 #ifdef DEBUG
   printf ("%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n", __func__,
 	  packet_type, packet_cnt, packet_bit15, packet_reg);
 #endif
 
-  for (i = 0; i < packet_cnt + 1; i++)
+  proc = packet_cnt + 1;
+
+  for (i = 0; i < proc; i++)
     {
       if (packet_bit15)
 	{
@@ -86,7 +89,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
       dump_reg (mapped_reg, mem_map[i]);
     }
 
-  return packet_cnt + 1;
+  return proc;
 }
 
 static int
@@ -102,49 +105,6 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
   return 0;
 }
 
-/* I think this is correct. */
-static int
-dump_packet3_noop (unsigned int packet_type, unsigned int packet_cnt,
-		   unsigned int packet_opcode, unsigned int *mem_map)
-{
-  int i;
-  unsigned int proc;
-
-  proc = packet_cnt + 1;
-
-  for (i = 0; i < proc; i++)
-    {
-#ifdef DEBUG
-      printf ("%s: 0x%08x\n", __func__, mem_map[i]);
-#endif
-      assert (mem_map[i] == 0x0);
-    }
-
-  return proc;
-}
-
-/* I think this has a bug in the length calculation. */
-static int
-dump_packet3_draw_immediate (unsigned int packet_type,
-			     unsigned int packet_cnt,
-			     unsigned int packet_opcode,
-			     unsigned int *mem_map)
-{
-  int i;
-  unsigned int proc;
-
-  proc = packet_cnt + 1;
-
-  for (i = 0; i < proc; i++)
-    {
-#ifdef DEBUG
-      printf ("%s: 0x%08x\n", __func__, mem_map[i]);
-#endif
-    }
-
-  return proc;
-}
-
 static int
 dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_opcode, unsigned int *mem_map)
@@ -157,20 +117,13 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 	  packet_cnt, packet_opcode);
 #endif
 
-  switch (packet_opcode)
+  proc = packet_cnt + 1;
+
+  for (i = 0; i < proc; i++)
     {
-    case RADEON_CP_NOP:
-      proc =
-	dump_packet3_noop (packet_type, packet_cnt, packet_opcode, mem_map);
-      break;
-    case RADEON_CP_3D_DRAW_IMMD_2:
-      proc =
-	dump_packet3_draw_immediate (packet_type, packet_cnt, packet_opcode,
-				     mem_map);
-      break;
-    default:
-      assert (0);
-      break;
+#ifdef DEBUG
+      printf ("%s: 0x%08x\n", __func__, mem_map[i]);
+#endif
     }
 
   return proc;
