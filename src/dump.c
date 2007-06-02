@@ -18,6 +18,7 @@
  */
 
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -35,6 +36,12 @@ static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 static void
 dump_reg (unsigned int key, unsigned int val)
 {
+  assert (key);
+
+#ifdef DEBUG
+  printf ("%s: key = 0x%04x val = 0x%08x\n", __func__, key, val);
+#endif
+
   switch (key)
     {
     case RADEON_CP_IB_BASE:
@@ -60,7 +67,8 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
   unsigned int mapped_reg;
 
 #ifdef DEBUG
-  printf ("%s\n", __func__);
+  printf ("%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n", __func__,
+	  packet_type, packet_cnt, packet_bit15, packet_reg);
 #endif
 
   for (i = 0; i < packet_cnt + 1; i++)
@@ -85,7 +93,8 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int *mem_map)
 {
 #ifdef DEBUG
-  printf ("%s\n", __func__);
+  printf ("%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n", __func__,
+	  packet_type, packet_cnt, packet_bit15, packet_reg);
 #endif
 
   return 0;
@@ -96,17 +105,40 @@ dump_packet3_noop (unsigned int packet_type, unsigned int packet_cnt,
 		   unsigned int packet_opcode, unsigned int *mem_map)
 {
   int i;
+  unsigned int proc;
 
-#ifdef DEBUG
-  printf ("%s\n", __func__);
-#endif
+  proc = packet_cnt + 1;
 
-  for (i = 0; i < packet_cnt + 1; i++)
+  for (i = 0; i < proc; i++)
     {
+#ifdef DEBUG
+      printf ("%s: 0x%08x\n", __func__, mem_map[i]);
+#endif
       assert (mem_map[i] == 0x0);
     }
 
-  return packet_cnt + 1;
+  return proc;
+}
+
+static int
+dump_packet3_draw_immediate (unsigned int packet_type,
+			     unsigned int packet_cnt,
+			     unsigned int packet_opcode,
+			     unsigned int *mem_map)
+{
+  int i;
+  unsigned int proc;
+
+  proc = (packet_cnt + 2) * 4;
+
+  for (i = 0; i < proc; i++)
+    {
+#ifdef DEBUG
+      printf ("%s: 0x%08x\n", __func__, mem_map[i]);
+#endif
+    }
+
+  return proc;
 }
 
 static int
@@ -117,7 +149,8 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
   unsigned int proc;
 
 #ifdef DEBUG
-  printf ("%s\n", __func__);
+  printf ("%s: type = %d cnt = %d opcode = 0x%02x\n", __func__,
+	  packet_type, packet_cnt, packet_opcode);
 #endif
 
   switch (packet_opcode)
@@ -126,8 +159,12 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
       proc =
 	dump_packet3_noop (packet_type, packet_cnt, packet_opcode, mem_map);
       break;
+    case RADEON_CP_3D_DRAW_IMMD_2:
+      proc =
+	dump_packet3_draw_immediate (packet_type, packet_cnt, packet_opcode,
+				     mem_map);
+      break;
     default:
-      printf ("opcode = 0x%02x\n", packet_opcode);
       assert (0);
       break;
     }
@@ -186,20 +223,15 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	  assert (0);
 	  break;
 	}
-    }
 
-  printf ("i = %d tail = %d\n", i - head, tail - head);
-  assert (i == tail);
+      assert (i + proc + 1 <= tail);
+    }
 }
 
 static void
 dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
   unsigned int *mapped_ib_addr;
-
-#ifdef DEBUG
-  printf ("%s\n", __func__);
-#endif
 
   mapped_ib_addr =
     (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
