@@ -100,6 +100,7 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
   return 0;
 }
 
+/* I think this is correct. */
 static int
 dump_packet3_noop (unsigned int packet_type, unsigned int packet_cnt,
 		   unsigned int packet_opcode, unsigned int *mem_map)
@@ -120,6 +121,7 @@ dump_packet3_noop (unsigned int packet_type, unsigned int packet_cnt,
   return proc;
 }
 
+/* I think this has a bug in the length calculation. */
 static int
 dump_packet3_draw_immediate (unsigned int packet_type,
 			     unsigned int packet_cnt,
