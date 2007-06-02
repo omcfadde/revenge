@@ -28,7 +28,7 @@
 #include "test.h"
 
 int option_blob = 0;		/* define to 1 if you're using the blob. */
-int option_ioctl = 1;		/* define to 1 for ioctl dumping. */
+int option_ioctl = 0;		/* define to 1 for ioctl dumping. */
 int option_verbose = 0;		/* define to 1 for printing of information that
 				   is not normally meaningful; for example, the
 				   ring head/tail pointers. Information that is
