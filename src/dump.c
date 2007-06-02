@@ -131,7 +131,7 @@ dump_packet3_draw_immediate (unsigned int packet_type,
   int i;
   unsigned int proc;
 
-  proc = (packet_cnt + 2) * 4;
+  proc = packet_cnt + 1;
 
   for (i = 0; i < proc; i++)
     {
@@ -151,8 +151,8 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
   unsigned int proc;
 
 #ifdef DEBUG
-  printf ("%s: type = %d cnt = %d opcode = 0x%02x\n", __func__,
-	  packet_type, packet_cnt, packet_opcode);
+  printf ("%s: type = %d cnt = %d opcode = 0x%02x\n", __func__, packet_type,
+	  packet_cnt, packet_opcode);
 #endif
 
   switch (packet_opcode)
@@ -172,6 +172,13 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
     }
 
   return proc;
+}
+
+/* shouldn't happen... */
+static int
+dump_null (void)
+{
+  return 1;
 }
 
 static void
@@ -202,32 +209,39 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 
       packet_opcode = (mem_map[i] >> 8) & 0xff;
 
-      assert (mem_map[i]);
-
-      switch (packet_type)
+      if (mem_map[i])
 	{
-	case 0x0:
-	  proc =
-	    dump_packet0 (packet_type, packet_cnt, packet_bit15, packet_reg,
-			  &mem_map[i + 1]);
-	  break;
-	case 0x2:
-	  proc =
-	    dump_packet2 (packet_type, packet_cnt, packet_bit15, packet_reg,
-			  &mem_map[i + 1]);
-	  break;
-	case 0x3:
-	  proc =
-	    dump_packet3 (packet_type, packet_cnt, packet_opcode,
-			  &mem_map[i + 1]);
-	  break;
-	default:
-	  assert (0);
-	  break;
+	  switch (packet_type)
+	    {
+	    case 0x0:
+	      proc =
+		dump_packet0 (packet_type, packet_cnt, packet_bit15,
+			      packet_reg, &mem_map[i + 1]);
+	      break;
+	    case 0x2:
+	      proc =
+		dump_packet2 (packet_type, packet_cnt, packet_bit15,
+			      packet_reg, &mem_map[i + 1]);
+	      break;
+	    case 0x3:
+	      proc =
+		dump_packet3 (packet_type, packet_cnt, packet_opcode,
+			      &mem_map[i + 1]);
+	      break;
+	    default:
+	      assert (0);
+	      break;
+	    }
+	}
+      else
+	{
+	  proc = dump_null ();
 	}
 
       assert (i + proc + 1 <= tail);
     }
+
+  assert (i == tail);
 }
 
 static void
