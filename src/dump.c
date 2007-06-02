@@ -27,8 +27,6 @@
 #include "main.h"
 #include "ring.h"
 
-/* #define DEBUG */
-
 static unsigned int ib_addr = 0, ib_size = 0;
 
 static void dump_ib (unsigned int ib_addr, unsigned int ib_size);

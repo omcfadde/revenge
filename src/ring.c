@@ -84,9 +84,11 @@ alloc_ring (void)
 
   ring_head = ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
 
+#ifdef DEBUG
   printf
     ("ring_offset = 0x%08x ring_size = 0x%08x ring_head = ring_tail = 0x%08x\n",
      ring_offset, ring_size, ring_head);
+#endif
 }
 
 void

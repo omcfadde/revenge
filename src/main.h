@@ -20,6 +20,8 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+/* #define DEBUG */
+
 #define REG_ADDR 0xe5000000	/* lspci */
 #define REG_SIZE 0x7d4		/* lspci */
 
