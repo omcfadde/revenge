@@ -133,7 +133,11 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 static int
 dump_null (void)
 {
-  return 1;
+#ifdef DEBUG
+  printf ("%s\n", __func__);
+#endif
+
+  return 0;
 }
 
 static void
