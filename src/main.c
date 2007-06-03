@@ -1,5 +1,6 @@
 /*
  * $Id$
+ * Copyright (C) 2007  Christoph Brill <egore911@egore911.de>
  * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,6 +28,8 @@
 #include "ring.h"
 #include "test.h"
 
+#include "config.h"
+
 int option_blob = 0;		/* define to 1 if you're using the blob. */
 int option_ioctl = 0;		/* define to 1 for ioctl dumping. */
 int option_verbose = 0;		/* define to 1 for printing of information that
@@ -35,7 +38,7 @@ int option_verbose = 0;		/* define to 1 for printing of information that
 				   normally meaningful is always printed. */
 
 int option_ioctl_before = 0;	/* define to 1 to dump the (write) ioctls before
-				   executing them as well as after execuding
+				   executing them as well as after executing
 				   them (the default) see below. */
 
 /*
@@ -99,11 +102,50 @@ alloc_opengl (void)
 }
 
 /*
+ * This simple method is used to parse commandline options. I might replace this
+ * with getopt_long in the future...
+ */
+void parse_options(int argc, char **argv)
+{
+  int i;
+  char **options;
+
+  options = argv;
+  for (i = 0; i < argc; i++, options++) {
+    char *option = *options;
+    if (*option == '-') {
+      if ((strcmp("h", option+1) == 0) || (strcmp("-help", option+1) == 0)) {
+      	printf("%s help\n-----\n", PACKAGE_STRING);
+	printf("Option                  Short   Information\n");
+	printf(" --trace-blob                   Trace the blob for information\n");
+        printf(" --trace-ioctls                 Trace the ioctls access\n");
+	printf(" --trace-ioctls-before          Trace the ioctls before writing them\n");
+	printf(" --help                 -h      Print this help screen and exit\n");
+	printf(" --verbose              -v      Verbose information\n");
+        exit(0);
+      } else if (strcmp("-trace-blob", option+1) == 0) {
+        printf("enabling blob tracing\n");
+	option_blob = 1;
+      } else if (strcmp("-trace-ioctls", option+1) == 0) {
+        printf("Enabling ioctls tracing\n");
+	option_ioctl = 1;
+      } else if (strcmp("-trace-ioctls-before", option+1) == 0) {
+        printf("Dumping ioctls before writing them\n");
+	option_ioctl_before = 1;
+      } else if ((strcmp("v", option+1) == 0) || (strcmp("-verbose", option+1) == 0)) {
+        printf("Enabling verbose output\n");
+        option_verbose = 1;
+      } else {
+        printf("Unknown option: %s\n", option);
+      }
+    }
+  }
+}
+
+/*
  * TODO: add functionality to read/write any register (like radeontool), in
  * addidtion to the normal functionality of running the tests and creating a
  * dump.
- *
- * TODO: add option parsing (see option_* above)
  *
  * TODO: add ability to dump MMIO stuff via interfacing with the kernel. the
  * kernel would be patched with the kmmio patch, and this program will contain
@@ -117,6 +159,8 @@ alloc_opengl (void)
 int
 main (int argc, char **argv)
 {
+  parse_options(argc, argv);
+
   if (alloc_opengl ())
     {
       return 1;
