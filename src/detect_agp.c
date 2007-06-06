@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "detect.h"
+#include "detect_agp.h"
 
 unsigned int agp_addr, agp_size;
 
