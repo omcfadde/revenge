@@ -25,6 +25,7 @@
 #include <unistd.h>
 
 #include "dump.h"
+#include "main.h"
 #include "misc.h"
 #include "ring.h"
 #include "test.h"
@@ -252,13 +253,15 @@ test (void)
 
   for (test = tests; test->name; test++)
     {
-#if 0
-      open_fd (test->name);
-#endif
+      if (option_per_file)
+	{
+	  open_fd (test->name);
+	}
       printf ("%s: %s\n", __func__, test->name);
       test->func ();
-#if 0
-      close_fd ();
-#endif
+      if (option_per_file)
+	{
+	  close_fd ();
+	}
     }
 }

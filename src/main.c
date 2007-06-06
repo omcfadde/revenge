@@ -40,6 +40,7 @@ int option_verbose = 0;		/* define to 1 for printing of information that
 int option_ioctl_before = 0;	/* define to 1 to dump the (write) ioctls before
 				   executing them as well as after executing
 				   them (the default) see below. */
+int option_per_file = 0;	/* define to 1 for per file stdout redirection. */
 
 /*
  * Note about ioctls.
@@ -122,6 +123,7 @@ void parse_options(int argc, char **argv)
 	printf(" --trace-ioctls-before          Trace the ioctls before writing them\n");
 	printf(" --help                 -h      Print this help screen and exit\n");
 	printf(" --verbose              -v      Verbose information\n");
+	printf(" --per-file                     Redirect output to a separate file for each test\n");
         exit(0);
       } else if (strcmp("-trace-blob", option+1) == 0) {
         printf("enabling blob tracing\n");
@@ -135,6 +137,9 @@ void parse_options(int argc, char **argv)
       } else if ((strcmp("v", option+1) == 0) || (strcmp("-verbose", option+1) == 0)) {
         printf("Enabling verbose output\n");
         option_verbose = 1;
+      } else if (strcmp("-per-file", option+1) == 0) {
+        printf("Enabling per file redirection\n");
+        option_per_file = 1;
       } else {
         printf("Unknown option: %s\n", option);
       }
