@@ -108,10 +108,9 @@ alloc_opengl (void)
       return 1;
     }
 
-  if (!
-      (Surface =
-       SDL_SetVideoMode (640, 480, 0,
-			 SDL_FULLSCREEN | SDL_NOFRAME | SDL_OPENGL)))
+  if (!(Surface = SDL_SetVideoMode (640, 480, 0,
+				    /* SDL_FULLSCREEN | */
+				    SDL_NOFRAME | SDL_OPENGL)))
     {
       printf ("%s\n", SDL_GetError ());
       SDL_Quit ();
