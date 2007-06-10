@@ -53,12 +53,12 @@ analyze_final_end (void)
 	{
 	  if ((resolv = resolv_reg (i)))
 	    {
-	      printf ("%23s (0x%04x) <- 0x%08x\n", resolv, i, regs[i]);
+	      printf ("%33s 0x%04x <- 0x%08x\n", resolv, i, regs[i]);
 	      free (resolv);
 	    }
 	  else
 	    {
-	      printf ("                          0x%04x <- 0x%08x\n", i,
+	      printf ("                                  0x%04x <- 0x%08x\n", i,
 		      regs[i]);
 	    }
 	}
