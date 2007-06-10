@@ -9,8 +9,8 @@ revenge_SOURCES = \
 		  analyze_final.h \
 		  analyze_raw.c \
 		  analyze_raw.h \
-		  detect_agp.c \
-		  detect_agp.h \
+		  detect.c \
+		  detect.h \
 		  dump.c \
 		  dump.h \
 		  ioctl.c \

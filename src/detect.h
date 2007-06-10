@@ -17,10 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_AGP_H__
-#define __DETECT_AGP_H__
+#ifndef __DETECT_H__
+#define __DETECT_H__
 
-extern unsigned int agp_addr, agp_size;
-void alloc_agp_aperture (void);
+extern unsigned int agp_addr, agp_len;
+extern unsigned int reg_addr, reg_len;
+void detect_aperture (void);
 
 #endif

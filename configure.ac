@@ -15,6 +15,10 @@ AC_PROG_CC
 AC_CHECK_LIB([GL], [main])
 # FIXME: Replace `main' with a function in `-lSDL':
 AC_CHECK_LIB([SDL], [main])
+# FIXME: Replace `main' with a function in `-lpci':
+AC_CHECK_LIB([pci], [main])
+# FIXME: Replace `main' with a function in `-lz':
+AC_CHECK_LIB([z], [main])
 
 # Checks for header files.
 AC_HEADER_STDC

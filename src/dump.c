@@ -23,7 +23,7 @@
 #include <stdlib.h>
 
 #include "analyze.h"
-#include "detect_agp.h"
+#include "detect.h"
 #include "main.h"
 #include "ring.h"
 

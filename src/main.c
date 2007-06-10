@@ -51,7 +51,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "detect_agp.h"
+#include "detect.h"
 #include "main.h"
 #include "ring.h"
 #include "test.h"
@@ -146,12 +146,13 @@ main (int argc, char **argv)
 	}
     }
 
+  detect_aperture ();
+
   if (alloc_opengl ())
     {
       return 1;
     }
 
-  alloc_agp_aperture ();
   alloc_ring ();
   test ();
   free_ring ();

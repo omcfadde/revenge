@@ -22,9 +22,6 @@
 
 /* #define DEBUG */
 
-#define REG_ADDR 0xe5000000	/* lspci */
-#define REG_SIZE 0x7d4		/* lspci */
-
 #define RADEON_MC_AGP_LOCATION		0x014c
 #define RADEON_CP_RB_BASE		0x0700
 #define RADEON_CP_RB_CNTL		0x0704
