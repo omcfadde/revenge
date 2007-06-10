@@ -20,8 +20,7 @@
 #ifndef __DETECT_H__
 #define __DETECT_H__
 
-extern unsigned int agp_addr, agp_len;
 extern unsigned int reg_addr, reg_len;
-void detect_aperture (void);
+void detect_reg_aperture (void);
 
 #endif

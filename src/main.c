@@ -58,6 +58,7 @@
 #include <unistd.h>
 
 #include "detect.h"
+#include "detect_agp.h"
 #include "main.h"
 #include "ring.h"
 #include "test.h"
@@ -154,7 +155,8 @@ main (int argc, char **argv)
 	}
     }
 
-  detect_aperture ();
+  detect_agp_aperture ();
+  detect_reg_aperture ();
 
   if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
     {

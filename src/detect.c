@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-unsigned int agp_addr, agp_len;
 unsigned int reg_addr, reg_len;
 
 static unsigned int
@@ -34,11 +33,9 @@ get_conf_long (unsigned char *config, unsigned int pos)
 /*
  * Identify the register aperture by finding a non-prefetchable 64K block of
  * memory.
- *
- * Identify the AGP aperture by finding a prefetchable > 32M block of memory.
  */
 void
-detect_aperture (void)
+detect_reg_aperture (void)
 {
   char filter_slot[] = "00.0", filter_id[] = "1002:";
   int i;
@@ -77,15 +74,6 @@ detect_aperture (void)
 		    {
 		      addr = pdev->base_addr[i] & PCI_ADDR_MEM_MASK;
 		      len = pdev->size[i];
-
-		      if ((flag & PCI_BASE_ADDRESS_MEM_PREFETCH)
-			  && len >= 33554432)
-			{
-			  agp_addr = (unsigned int) addr;
-			  agp_len = (unsigned int) len;
-			  printf ("AGP Aperture 0x%08x (0x%08x)\n", agp_addr,
-				  agp_len);
-			}
 
 		      if (!(flag & PCI_BASE_ADDRESS_MEM_PREFETCH)
 			  && len == 65536)

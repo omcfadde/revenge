@@ -17,34 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef __DETECT_AGP_H__
+#define __DETECT_AGP_H__
 
-#include "detect.h"
-#include "detect_agp.h"
-#include "main.h"
-#include "ring.h"
+extern unsigned int agp_addr, agp_len;
+void detect_agp_aperture (void);
 
-unsigned int ring_head, ring_size, ring_tail;
-
-void
-alloc_ring (void)
-{
-  unsigned int ring_offset;
-
-  ring_offset =
-    mem_map[RADEON_CP_RB_BASE >> 2] -
-    ((mem_map[RADEON_MC_AGP_LOCATION >> 2] & 0xffff) << 16);
-
-  ring_mem_map = (unsigned int *) ((char *) agp_mem_map + ring_offset);
-
-  ring_size = (1 << ((mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
-
-  ring_head = ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
-
-#ifdef DEBUG
-  printf
-    ("ring_offset = 0x%08x ring_size = 0x%08x ring_head = ring_tail = 0x%08x\n",
-     ring_offset, ring_size, ring_head);
 #endif
-}
