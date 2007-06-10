@@ -213,8 +213,16 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 }
 
 void
-dump (void)
+dump_before (void)
 {
+  ring_head = ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
+}
+
+void
+dump_after (void)
+{
+  ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
+
 #ifndef DEBUG
   analyze_begin ();
 #endif

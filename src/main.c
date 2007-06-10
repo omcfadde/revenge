@@ -47,9 +47,15 @@
  */
 
 #include <SDL.h>
+#include <assert.h>
+#include <fcntl.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include "detect.h"
 #include "main.h"
@@ -124,6 +130,9 @@ static struct option long_options[] = {
   {0, 0, 0, 0},
 };
 
+int mem_fd;
+unsigned int *agp_mem_map, *mem_map, *ring_mem_map;
+
 int
 main (int argc, char **argv)
 {
@@ -148,6 +157,25 @@ main (int argc, char **argv)
 
   detect_aperture ();
 
+  if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
+    {
+      return 1;
+    }
+
+  if ((mem_map =
+       mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+	     reg_addr)) < 0)
+    {
+      return 1;
+    }
+
+  if ((agp_mem_map =
+       mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+	     agp_addr)) < 0)
+    {
+      return 1;
+    }
+
   if (alloc_opengl ())
     {
       return 1;
@@ -155,7 +183,18 @@ main (int argc, char **argv)
 
   alloc_ring ();
   test ();
-  free_ring ();
+
+  if (munmap (agp_mem_map, agp_len) < 0)
+    {
+      assert (0);
+    }
+
+  if (munmap (mem_map, reg_len) < 0)
+    {
+      assert (0);
+    }
+
+  close (mem_fd);
 
   return 0;
 }

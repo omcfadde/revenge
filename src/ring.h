@@ -20,12 +20,7 @@
 #ifndef __RING_H__
 #define __RING_H__
 
-extern int mem_fd;
-extern unsigned int *agp_mem_map, *mem_map, *ring_mem_map;
 extern unsigned int ring_head, ring_size, ring_tail;
-void free_ring (void);
 void alloc_ring (void);
-void before_ring (void);
-void after_ring (void);
 
 #endif

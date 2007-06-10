@@ -41,15 +41,14 @@ static void
 before (void)
 {
   quiescent ();
-  before_ring ();
+  dump_before ();
 }
 
 static void
 after (void)
 {
   quiescent ();
-  after_ring ();
-  dump ();
+  dump_after ();
 }
 
 static void

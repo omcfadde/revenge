@@ -20,6 +20,7 @@
 #ifndef __DUMP_H__
 #define __DUMP_H__
 
-void dump (void);
+void dump_before (void);
+void dump_after (void);
 
 #endif
