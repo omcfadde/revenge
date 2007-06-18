@@ -17,11 +17,76 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <assert.h>
+#include <ctype.h>
 #include <pci/pci.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-unsigned int reg_addr, reg_len;
+unsigned int agp_addr, agp_len, reg_addr, reg_len;
+
+static int
+is_agp_iomem (int level, char *name)
+{
+  if (strcmp (name, "0000:00:00.0") == 0 || strcmp (name, "GART") == 0)
+    {
+      return 1;
+    }
+
+  return 0;
+}
+
+void
+detect_agp_aperture (void)
+{
+  char buf[BUFSIZ];
+  FILE *file;
+
+  if (!(file = fopen ("/proc/iomem", "r")))
+    {
+      assert (0);
+    }
+
+  while (fgets (buf, BUFSIZ, file))
+    {
+      int level = 0;
+      char *p = buf;
+      while (*p && isspace (*p))
+	{
+	  level++;
+	  p++;
+	}
+
+      unsigned int start, end;
+      int n, ret;
+      ret = sscanf (p, "%x-%x : %n", &start, &end, &n);
+      if (ret < 2)
+	{
+	  continue;
+	}
+
+      p += n;
+      n = strlen (p);
+      if (p[n - 1] == '\n')
+	{
+	  p[n - 1] = '\0';
+	}
+
+      if (is_agp_iomem (level, p))
+	{
+	  agp_addr = start;
+	  agp_len = end - start + 1;
+	  printf ("AGP Aperture 0x%08x (0x%08x)\n", agp_addr, agp_len);
+	  fclose (file);
+	  return;
+	}
+    }
+
+  fclose (file);
+
+  assert (0);
+}
 
 static unsigned int
 get_conf_long (unsigned char *config, unsigned int pos)
@@ -30,10 +95,6 @@ get_conf_long (unsigned char *config, unsigned int pos)
     (config[pos + 3] << 24);
 }
 
-/*
- * Identify the register aperture by finding a non-prefetchable 64K block of
- * memory.
- */
 void
 detect_reg_aperture (void)
 {

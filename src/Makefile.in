@@ -44,9 +44,9 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = analyze.$(OBJEXT) analyze_final.$(OBJEXT) \
-	analyze_raw.$(OBJEXT) detect.$(OBJEXT) detect_agp.$(OBJEXT) \
-	dump.$(OBJEXT) main.$(OBJEXT) misc.$(OBJEXT) resolv.$(OBJEXT) \
-	ring.$(OBJEXT) test.$(OBJEXT)
+	analyze_raw.$(OBJEXT) detect.$(OBJEXT) dump.$(OBJEXT) \
+	main.$(OBJEXT) misc.$(OBJEXT) resolv.$(OBJEXT) ring.$(OBJEXT) \
+	test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -155,8 +155,6 @@ revenge_SOURCES = \
 		  analyze_raw.h \
 		  detect.c \
 		  detect.h \
-		  detect_agp.c \
-		  detect_agp.h \
 		  dump.c \
 		  dump.h \
 		  main.c \
@@ -240,7 +238,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze_final.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze_raw.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect_agp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc.Po@am__quote@

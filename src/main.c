@@ -30,7 +30,6 @@
 #include <unistd.h>
 
 #include "detect.h"
-#include "detect_agp.h"
 #include "main.h"
 #include "ring.h"
 #include "test.h"

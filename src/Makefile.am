@@ -11,8 +11,6 @@ revenge_SOURCES = \
 		  analyze_raw.h \
 		  detect.c \
 		  detect.h \
-		  detect_agp.c \
-		  detect_agp.h \
 		  dump.c \
 		  dump.h \
 		  main.c \
