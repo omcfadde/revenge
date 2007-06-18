@@ -225,9 +225,9 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 void
 dump_before (void)
 {
-  rb_addr = mem_map[RADEON_CP_RB_BASE >> 2];
-  rb_head = mem_map[RADEON_CP_RB_RPTR >> 2];
-  rb_size = (1 << ((mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
+  rb_addr = reg_mem_map[RADEON_CP_RB_BASE >> 2];
+  rb_head = reg_mem_map[RADEON_CP_RB_RPTR >> 2];
+  rb_size = (1 << ((reg_mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
 }
 
 void
@@ -235,7 +235,7 @@ dump_after (void)
 {
   unsigned int *rb_mem_map;
 
-  rb_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
+  rb_tail = reg_mem_map[RADEON_CP_RB_RPTR >> 2];
 
 #ifndef DEBUG
   analyze_begin ();

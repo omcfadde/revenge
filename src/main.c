@@ -91,7 +91,7 @@ static struct option long_options[] = {
 };
 
 int mem_fd;
-unsigned int *agp_mem_map, *mem_map;
+unsigned int *agp_mem_map, *reg_mem_map;
 
 int
 main (int argc, char **argv)
@@ -123,7 +123,7 @@ main (int argc, char **argv)
       return 1;
     }
 
-  if ((mem_map =
+  if ((reg_mem_map =
        mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 	     reg_addr)) < 0)
     {
@@ -149,7 +149,7 @@ main (int argc, char **argv)
       assert (0);
     }
 
-  if (munmap (mem_map, reg_len) < 0)
+  if (munmap (reg_mem_map, reg_len) < 0)
     {
       assert (0);
     }
