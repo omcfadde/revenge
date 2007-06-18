@@ -202,15 +202,9 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 }
 
 static unsigned int *
-memory_get_ib (unsigned int ib_addr, unsigned int ib_size)
+memory_fetch (unsigned int addr, unsigned int size)
 {
-  return (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
-}
-
-static unsigned int *
-memory_get_rb (unsigned int rb_addr, unsigned int rb_size)
-{
-  return (unsigned int *) ((char *) agp_mem_map + (rb_addr - agp_addr));
+  return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
 }
 
 static void
@@ -218,7 +212,7 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
   unsigned int *ib_mem_map;
 
-  ib_mem_map = memory_get_ib (ib_addr, ib_size);
+  ib_mem_map = memory_fetch (ib_addr, ib_size);
   dump_packet (0, ib_size, ib_mem_map);
 }
 
@@ -241,7 +235,7 @@ dump_rb_post (void)
   analyze_begin ();
 #endif
 
-  rb_mem_map = memory_get_rb (rb_addr, rb_size);
+  rb_mem_map = memory_fetch (rb_addr, rb_size);
   dump_packet (rb_head, rb_tail, rb_mem_map);
 
 #ifndef DEBUG
