@@ -15,14 +15,6 @@ revenge_SOURCES = \
 		  detect_agp.h \
 		  dump.c \
 		  dump.h \
-		  ioctl.c \
-		  ioctl.h \
-		  ioctl_blob.c \
-		  ioctl_blob.h \
-		  ioctl_drm.c \
-		  ioctl_drm.h \
-		  ioctl_radeon.c \
-		  ioctl_radeon.h \
 		  main.c \
 		  main.h \
 		  misc.c \

@@ -45,9 +45,8 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = analyze.$(OBJEXT) analyze_final.$(OBJEXT) \
 	analyze_raw.$(OBJEXT) detect.$(OBJEXT) detect_agp.$(OBJEXT) \
-	dump.$(OBJEXT) ioctl.$(OBJEXT) ioctl_blob.$(OBJEXT) \
-	ioctl_drm.$(OBJEXT) ioctl_radeon.$(OBJEXT) main.$(OBJEXT) \
-	misc.$(OBJEXT) resolv.$(OBJEXT) ring.$(OBJEXT) test.$(OBJEXT)
+	dump.$(OBJEXT) main.$(OBJEXT) misc.$(OBJEXT) resolv.$(OBJEXT) \
+	ring.$(OBJEXT) test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -160,14 +159,6 @@ revenge_SOURCES = \
 		  detect_agp.h \
 		  dump.c \
 		  dump.h \
-		  ioctl.c \
-		  ioctl.h \
-		  ioctl_blob.c \
-		  ioctl_blob.h \
-		  ioctl_drm.c \
-		  ioctl_drm.h \
-		  ioctl_radeon.c \
-		  ioctl_radeon.h \
 		  main.c \
 		  main.h \
 		  misc.c \
@@ -251,10 +242,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect_agp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_blob.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_drm.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_radeon.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/misc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/resolv.Po@am__quote@

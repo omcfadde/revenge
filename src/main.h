@@ -70,9 +70,6 @@
 #	define RADEON_CNTL_BITBLT_MULTI		0x9B
 //#     define RADEON_CNTL_SET_SCISSORS         0xC0001E00
 
-extern int option_blob;
-extern int option_ioctl;
-extern int option_ioctl_before;
 extern int option_per_file;
 extern int option_verbose;
 extern int mem_fd;
