@@ -70,6 +70,7 @@
 #	define RADEON_CNTL_BITBLT_MULTI		0x9B
 //#     define RADEON_CNTL_SET_SCISSORS         0xC0001E00
 
+extern int option_agp;
 extern int option_verbose;
 extern int mem_fd;
 extern unsigned int *agp_mem_map, *reg_mem_map;

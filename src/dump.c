@@ -204,7 +204,14 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 static unsigned int *
 memory_fetch (unsigned int addr, unsigned int size)
 {
-  return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
+  if (option_agp)
+    {
+      return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
+    }
+
+  assert (0);
+
+  return NULL;
 }
 
 static void

@@ -35,10 +35,8 @@
 
 #include "config.h"
 
-int option_verbose = 0;		/* define to 1 for printing of information that
-				   is not normally meaningful; for example, the
-				   ring head/tail pointers. Information that is
-				   normally meaningful is always printed. */
+int option_agp = 1;
+int option_verbose = 0;
 
 static int
 alloc_opengl (void)
@@ -86,6 +84,7 @@ alloc_opengl (void)
 }
 
 static struct option long_options[] = {
+  {"agp", no_argument, &option_verbose, 1},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };
@@ -130,11 +129,14 @@ main (int argc, char **argv)
       return 1;
     }
 
-  if ((agp_mem_map =
-       mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-	     agp_addr)) < 0)
+  if (option_agp)
     {
-      return 1;
+      if ((agp_mem_map =
+	   mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+		 agp_addr)) < 0)
+	{
+	  return 1;
+	}
     }
 
   if (alloc_opengl ())
@@ -144,9 +146,12 @@ main (int argc, char **argv)
 
   test ();
 
-  if (munmap (agp_mem_map, agp_len) < 0)
+  if (option_agp)
     {
-      assert (0);
+      if (munmap (agp_mem_map, agp_len) < 0)
+	{
+	  assert (0);
+	}
     }
 
   if (munmap (reg_mem_map, reg_len) < 0)
