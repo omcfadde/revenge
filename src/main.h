@@ -72,7 +72,7 @@
 
 extern int option_verbose;
 extern int mem_fd;
-extern unsigned int *agp_mem_map, *mem_map, *ring_mem_map;
+extern unsigned int *agp_mem_map, *mem_map;
 int main (int argc, char **argv);
 
 #endif

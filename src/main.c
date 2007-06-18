@@ -31,7 +31,6 @@
 
 #include "detect.h"
 #include "main.h"
-#include "ring.h"
 #include "test.h"
 
 #include "config.h"
@@ -92,7 +91,7 @@ static struct option long_options[] = {
 };
 
 int mem_fd;
-unsigned int *agp_mem_map, *mem_map, *ring_mem_map;
+unsigned int *agp_mem_map, *mem_map;
 
 int
 main (int argc, char **argv)
@@ -143,7 +142,6 @@ main (int argc, char **argv)
       return 1;
     }
 
-  alloc_ring ();
   test ();
 
   if (munmap (agp_mem_map, agp_len) < 0)

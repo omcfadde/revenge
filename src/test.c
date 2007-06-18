@@ -26,7 +26,6 @@
 
 #include "dump.h"
 #include "main.h"
-#include "ring.h"
 #include "test.h"
 
 static void

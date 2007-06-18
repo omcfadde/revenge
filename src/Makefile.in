@@ -45,7 +45,7 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = analyze.$(OBJEXT) analyze_final.$(OBJEXT) \
 	analyze_raw.$(OBJEXT) detect.$(OBJEXT) dump.$(OBJEXT) \
-	main.$(OBJEXT) resolv.$(OBJEXT) ring.$(OBJEXT) test.$(OBJEXT)
+	main.$(OBJEXT) resolv.$(OBJEXT) test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -160,8 +160,6 @@ revenge_SOURCES = \
 		  main.h \
 		  resolv.c \
 		  resolv.h \
-		  ring.c \
-		  ring.h \
 		  test.c \
 		  test.h
 
@@ -238,7 +236,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/resolv.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ring.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
 
 .c.o:

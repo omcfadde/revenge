@@ -25,9 +25,9 @@
 #include "analyze.h"
 #include "detect.h"
 #include "main.h"
-#include "ring.h"
 
 static unsigned int ib_addr = 0, ib_size = 0;
+static unsigned int rb_head = 0, rb_size = 0, rb_tail = 0;
 
 static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 
@@ -157,7 +157,7 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
    * $4 = 11111111111111111001111111111111
    */
 
-  for (i = head; i < tail; i += proc + 1, i &= ring_size - 1)
+  for (i = head; i < tail; i += proc + 1, i &= rb_size - 1)
     {
       packet_type = (mem_map[i] >> 30) & 0x3;
       packet_cnt = (mem_map[i] >> 16) & 0x3fff;
@@ -204,31 +204,36 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 static void
 dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
-  unsigned int *mapped_ib_addr;
+  unsigned int *ib_mem_map;
 
-  mapped_ib_addr =
+  ib_mem_map =
     (unsigned int *) ((char *) agp_mem_map + (ib_addr - agp_addr));
 
-  dump_packet (0, ib_size, mapped_ib_addr);
+  dump_packet (0, ib_size, ib_mem_map);
 }
 
 void
 dump_before (void)
 {
-  ring_head = ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
+  rb_head = mem_map[RADEON_CP_RB_RPTR >> 2];
+  rb_size = (1 << ((mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
 }
 
 void
 dump_after (void)
 {
-  ring_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
+  unsigned int *rb_mem_map;
+  unsigned int rb_addr;
+
+  rb_addr = mem_map[RADEON_CP_RB_BASE >> 2];
+  rb_tail = mem_map[RADEON_CP_RB_RPTR >> 2];
+  rb_mem_map =
+    (unsigned int *) ((char *) agp_mem_map + (rb_addr - agp_addr));
 
 #ifndef DEBUG
   analyze_begin ();
 #endif
-
-  dump_packet (ring_head, ring_tail, ring_mem_map);
-
+  dump_packet (rb_head, rb_tail, rb_mem_map);
 #ifndef DEBUG
   analyze_end ();
 #endif
