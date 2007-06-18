@@ -15,8 +15,6 @@ revenge_SOURCES = \
 		  dump.h \
 		  main.c \
 		  main.h \
-		  misc.c \
-		  misc.h \
 		  resolv.c \
 		  resolv.h \
 		  ring.c \

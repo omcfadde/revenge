@@ -36,7 +36,6 @@
 
 #include "config.h"
 
-int option_per_file = 0;	/* define to 1 for per file stdout redirection. */
 int option_verbose = 0;		/* define to 1 for printing of information that
 				   is not normally meaningful; for example, the
 				   ring head/tail pointers. Information that is
@@ -88,7 +87,6 @@ alloc_opengl (void)
 }
 
 static struct option long_options[] = {
-  {"per-file", no_argument, &option_per_file, 1},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };

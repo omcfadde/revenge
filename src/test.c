@@ -26,7 +26,6 @@
 
 #include "dump.h"
 #include "main.h"
-#include "misc.h"
 #include "ring.h"
 #include "test.h"
 
@@ -246,15 +245,7 @@ test (void)
 
   for (test = tests; test->name; test++)
     {
-      if (option_per_file)
-	{
-	  open_fd (test->name);
-	}
       printf ("%s: %s\n", __func__, test->name);
       test->func ();
-      if (option_per_file)
-	{
-	  close_fd ();
-	}
     }
 }
