@@ -223,7 +223,7 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 }
 
 void
-dump_before (void)
+dump_rb_pre (void)
 {
   rb_addr = reg_mem_map[RADEON_CP_RB_BASE >> 2];
   rb_head = reg_mem_map[RADEON_CP_RB_RPTR >> 2];
@@ -231,7 +231,7 @@ dump_before (void)
 }
 
 void
-dump_after (void)
+dump_rb_post (void)
 {
   unsigned int *rb_mem_map;
 

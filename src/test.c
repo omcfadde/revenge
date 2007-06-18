@@ -39,14 +39,14 @@ static void
 before (void)
 {
   quiescent ();
-  dump_before ();
+  dump_rb_pre ();
 }
 
 static void
 after (void)
 {
   quiescent ();
-  dump_after ();
+  dump_rb_post ();
 }
 
 static void
