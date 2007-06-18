@@ -178,19 +178,13 @@ test_frag_mov (void)
 static void
 test_smooth_line (void)
 {
-  GLint ci, i;
+  GLint i;
   int enable = 1;
   float pntA[3] = {
     -160.0, 0.0, 0.0
   };
   float pntB[3] = {
     -130.0, 0.0, 0.0
-  };
-  float pntC[3] = {
-    -40.0, -50.0, 0.0
-  };
-  float pntD[3] = {
-    30.0, 60.0, 0.0
   };
 
   glClear (GL_COLOR_BUFFER_BIT);
