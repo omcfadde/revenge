@@ -89,6 +89,7 @@ opengl_close (void)
 
 static struct option long_options[] = {
   {"agp", no_argument, &option_agp, 1},
+  {"pcie", no_argument, &option_agp, 0},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };
