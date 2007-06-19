@@ -202,13 +202,13 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 }
 
 static unsigned int *
-memory_fetch_agp (unsigned int addr, unsigned int size)
+memory_read_agp (unsigned int addr, unsigned int size)
 {
   return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
 }
 
 static unsigned int *
-memory_fetch_pcie (unsigned int addr, unsigned int size)
+memory_read_pcie (unsigned int addr, unsigned int size)
 {
   assert (0);
 
@@ -216,15 +216,15 @@ memory_fetch_pcie (unsigned int addr, unsigned int size)
 }
 
 static unsigned int *
-memory_fetch (unsigned int addr, unsigned int size)
+memory_read (unsigned int addr, unsigned int size)
 {
   if (option_agp)
     {
-      return memory_fetch_agp (addr, size);
+      return memory_read_agp (addr, size);
     }
   else
     {
-      return memory_fetch_pcie (addr, size);
+      return memory_read_pcie (addr, size);
     }
 }
 
@@ -233,7 +233,7 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
   unsigned int *ib_mem_map;
 
-  ib_mem_map = memory_fetch (ib_addr, ib_size);
+  ib_mem_map = memory_read (ib_addr, ib_size);
   dump_packet (0, ib_size, ib_mem_map);
 }
 
@@ -256,7 +256,7 @@ dump_rb_post (void)
   analyze_begin ();
 #endif
 
-  rb_mem_map = memory_fetch (rb_addr, rb_size);
+  rb_mem_map = memory_read (rb_addr, rb_size);
   dump_packet (rb_head, rb_tail, rb_mem_map);
 
 #ifndef DEBUG
