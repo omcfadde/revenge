@@ -1,7 +1,6 @@
-*.log
 *.o
 *~
-.*.sw*
+.*.sw[a-z]
 .deps
 Makefile
 autom4te.cache
