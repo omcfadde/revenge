@@ -202,16 +202,30 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 }
 
 static unsigned int *
+memory_fetch_agp (unsigned int addr, unsigned int size)
+{
+  return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
+}
+
+static unsigned int *
+memory_fetch_pcie (unsigned int addr, unsigned int size)
+{
+  assert (0);
+
+  return NULL;
+}
+
+static unsigned int *
 memory_fetch (unsigned int addr, unsigned int size)
 {
   if (option_agp)
     {
-      return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
+      return memory_fetch_agp (addr, size);
     }
-
-  assert (0);
-
-  return NULL;
+  else
+    {
+      return memory_fetch_pcie (addr, size);
+    }
 }
 
 static void
