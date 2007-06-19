@@ -38,8 +38,8 @@
 int option_agp = 1;
 int option_verbose = 0;
 
-static int
-alloc_opengl (void)
+static void
+opengl_open (void)
 {
   SDL_Surface *Surface;
 
@@ -47,28 +47,28 @@ alloc_opengl (void)
     {
       printf ("%s\n", SDL_GetError ());
       SDL_Quit ();
-      return 1;
+      assert (0);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, 16) < 0)
     {
       printf ("%s\n", SDL_GetError ());
       SDL_Quit ();
-      return 1;
+      assert (0);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, 0) < 0)
     {
       printf ("%s\n", SDL_GetError ());
       SDL_Quit ();
-      return 1;
+      assert (0);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_STENCIL_SIZE, 8) < 0)
     {
       printf ("%s\n", SDL_GetError ());
       SDL_Quit ();
-      return 1;
+      assert (0);
     }
 
   if (!(Surface = SDL_SetVideoMode (640, 480, 0,
@@ -77,10 +77,14 @@ alloc_opengl (void)
     {
       printf ("%s\n", SDL_GetError ());
       SDL_Quit ();
-      return 1;
+      assert (0);
     }
+}
 
-  return 0;
+static void
+opengl_close (void)
+{
+  SDL_Quit ();
 }
 
 static struct option long_options[] = {
@@ -89,8 +93,8 @@ static struct option long_options[] = {
   {0, 0, 0, 0},
 };
 
-int mem_fd;
-unsigned int *agp_mem_map, *reg_mem_map;
+int mem_fd = -1;
+unsigned int *agp_mem_map = NULL, *reg_mem_map = NULL;
 
 int
 main (int argc, char **argv)
@@ -116,15 +120,7 @@ main (int argc, char **argv)
 
   if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
     {
-      return 1;
-    }
-
-  detect_reg_aperture ();
-  if ((reg_mem_map =
-       mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-	     reg_addr)) < 0)
-    {
-      return 1;
+      assert (0);
     }
 
   if (option_agp)
@@ -134,16 +130,21 @@ main (int argc, char **argv)
 	   mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 		 agp_addr)) < 0)
 	{
-	  return 1;
+	  assert (0);
 	}
     }
 
-  if (alloc_opengl ())
+  detect_reg_aperture ();
+  if ((reg_mem_map =
+       mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+	     reg_addr)) < 0)
     {
-      return 1;
+      assert (0);
     }
 
+  opengl_open ();
   test ();
+  opengl_close ();
 
   if (option_agp)
     {
@@ -158,7 +159,10 @@ main (int argc, char **argv)
       assert (0);
     }
 
-  close (mem_fd);
+  if (close (mem_fd) < 0)
+    {
+      assert (0);
+    }
 
   return 0;
 }
