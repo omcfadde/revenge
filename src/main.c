@@ -114,14 +114,12 @@ main (int argc, char **argv)
 	}
     }
 
-  detect_agp_aperture ();
-  detect_reg_aperture ();
-
   if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
     {
       return 1;
     }
 
+  detect_reg_aperture ();
   if ((reg_mem_map =
        mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 	     reg_addr)) < 0)
@@ -131,6 +129,7 @@ main (int argc, char **argv)
 
   if (option_agp)
     {
+      detect_agp_aperture ();
       if ((agp_mem_map =
 	   mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 		 agp_addr)) < 0)
