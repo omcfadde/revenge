@@ -84,7 +84,7 @@ alloc_opengl (void)
 }
 
 static struct option long_options[] = {
-  {"agp", no_argument, &option_verbose, 1},
+  {"agp", no_argument, &option_agp, 1},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };
