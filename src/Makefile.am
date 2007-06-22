@@ -9,6 +9,8 @@ revenge_SOURCES = \
 		  analyze_final.h \
 		  analyze_raw.c \
 		  analyze_raw.h \
+		  analyze_resolv.c \
+		  analyze_resolv.h \
 		  detect.c \
 		  detect.h \
 		  dump.c \
@@ -19,7 +21,5 @@ revenge_SOURCES = \
 		  memory.h \
 		  register.c \
 		  register.h \
-		  resolv.c \
-		  resolv.h \
 		  test.c \
 		  test.h

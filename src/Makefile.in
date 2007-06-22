@@ -44,9 +44,9 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = analyze.$(OBJEXT) analyze_final.$(OBJEXT) \
-	analyze_raw.$(OBJEXT) detect.$(OBJEXT) dump.$(OBJEXT) \
-	main.$(OBJEXT) memory.$(OBJEXT) register.$(OBJEXT) \
-	resolv.$(OBJEXT) test.$(OBJEXT)
+	analyze_raw.$(OBJEXT) analyze_resolv.$(OBJEXT) \
+	detect.$(OBJEXT) dump.$(OBJEXT) main.$(OBJEXT) \
+	memory.$(OBJEXT) register.$(OBJEXT) test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -153,6 +153,8 @@ revenge_SOURCES = \
 		  analyze_final.h \
 		  analyze_raw.c \
 		  analyze_raw.h \
+		  analyze_resolv.c \
+		  analyze_resolv.h \
 		  detect.c \
 		  detect.h \
 		  dump.c \
@@ -163,8 +165,6 @@ revenge_SOURCES = \
 		  memory.h \
 		  register.c \
 		  register.h \
-		  resolv.c \
-		  resolv.h \
 		  test.c \
 		  test.h
 
@@ -237,12 +237,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze_final.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze_raw.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/analyze_resolv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/register.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/resolv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
 
 .c.o:

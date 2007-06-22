@@ -24,7 +24,7 @@
 
 #include "analyze.h"
 #include "analyze_raw.h"
-#include "resolv.h"
+#include "analyze_resolv.h"
 
 static void
 analyze_raw_reg (unsigned int key, unsigned int val)

@@ -24,7 +24,7 @@
 
 #include "analyze.h"
 #include "analyze_final.h"
-#include "resolv.h"
+#include "analyze_resolv.h"
 
 /*
  * this is a horrible quick and dirty hack! it can miss a lot of writes, and
