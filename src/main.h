@@ -91,6 +91,8 @@
 #define RADEON_PCIE_TX_GART_END_LO	0x16
 #define RADEON_PCIE_TX_GART_END_HI	0x17
 
+#define ATI_PCIGART_PAGE_SIZE		4096	/**< PCI GART page size */
+
 extern int option_agp;
 extern int option_verbose;
 extern int mem_fd;

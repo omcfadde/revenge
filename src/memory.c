@@ -36,7 +36,7 @@ memory_read_pcie (unsigned int addr, unsigned int size)
   unsigned int page_addr = 0;
   unsigned int gart_entry_num = 0;
 
-  gart_entry_num = (addr - pcigart_start) / /* page_size */ 4096;
+  gart_entry_num = (addr - pcigart_start) / ATI_PCIGART_PAGE_SIZE;
   page_addr = (pcigart_mem_map[gart_entry_num] & ~0xc) << 8;
   printf ("0x%08x\n", page_addr);
 
