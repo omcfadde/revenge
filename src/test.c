@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "dump.h"
@@ -31,8 +32,14 @@
 static void
 quiescent (void)
 {
-  glFlush ();
-  sleep (1);
+  int i;
+  struct timespec req = { 0, 1000 };
+
+  for (i = 0; i < 100; i++)
+    {
+      glFlush ();
+      nanosleep (&req, NULL);
+    }
 }
 
 static void
