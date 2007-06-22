@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/mman.h>
 
 #include "detect.h"
 #include "main.h"
@@ -33,15 +34,25 @@ memory_read_agp (unsigned int addr, unsigned int size)
 static unsigned int *
 memory_read_pcie (unsigned int addr, unsigned int size)
 {
-  unsigned int page_addr = 0;
-  unsigned int gart_entry_num = 0;
+  unsigned int *page_mem_map;
+  unsigned int gart_entry_num;
+  unsigned int page_addr;
 
   gart_entry_num = (addr - pcigart_start) / ATI_PCIGART_PAGE_SIZE;
-  page_addr = (pcigart_mem_map[gart_entry_num] & ~0xc) << 8;
-  printf ("0x%08x\n", page_addr);
 
-  assert (0);
-  return NULL;
+  page_addr =
+    ((pcigart_mem_map[gart_entry_num] & ~0xc) << 8) +
+    addr % ATI_PCIGART_PAGE_SIZE;
+
+  if ((page_mem_map =
+       mmap (NULL, /* FIXME */ 1024 * 1024, PROT_READ | PROT_WRITE,
+	     MAP_SHARED,
+	     mem_fd, page_addr)) < 0)
+    {
+      assert (0);
+    }
+
+  return page_mem_map;
 }
 
 unsigned int *
