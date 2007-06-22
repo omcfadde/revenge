@@ -20,7 +20,9 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
-/* #define DEBUG */
+#if 1
+#define DEBUG
+#endif
 
 #define RADEON_MC_AGP_LOCATION		0x014c
 #define RADEON_CP_RB_BASE		0x0700
@@ -70,10 +72,31 @@
 #	define RADEON_CNTL_BITBLT_MULTI		0x9B
 //#     define RADEON_CNTL_SET_SCISSORS         0xC0001E00
 
+#define RADEON_PCIE_INDEX               0x0030
+#define RADEON_PCIE_DATA                0x0034
+#define RADEON_PCIE_TX_GART_CNTL	0x10
+#	define RADEON_PCIE_TX_GART_EN   	(1 << 0)
+#	define RADEON_PCIE_TX_GART_UNMAPPED_ACCESS_PASS_THRU (0<<1)
+#	define RADEON_PCIE_TX_GART_UNMAPPED_ACCESS_CLAMP_LO  (1<<1)
+#	define RADEON_PCIE_TX_GART_UNMAPPED_ACCESS_DISCARD   (3<<1)
+#	define RADEON_PCIE_TX_GART_MODE_32_128_CACHE	(0<<3)
+#	define RADEON_PCIE_TX_GART_MODE_8_4_128_CACHE	(1<<3)
+#	define RADEON_PCIE_TX_GART_CHK_RW_VALID_EN      (1<<5)
+#	define RADEON_PCIE_TX_GART_INVALIDATE_TLB	(1<<8)
+#define RADEON_PCIE_TX_DISCARD_RD_ADDR_LO 0x11
+#define RADEON_PCIE_TX_DISCARD_RD_ADDR_HI 0x12
+#define RADEON_PCIE_TX_GART_BASE  	0x13
+#define RADEON_PCIE_TX_GART_START_LO	0x14
+#define RADEON_PCIE_TX_GART_START_HI	0x15
+#define RADEON_PCIE_TX_GART_END_LO	0x16
+#define RADEON_PCIE_TX_GART_END_HI	0x17
+
 extern int option_agp;
 extern int option_verbose;
 extern int mem_fd;
-extern unsigned int *agp_mem_map, *reg_mem_map;
+extern unsigned int *agp_mem_map;
+extern unsigned int *pcigart_mem_map;
+extern unsigned int *reg_mem_map;
 int main (int argc, char **argv);
 
 #endif

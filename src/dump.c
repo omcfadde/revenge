@@ -18,13 +18,14 @@
  */
 
 #include <assert.h>
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "analyze.h"
 #include "detect.h"
 #include "main.h"
+#include "memory.h"
+#include "register.h"
 
 static unsigned int ib_addr = 0, ib_size = 0;
 static unsigned int rb_addr = 0, rb_head = 0, rb_size = 0, rb_tail = 0;
@@ -201,33 +202,6 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
   assert (i == tail);
 }
 
-static unsigned int *
-memory_read_agp (unsigned int addr, unsigned int size)
-{
-  return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
-}
-
-static unsigned int *
-memory_read_pcie (unsigned int addr, unsigned int size)
-{
-  assert (0);
-
-  return NULL;
-}
-
-static unsigned int *
-memory_read (unsigned int addr, unsigned int size)
-{
-  if (option_agp)
-    {
-      return memory_read_agp (addr, size);
-    }
-  else
-    {
-      return memory_read_pcie (addr, size);
-    }
-}
-
 static void
 dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
@@ -240,9 +214,15 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 void
 dump_rb_pre (void)
 {
-  rb_addr = reg_mem_map[RADEON_CP_RB_BASE >> 2];
-  rb_head = reg_mem_map[RADEON_CP_RB_RPTR >> 2];
-  rb_size = (1 << ((reg_mem_map[RADEON_CP_RB_CNTL >> 2] & 0xff) + 1));
+  rb_addr = register_read (RADEON_CP_RB_BASE);
+  rb_head = register_read (RADEON_CP_RB_RPTR);
+  rb_size = (1 << ((register_read(RADEON_CP_RB_CNTL) & 0xff) + 1));
+
+#ifdef DEBUG
+  printf ("rb_addr = 0x%08x\n", rb_addr);
+  printf ("rb_head = 0x%08x\n", rb_head);
+  printf ("rb_size = 0x%08x\n", rb_size);
+#endif
 }
 
 void
@@ -250,7 +230,10 @@ dump_rb_post (void)
 {
   unsigned int *rb_mem_map;
 
-  rb_tail = reg_mem_map[RADEON_CP_RB_RPTR >> 2];
+  rb_tail = register_read (RADEON_CP_RB_RPTR);
+#ifdef DEBUG
+  printf ("rb_tail = 0x%08x (%d)\n", rb_tail, rb_tail - rb_head);
+#endif
 
 #ifndef DEBUG
   analyze_begin ();

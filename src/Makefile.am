@@ -15,6 +15,10 @@ revenge_SOURCES = \
 		  dump.h \
 		  main.c \
 		  main.h \
+		  memory.c \
+		  memory.h \
+		  register.c \
+		  register.h \
 		  resolv.c \
 		  resolv.h \
 		  test.c \

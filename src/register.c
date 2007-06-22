@@ -17,15 +17,33 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_H__
-#define __DETECT_H__
+#include <stdio.h>
+#include <stdlib.h>
 
-extern unsigned int agp_addr, agp_len;
-extern unsigned int pcigart_addr, pcigart_len;
-extern unsigned int pcigart_start, pcigart_end;
-extern unsigned int reg_addr, reg_len;
-void detect_agp_aperture (void);
-void detect_pcigart_aperture (void);
-void detect_reg_aperture (void);
+#include "main.h"
 
-#endif
+unsigned int
+register_read (unsigned int key)
+{
+  return reg_mem_map[key >> 2];
+}
+
+void
+register_write (unsigned int key, unsigned int val)
+{
+  reg_mem_map[key >> 2] = val;
+}
+
+unsigned int
+register_read_pcie (unsigned int key)
+{
+  register_write (RADEON_PCIE_INDEX, key);
+  return register_read (RADEON_PCIE_DATA);
+}
+
+void
+register_write_pcie (unsigned int key, unsigned int val)
+{
+  register_write (RADEON_PCIE_INDEX, key);
+  register_write (RADEON_PCIE_DATA, val);
+}

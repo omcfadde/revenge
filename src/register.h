@@ -17,15 +17,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_H__
-#define __DETECT_H__
+#ifndef __REGISTER_H__
+#define __REGISTER_H__
 
-extern unsigned int agp_addr, agp_len;
-extern unsigned int pcigart_addr, pcigart_len;
-extern unsigned int pcigart_start, pcigart_end;
-extern unsigned int reg_addr, reg_len;
-void detect_agp_aperture (void);
-void detect_pcigart_aperture (void);
-void detect_reg_aperture (void);
+unsigned int register_read (unsigned int key);
+void register_write (unsigned int key, unsigned int val);
+unsigned int register_read_pcie (unsigned int key);
+void register_write_pcie (unsigned int key, unsigned int val);
 
 #endif

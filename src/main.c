@@ -95,7 +95,9 @@ static struct option long_options[] = {
 };
 
 int mem_fd = -1;
-unsigned int *agp_mem_map = NULL, *reg_mem_map = NULL;
+unsigned int *agp_mem_map = NULL;
+unsigned int *pcigart_mem_map = NULL;
+unsigned int *reg_mem_map = NULL;
 
 int
 main (int argc, char **argv)
@@ -124,6 +126,14 @@ main (int argc, char **argv)
       assert (0);
     }
 
+  detect_reg_aperture ();
+  if ((reg_mem_map =
+       mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+	     reg_addr)) < 0)
+    {
+      assert (0);
+    }
+
   if (option_agp)
     {
       detect_agp_aperture ();
@@ -134,18 +144,25 @@ main (int argc, char **argv)
 	  assert (0);
 	}
     }
-
-  detect_reg_aperture ();
-  if ((reg_mem_map =
-       mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-	     reg_addr)) < 0)
+  else
     {
-      assert (0);
+      detect_pcigart_aperture ();
+      if ((pcigart_mem_map =
+	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+		 pcigart_addr)) < 0)
+	{
+	  assert (0);
+	}
     }
 
   opengl_open ();
   test ();
   opengl_close ();
+
+  if (munmap (reg_mem_map, reg_len) < 0)
+    {
+      assert (0);
+    }
 
   if (option_agp)
     {
@@ -154,10 +171,12 @@ main (int argc, char **argv)
 	  assert (0);
 	}
     }
-
-  if (munmap (reg_mem_map, reg_len) < 0)
+  else
     {
-      assert (0);
+      if (munmap (pcigart_mem_map, pcigart_len) < 0)
+	{
+	  assert (0);
+	}
     }
 
   if (close (mem_fd) < 0)

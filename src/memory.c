@@ -17,15 +17,42 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_H__
-#define __DETECT_H__
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-extern unsigned int agp_addr, agp_len;
-extern unsigned int pcigart_addr, pcigart_len;
-extern unsigned int pcigart_start, pcigart_end;
-extern unsigned int reg_addr, reg_len;
-void detect_agp_aperture (void);
-void detect_pcigart_aperture (void);
-void detect_reg_aperture (void);
+#include "detect.h"
+#include "main.h"
 
-#endif
+static unsigned int *
+memory_read_agp (unsigned int addr, unsigned int size)
+{
+  return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
+}
+
+static unsigned int *
+memory_read_pcie (unsigned int addr, unsigned int size)
+{
+  unsigned int page_addr = 0;
+  unsigned int gart_entry_num = 0;
+
+  gart_entry_num = (addr - pcigart_start) / /* page_size */ 4096;
+  page_addr = (pcigart_mem_map[gart_entry_num] & ~0xc) << 8;
+  printf ("0x%08x\n", page_addr);
+
+  assert (0);
+  return NULL;
+}
+
+unsigned int *
+memory_read (unsigned int addr, unsigned int size)
+{
+  if (option_agp)
+    {
+      return memory_read_agp (addr, size);
+    }
+  else
+    {
+      return memory_read_pcie (addr, size);
+    }
+}

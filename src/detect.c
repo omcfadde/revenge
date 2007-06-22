@@ -24,7 +24,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-unsigned int agp_addr, agp_len, reg_addr, reg_len;
+#include "main.h"
+#include "register.h"
+
+unsigned int agp_addr = 0, agp_len = 0;
+unsigned int pcigart_addr = 0, pcigart_len = 0;
+unsigned int pcigart_start = 0, pcigart_end = 0;
+unsigned int reg_addr = 0, reg_len = 0;
 
 static int
 is_agp_iomem (int level, char *name)
@@ -86,6 +92,18 @@ detect_agp_aperture (void)
   fclose (file);
 
   assert (0);
+}
+
+void
+detect_pcigart_aperture (void)
+{
+  pcigart_addr = register_read_pcie (RADEON_PCIE_TX_GART_BASE);
+  pcigart_len = /* 1024 * 32 */ 32768;
+  printf ("PCI GART Aperture 0x%08x (0x%08x)\n", pcigart_addr, pcigart_len);
+
+  pcigart_start = register_read_pcie (RADEON_PCIE_TX_GART_START_LO);
+  pcigart_end = register_read_pcie (RADEON_PCIE_TX_GART_END_LO);
+  printf ("PCI GART Start/End 0x%08x 0x%08x\n", pcigart_start, pcigart_end);
 }
 
 static unsigned int
