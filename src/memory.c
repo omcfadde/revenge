@@ -42,12 +42,11 @@ memory_read_pcie (unsigned int addr, unsigned int size)
 
   page_addr =
     ((pcigart_mem_map[gart_entry_num] & ~0xc) << 8) +
-    addr % ATI_PCIGART_PAGE_SIZE;
+    ((addr - pcigart_start) % ATI_PCIGART_PAGE_SIZE);
 
   if ((page_mem_map =
-       mmap (NULL, /* FIXME */ 1024 * 1024, PROT_READ | PROT_WRITE,
-	     MAP_SHARED,
-	     mem_fd, page_addr)) < 0)
+       mmap (NULL, 10485760, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+	     page_addr)) < 0)
     {
       assert (0);
     }
