@@ -94,6 +94,7 @@
 #define ATI_PCIGART_PAGE_SIZE		4096	/**< PCI GART page size */
 
 extern int option_agp;
+extern int option_disable_ib;
 extern int option_verbose;
 extern int mem_fd;
 extern unsigned int *agp_mem_map;

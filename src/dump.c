@@ -207,8 +207,11 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
   unsigned int *ib_mem_map;
 
-  ib_mem_map = memory_read (ib_addr, ib_size);
-  dump_packet (0, ib_size, ib_mem_map);
+  if (!option_disable_ib)
+    {
+      ib_mem_map = memory_read (ib_addr, ib_size);
+      dump_packet (0, ib_size, ib_mem_map);
+    }
 }
 
 void

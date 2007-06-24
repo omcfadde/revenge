@@ -36,6 +36,7 @@
 #include "config.h"
 
 int option_agp = 1;
+int option_disable_ib = 0;
 int option_verbose = 0;
 
 static void
@@ -89,6 +90,7 @@ opengl_close (void)
 
 static struct option long_options[] = {
   {"agp", no_argument, &option_agp, 1},
+  {"disable-ib", no_argument, &option_disable_ib, 1},
   {"pcie", no_argument, &option_agp, 0},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
