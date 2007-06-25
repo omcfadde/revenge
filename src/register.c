@@ -47,3 +47,21 @@ register_write_pcie (unsigned int key, unsigned int val)
   register_write (RADEON_PCIE_INDEX, key);
   register_write (RADEON_PCIE_DATA, val);
 }
+
+unsigned int
+register_read_igp (unsigned int key)
+{
+  unsigned int ret;
+  register_write (RADEON_IGPGART_INDEX, key & 0x7f);
+  ret = register_read (RADEON_IGPGART_DATA);
+  register_write (RADEON_IGPGART_INDEX, 0x7f);
+  return ret;
+}
+
+void
+register_write_igp (unsigned int key, unsigned int val)
+{
+  register_write (RADEON_IGPGART_INDEX, (key & 0x7f) | (1<<8));
+  register_write (RADEON_IGPGART_DATA, val);
+  register_write (RADEON_IGPGART_INDEX, 0x7f);
+}

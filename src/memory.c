@@ -37,12 +37,16 @@ memory_read_pcie (unsigned int addr, unsigned int size)
   unsigned int *page_mem_map;
   unsigned int gart_entry_num;
   unsigned int page_addr;
+  unsigned int table_addr;
 
   gart_entry_num = (addr - pcigart_start) / ATI_PCIGART_PAGE_SIZE;
 
-  page_addr =
-    ((pcigart_mem_map[gart_entry_num] & ~0xc) << 8) +
-    ((addr - pcigart_start) % ATI_PCIGART_PAGE_SIZE);
+  if (option_interface == IF_IGP)
+      table_addr = (pcigart_mem_map[gart_entry_num] & ~0xc);
+  else
+      table_addr = (pcigart_mem_map[gart_entry_num] & ~0xc) << 8;
+
+  page_addr = table_addr + ((addr - pcigart_start) % ATI_PCIGART_PAGE_SIZE);
 
   if ((page_mem_map =
        mmap (NULL, 10485760, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
@@ -57,7 +61,7 @@ memory_read_pcie (unsigned int addr, unsigned int size)
 unsigned int *
 memory_read (unsigned int addr, unsigned int size)
 {
-  if (option_agp)
+  if (option_interface == IF_AGP)
     {
       return memory_read_agp (addr, size);
     }

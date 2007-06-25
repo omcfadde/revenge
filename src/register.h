@@ -24,5 +24,7 @@ unsigned int register_read (unsigned int key);
 void register_write (unsigned int key, unsigned int val);
 unsigned int register_read_pcie (unsigned int key);
 void register_write_pcie (unsigned int key, unsigned int val);
+unsigned int register_read_igp (unsigned int key);
+void register_write_igp (unsigned int key, unsigned int val);
 
 #endif

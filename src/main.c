@@ -35,8 +35,8 @@
 
 #include "config.h"
 
-int option_agp = 1;
 int option_disable_ib = 0;
+int option_interface = 1;
 int option_verbose = 0;
 
 static void
@@ -89,9 +89,10 @@ opengl_close (void)
 }
 
 static struct option long_options[] = {
-  {"agp", no_argument, &option_agp, 1},
+  {"igp", no_argument, &option_interface, IF_IGP},
+  {"agp", no_argument, &option_interface, IF_AGP},
+  {"pcie", no_argument, &option_interface, IF_PCIE},
   {"disable-ib", no_argument, &option_disable_ib, 1},
-  {"pcie", no_argument, &option_agp, 0},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };
@@ -136,7 +137,7 @@ main (int argc, char **argv)
       assert (0);
     }
 
-  if (option_agp)
+  if (option_interface == IF_AGP)
     {
       detect_agp_aperture ();
       if ((agp_mem_map =
@@ -148,7 +149,10 @@ main (int argc, char **argv)
     }
   else
     {
-      detect_pcigart_aperture ();
+      if (option_interface == IF_IGP)
+         detect_igpgart_aperture ();
+      else
+         detect_pcigart_aperture ();
       if ((pcigart_mem_map =
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 		 pcigart_addr)) < 0)
@@ -166,19 +170,18 @@ main (int argc, char **argv)
       assert (0);
     }
 
-  if (option_agp)
+  switch (option_interface)
     {
-      if (munmap (agp_mem_map, agp_len) < 0)
-	{
+      case IF_AGP:
+	if (munmap (agp_mem_map, agp_len) < 0)
 	  assert (0);
-	}
-    }
-  else
-    {
-      if (munmap (pcigart_mem_map, pcigart_len) < 0)
-	{
+	break;
+      case IF_PCIE:
+      case IF_IGP:
+      default:
+        if (munmap (pcigart_mem_map, pcigart_len) < 0)
 	  assert (0);
-	}
+	break;
     }
 
   if (close (mem_fd) < 0)

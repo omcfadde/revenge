@@ -24,6 +24,10 @@
 #define DEBUG
 #endif
 
+#define IF_PCIE 0
+#define IF_AGP 1
+#define IF_IGP 2
+
 #define RADEON_MC_AGP_LOCATION		0x014c
 #define RADEON_CP_RB_BASE		0x0700
 #define RADEON_CP_RB_CNTL		0x0704
@@ -93,7 +97,16 @@
 
 #define ATI_PCIGART_PAGE_SIZE		4096	/**< PCI GART page size */
 
-extern int option_agp;
+#define RADEON_IGPGART_INDEX            0x168
+#define RADEON_IGPGART_DATA             0x16c
+#define RADEON_IGPGART_UNK_18           0x18
+#define RADEON_IGPGART_CTRL             0x2b
+#define RADEON_IGPGART_BASE_ADDR        0x2c
+#define RADEON_IGPGART_FLUSH            0x2e
+#define RADEON_IGPGART_ENABLE           0x38
+#define RADEON_IGPGART_UNK_39           0x39
+
+extern int option_interface;
 extern int option_disable_ib;
 extern int option_verbose;
 extern int mem_fd;
