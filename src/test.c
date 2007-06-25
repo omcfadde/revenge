@@ -29,7 +29,7 @@
 #include "main.h"
 #include "test.h"
 
-static void
+static inline void
 quiescent (void)
 {
   int i;
@@ -40,20 +40,6 @@ quiescent (void)
       glFinish ();
       nanosleep (&req, NULL);
     }
-}
-
-static void
-before (void)
-{
-  quiescent ();
-  dump_rb_pre ();
-}
-
-static void
-after (void)
-{
-  quiescent ();
-  dump_rb_post ();
 }
 
 static void
@@ -69,178 +55,17 @@ tri (void)
 static void
 test_null (void)
 {
-  before ();
-  after ();
 }
 
 static void
 test_tri (void)
 {
-  before ();
   tri ();
-  after ();
-}
-
-static void
-test_polygon_offset (void)
-{
-  before ();
-  glPolygonOffset (0.1, 0.2);
-  tri ();
-  after ();
-
-}
-
-static void
-test_polygon_offset_fill_enable (void)
-{
-  before ();
-  glEnable (GL_POLYGON_OFFSET_FILL);
-  tri ();
-  after ();
-}
-
-static void
-test_polygon_offset_fill_disable (void)
-{
-  before ();
-  glDisable (GL_POLYGON_OFFSET_FILL);
-  tri ();
-  after ();
-}
-
-static void
-test_polygon_offset_line_enable (void)
-{
-  before ();
-  glEnable (GL_POLYGON_OFFSET_LINE);
-  tri ();
-  after ();
-}
-
-static void
-test_polygon_offset_line_disable (void)
-{
-  before ();
-  glDisable (GL_POLYGON_OFFSET_LINE);
-  tri ();
-  after ();
-}
-
-static void
-test_polygon_offset_point_enable (void)
-{
-  before ();
-  glEnable (GL_POLYGON_OFFSET_POINT);
-  tri ();
-  after ();
-}
-
-static void
-test_polygon_offset_point_disable (void)
-{
-  before ();
-  glDisable (GL_POLYGON_OFFSET_POINT);
-  tri ();
-  after ();
-}
-
-static void
-test_frag_mov (void)
-{
-  GLuint arbfp;
-
-  /* *INDENT-OFF* */
-  char *arbfptxt =
-    "!!ARBfp1.0\n"
-    "MOV result.color, fragment.color;\n"
-    "END\n";
-  /* *INDENT-ON* */
-
-  before ();
-
-  glGenProgramsARB (1, &arbfp);
-  glBindProgramARB (GL_FRAGMENT_PROGRAM_ARB, arbfp);
-  glProgramStringARB (GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB,
-		      strlen (arbfptxt), (const GLubyte *) arbfptxt);
-
-  glEnable (GL_FRAGMENT_PROGRAM_ARB);
-
-  glBegin (GL_TRIANGLES);
-  glColor3f (1.0, 0.0, 0.0);
-  glVertex3f (1.0, 0.0, 0.0);
-  glColor3f (0.0, 1.0, 0.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glColor3f (0.0, 0.0, 1.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
-
-  after ();
-
-  glDisable (GL_FRAGMENT_PROGRAM_ARB);
-}
-
-static void
-test_smooth_line (void)
-{
-  GLint i;
-  int enable = 1;
-  float pntA[3] = {
-    -160.0, 0.0, 0.0
-  };
-  float pntB[3] = {
-    -130.0, 0.0, 0.0
-  };
-
-  glClear (GL_COLOR_BUFFER_BIT);
-
-  before ();
-
-  if (enable)
-    {
-      glEnable (GL_LINE_SMOOTH);
-      glEnable (GL_BLEND);
-    }
-  else
-    {
-      glDisable (GL_LINE_SMOOTH);
-      glDisable (GL_BLEND);
-    }
-
-  for (i = 0; i < 360; i += 5)
-    {
-      glRotatef (5.0, 0, 0, 1);
-      glBegin (GL_LINE_STRIP);
-      glVertex3fv (pntA);
-      glVertex3fv (pntB);
-      glEnd ();
-    }
-
-  after ();
 }
 
 static struct test_t tests[] = {
   {"test_null", test_null},
   {"test_tri", test_tri},
-
-#if 0
-  {"test_smooth_line", test_smooth_line},
-
-  /* order is important! */
-  {"test_polygon_offset", test_polygon_offset},
-
-  {"test_polygon_offset_point_enable", test_polygon_offset_fill_enable},
-  {"test_polygon_offset_point_disable", test_polygon_offset_point_disable},
-  {"test_polygon_offset_fill_enable", test_polygon_offset_fill_enable},
-  {"test_polygon_offset_fill_disable", test_polygon_offset_fill_disable},
-  {"test_polygon_offset_line_enable", test_polygon_offset_line_enable},
-  {"test_polygon_offset_line_disable", test_polygon_offset_line_disable},
-  {"test_polygon_offset_point_enable", test_polygon_offset_point_enable},
-  {"test_polygon_offset_point_disable", test_polygon_offset_point_disable},
-
-  {"test_frag_mov", test_frag_mov},
-#endif
-
   {NULL, NULL}
 };
 
@@ -252,6 +77,10 @@ test (void)
   for (test = tests; test->name; test++)
     {
       printf ("%s: %s\n", __func__, test->name);
+      quiescent ();
+      dump_rb_pre ();
       test->func ();
+      quiescent ();
+      dump_rb_post ();
     }
 }
