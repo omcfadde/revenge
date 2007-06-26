@@ -27,10 +27,17 @@
 #include "main.h"
 #include "register.h"
 
-unsigned int agp_addr = 0, agp_len = 0;
-unsigned int pcigart_addr = 0, pcigart_len = 0;
-unsigned int pcigart_start = 0, pcigart_end = 0;
-unsigned int reg_addr = 0, reg_len = 0;
+unsigned int agp_addr = 0;
+unsigned int agp_len = 0;
+
+unsigned int pcigart_addr = 0;
+unsigned int pcigart_len = 0;
+
+unsigned int pcigart_end = 0;
+unsigned int pcigart_start = 0;
+
+unsigned int reg_addr = 0;
+unsigned int reg_len = 0;
 
 static int
 is_agp_iomem (int level, char *name)
