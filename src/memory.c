@@ -50,6 +50,8 @@ gart_to_phys (unsigned int addr)
       break;
     }
 
+  assert ((phys_addr % sysconf (_SC_PAGE_SIZE)) == 0);
+
   return phys_addr;
 }
 
