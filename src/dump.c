@@ -158,7 +158,7 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
    * $4 = 11111111111111111001111111111111
    */
 
-  for (i = head; i < tail; i += proc + 1, i &= rb_size - 1)
+  for (i = head; i < tail; i += proc + 1)
     {
       packet_type = (mem_map[i] >> 30) & 0x3;
       packet_cnt = (mem_map[i] >> 16) & 0x3fff;
