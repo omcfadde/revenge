@@ -114,12 +114,11 @@ detect_igpgart_aperture (void)
   pcigart_len = /* 1024 * 32 */ 32768;
   printf ("IGP GART Aperture 0x%08x (0x%08x)\n", pcigart_addr, pcigart_len);
 
-  agp_base = register_read(RADEON_MC_AGP_LOCATION);
+  agp_base = register_read (RADEON_MC_AGP_LOCATION);
   pcigart_start = (agp_base & 0xffff) << 16;
   pcigart_end = (agp_base & 0xffff0000);
   printf ("IGP GART Start/End 0x%08x 0x%08x\n", pcigart_start, pcigart_end);
 }
-
 
 static unsigned int
 get_conf_long (unsigned char *config, unsigned int pos)

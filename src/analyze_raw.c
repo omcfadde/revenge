@@ -38,7 +38,8 @@ analyze_raw_reg (unsigned int key, unsigned int val)
     }
   else
     {
-      printf ("                                  0x%04x <- 0x%08x\n", key, val);
+      printf ("                                  0x%04x <- 0x%08x\n", key,
+	      val);
     }
 }
 

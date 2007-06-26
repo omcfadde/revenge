@@ -61,7 +61,7 @@ register_read_igp (unsigned int key)
 void
 register_write_igp (unsigned int key, unsigned int val)
 {
-  register_write (RADEON_IGPGART_INDEX, (key & 0x7f) | (1<<8));
+  register_write (RADEON_IGPGART_INDEX, (key & 0x7f) | (1 << 8));
   register_write (RADEON_IGPGART_DATA, val);
   register_write (RADEON_IGPGART_INDEX, 0x7f);
 }

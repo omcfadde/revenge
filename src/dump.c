@@ -219,7 +219,7 @@ dump_rb_pre (void)
 {
   rb_addr = register_read (RADEON_CP_RB_BASE);
   rb_head = register_read (RADEON_CP_RB_RPTR);
-  rb_size = (1 << ((register_read(RADEON_CP_RB_CNTL) & 0xff) + 1));
+  rb_size = (1 << ((register_read (RADEON_CP_RB_CNTL) & 0xff) + 1));
 
 #ifdef DEBUG
   printf ("rb_addr = 0x%08x\n", rb_addr);
