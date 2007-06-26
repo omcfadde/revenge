@@ -21,7 +21,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "analyze.h"
 #include "detect.h"
 #include "main.h"
 #include "memory.h"
@@ -35,11 +34,7 @@ static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 static void
 dump_reg (unsigned int key, unsigned int val)
 {
-  assert (key);
-
-#ifdef DEBUG
   printf ("%s: key = 0x%04x val = 0x%08x\n", __func__, key, val);
-#endif
 
   switch (key)
     {
@@ -52,9 +47,7 @@ dump_reg (unsigned int key, unsigned int val)
       ib_addr = ib_size = 0;
       break;
     default:
-#ifndef DEBUG
-      analyze_reg (key, val);
-#endif
+      /* empty */
       break;
     }
 }
@@ -68,10 +61,8 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
   unsigned int mapped_reg;
   unsigned int proc;
 
-#ifdef DEBUG
   printf ("%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n", __func__,
 	  packet_type, packet_cnt, packet_bit15, packet_reg);
-#endif
 
   proc = packet_cnt + 1;
 
@@ -96,10 +87,8 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_bit15, unsigned int packet_reg,
 	      unsigned int *mem_map)
 {
-#ifdef DEBUG
   printf ("%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n", __func__,
 	  packet_type, packet_cnt, packet_bit15, packet_reg);
-#endif
 
   return 0;
 }
@@ -108,39 +97,14 @@ static int
 dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_opcode, unsigned int *mem_map)
 {
-  int i;
-  unsigned int proc;
-
-#ifdef DEBUG
   printf ("%s: type = %d cnt = %d opcode = 0x%02x\n", __func__, packet_type,
 	  packet_cnt, packet_opcode);
-#endif
 
-  proc = packet_cnt + 1;
-
-  for (i = 0; i < proc; i++)
-    {
-#ifdef DEBUG
-      printf ("%s: 0x%08x\n", __func__, mem_map[i]);
-#endif
-    }
-
-  return proc;
-}
-
-/* shouldn't happen... */
-static int
-dump_null (void)
-{
-#ifdef DEBUG
-  printf ("%s\n", __func__);
-#endif
-
-  return 0;
+  return packet_cnt + 1;
 }
 
 static void
-dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
+dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 {
   int i;
   unsigned int packet_type, packet_cnt, packet_bit15, packet_reg,
@@ -193,7 +157,7 @@ dump_packet (unsigned int head, unsigned int tail, unsigned int *mem_map)
 	}
       else
 	{
-	  proc = dump_null ();
+	  proc = 0;
 	}
 
       assert (i + proc + 1 <= tail);
@@ -210,7 +174,7 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
   if (!option_disable_ib)
     {
       ib_mem_map = memory_read (ib_addr, ib_size);
-      dump_packet (0, ib_size, ib_mem_map);
+      dump_packets (0, ib_size, ib_mem_map);
     }
 }
 
@@ -220,12 +184,6 @@ dump_rb_pre (void)
   rb_addr = register_read (RADEON_CP_RB_BASE);
   rb_head = register_read (RADEON_CP_RB_RPTR);
   rb_size = (1 << ((register_read (RADEON_CP_RB_CNTL) & 0xff) + 1));
-
-#ifdef DEBUG
-  printf ("rb_addr = 0x%08x\n", rb_addr);
-  printf ("rb_head = 0x%08x\n", rb_head);
-  printf ("rb_size = 0x%08x\n", rb_size);
-#endif
 }
 
 void
@@ -234,18 +192,6 @@ dump_rb_post (void)
   unsigned int *rb_mem_map;
 
   rb_tail = register_read (RADEON_CP_RB_RPTR);
-#ifdef DEBUG
-  printf ("rb_tail = 0x%08x (%d)\n", rb_tail, rb_tail - rb_head);
-#endif
-
-#ifndef DEBUG
-  analyze_begin ();
-#endif
-
   rb_mem_map = memory_read (rb_addr, rb_size);
-  dump_packet (rb_head, rb_tail, rb_mem_map);
-
-#ifndef DEBUG
-  analyze_end ();
-#endif
+  dump_packets (rb_head, rb_tail, rb_mem_map);
 }
