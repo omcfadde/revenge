@@ -71,7 +71,7 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
 
   if ((mem_map =
        mmap (NULL, sysconf (_SC_PAGE_SIZE), PROT_READ | PROT_WRITE,
-	     MAP_SHARED, mem_fd, phys_addr)) < 0)
+	     MAP_SHARED, mem_fd, phys_addr)) == MAP_FAILED)
     {
       assert (0);
     }

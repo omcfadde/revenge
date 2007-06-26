@@ -132,7 +132,7 @@ main (int argc, char **argv)
   detect_reg_aperture ();
   if ((reg_mem_map =
        mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-	     reg_addr)) < 0)
+	     reg_addr)) == MAP_FAILED)
     {
       assert (0);
     }
@@ -142,7 +142,7 @@ main (int argc, char **argv)
       detect_agp_aperture ();
       if ((agp_mem_map =
 	   mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-		 agp_addr)) < 0)
+		 agp_addr)) == MAP_FAILED)
 	{
 	  assert (0);
 	}
@@ -150,12 +150,12 @@ main (int argc, char **argv)
   else
     {
       if (option_interface == IF_IGP)
-         detect_igpgart_aperture ();
+	detect_igpgart_aperture ();
       else
-         detect_pcigart_aperture ();
+	detect_pcigart_aperture ();
       if ((pcigart_mem_map =
-	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-		 pcigart_addr)) < 0)
+	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
+		 mem_fd, pcigart_addr)) == MAP_FAILED)
 	{
 	  assert (0);
 	}
@@ -172,16 +172,16 @@ main (int argc, char **argv)
 
   switch (option_interface)
     {
-      case IF_AGP:
-	if (munmap (agp_mem_map, agp_len) < 0)
-	  assert (0);
-	break;
-      case IF_PCIE:
-      case IF_IGP:
-      default:
-        if (munmap (pcigart_mem_map, pcigart_len) < 0)
-	  assert (0);
-	break;
+    case IF_AGP:
+      if (munmap (agp_mem_map, agp_len) < 0)
+	assert (0);
+      break;
+    case IF_PCIE:
+    case IF_IGP:
+    default:
+      if (munmap (pcigart_mem_map, pcigart_len) < 0)
+	assert (0);
+      break;
     }
 
   if (close (mem_fd) < 0)
