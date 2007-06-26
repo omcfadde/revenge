@@ -35,9 +35,9 @@ quiescent (void)
   int i;
   struct timespec req = { 0, 1000 };
 
-  for (i = 0; i < 1; i++)
+  for (i = 0; i < 10; i++)
     {
-      glFinish ();
+      glFlush ();
       nanosleep (&req, NULL);
     }
 }

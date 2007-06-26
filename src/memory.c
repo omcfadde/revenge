@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #include "detect.h"
 #include "main.h"
@@ -31,42 +32,65 @@ memory_read_agp (unsigned int addr, unsigned int size)
   return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
 }
 
+static unsigned int
+gart_to_phys (unsigned int addr)
+{
+  int num;
+  unsigned int phys_addr;
+
+  num = (addr - pcigart_start) / ATI_PCIGART_PAGE_SIZE;
+
+  switch (option_interface)
+    {
+    case IF_IGP:
+      phys_addr = (pcigart_mem_map[num] & ~0xc);
+      break;
+    default:
+      phys_addr = (pcigart_mem_map[num] & ~0xc) << 8;
+      break;
+    }
+
+  return phys_addr;
+}
+
+static unsigned int
+gart_to_phys_modulus (unsigned int addr)
+{
+  return (addr - pcigart_start) % ATI_PCIGART_PAGE_SIZE;
+}
+
 static unsigned int *
 memory_read_pcigart (unsigned int addr, unsigned int size)
 {
-  unsigned int *page_mem_map;
-  unsigned int gart_entry_num;
-  unsigned int page_addr;
-  unsigned int table_addr;
+  unsigned int *mem_map;
+  unsigned int phys_addr;
 
-  gart_entry_num = (addr - pcigart_start) / ATI_PCIGART_PAGE_SIZE;
+  phys_addr = gart_to_phys (addr);
 
-  if (option_interface == IF_IGP)
-    table_addr = (pcigart_mem_map[gart_entry_num] & ~0xc);
-  else
-    table_addr = (pcigart_mem_map[gart_entry_num] & ~0xc) << 8;
-
-  page_addr = table_addr + ((addr - pcigart_start) % ATI_PCIGART_PAGE_SIZE);
-
-  if ((page_mem_map =
-       mmap (NULL, 10485760, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
-	     page_addr)) < 0)
+  if ((mem_map =
+       mmap (NULL, sysconf (_SC_PAGE_SIZE), PROT_READ | PROT_WRITE,
+	     MAP_SHARED, mem_fd, phys_addr)) < 0)
     {
       assert (0);
     }
 
-  return page_mem_map;
+  return mem_map + gart_to_phys_modulus (addr);
 }
 
 unsigned int *
 memory_read (unsigned int addr, unsigned int size)
 {
-  if (option_interface == IF_AGP)
+  unsigned int *mem_map;
+
+  switch (option_interface)
     {
-      return memory_read_agp (addr, size);
+    case IF_AGP:
+      mem_map = memory_read_agp (addr, size);
+      break;
+    default:
+      mem_map = memory_read_pcigart (addr, size);
+      break;
     }
-  else
-    {
-      return memory_read_pcigart (addr, size);
-    }
+
+  return mem_map;
 }
