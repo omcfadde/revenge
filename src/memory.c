@@ -20,6 +20,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -29,6 +30,8 @@
 static unsigned int *
 memory_read_agp (unsigned int addr, unsigned int size)
 {
+  /* FIXME */
+  assert (0);
   return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
 }
 
@@ -50,33 +53,46 @@ gart_to_phys (unsigned int addr)
       break;
     }
 
-  assert ((phys_addr % sysconf (_SC_PAGE_SIZE)) == 0);
-
   return phys_addr;
-}
-
-static unsigned int
-gart_to_phys_modulus (unsigned int addr)
-{
-  return (addr - pcigart_start) % ATI_PCIGART_PAGE_SIZE;
 }
 
 static unsigned int *
 memory_read_pcigart (unsigned int addr, unsigned int size)
 {
-  unsigned int *mem_map;
-  unsigned int phys_addr;
+  int i;
+  unsigned int *page_mem_map;
+  unsigned int *tmp;
+  unsigned int page_addr, page_phys_addr;
 
-  phys_addr = gart_to_phys (addr);
+  size = (size + (ATI_PCIGART_PAGE_SIZE - 1)) & ~(ATI_PCIGART_PAGE_SIZE - 1);
 
-  if ((mem_map =
-       mmap (NULL, sysconf (_SC_PAGE_SIZE), PROT_READ | PROT_WRITE,
-	     MAP_SHARED, mem_fd, phys_addr)) == MAP_FAILED)
+  assert ((addr % ATI_PCIGART_PAGE_SIZE) == 0);
+  assert ((size % ATI_PCIGART_PAGE_SIZE) == 0);
+
+  tmp = (unsigned int *) malloc (size);
+
+  for (i = 0; i < size; i += ATI_PCIGART_PAGE_SIZE)
     {
-      assert (0);
+      page_addr = addr + i;
+      page_phys_addr = gart_to_phys (page_addr);
+
+      if ((page_mem_map =
+	   mmap (NULL, ATI_PCIGART_PAGE_SIZE, PROT_READ | PROT_WRITE,
+		 MAP_SHARED, mem_fd, page_phys_addr)) == MAP_FAILED)
+	{
+	  assert (0);
+	}
+
+      memcpy ((unsigned int *) ((char *) tmp + i), page_mem_map,
+	      ATI_PCIGART_PAGE_SIZE);
+
+      if (munmap (page_mem_map, ATI_PCIGART_PAGE_SIZE) < 0)
+	{
+	  assert (0);
+	}
     }
 
-  return mem_map + gart_to_phys_modulus (addr);
+  return tmp;
 }
 
 unsigned int *

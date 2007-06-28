@@ -32,14 +32,10 @@
 static inline void
 quiescent (void)
 {
-  int i;
-  struct timespec req = { 0, 1000 };
+  struct timespec req = { 1, 0 };
 
-  for (i = 0; i < 10; i++)
-    {
-      glFlush ();
-      nanosleep (&req, NULL);
-    }
+  glFinish ();
+  nanosleep (&req, NULL);
 }
 
 static void
