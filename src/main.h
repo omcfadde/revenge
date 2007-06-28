@@ -20,10 +20,6 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
-#if 1
-#define DEBUG
-#endif
-
 #define IF_PCIE 0
 #define IF_AGP 1
 #define IF_IGP 2
