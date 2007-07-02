@@ -194,6 +194,6 @@ dump_rb_post (void)
 
   rb_tail = register_read (RADEON_CP_RB_RPTR);
   rb_mem_map = memory_read (rb_addr, rb_size);
-  dump_packets (0, rb_tail - rb_head, rb_mem_map);
+  dump_packets (rb_head, rb_tail, rb_mem_map);
   free (rb_mem_map);
 }

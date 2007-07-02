@@ -30,9 +30,13 @@
 static unsigned int *
 memory_read_agp (unsigned int addr, unsigned int size)
 {
-  /* FIXME */
-  assert (0);
-  return (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr));
+  unsigned int *tmp;
+
+  tmp = (unsigned int *) malloc (size);
+  memcpy (tmp, (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr)),
+	  size);
+
+  return tmp;
 }
 
 static unsigned int
