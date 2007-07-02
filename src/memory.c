@@ -32,9 +32,9 @@ memory_read_agp (unsigned int addr, unsigned int size)
 {
   unsigned int *tmp;
 
-  tmp = (unsigned int *) malloc (size);
+  tmp = (unsigned int *) malloc (size * 4);
   memcpy (tmp, (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr)),
-	  size);
+	  size * 4);
 
   return tmp;
 }
