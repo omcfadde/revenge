@@ -47,6 +47,8 @@ gart_to_phys (unsigned int addr)
 
   num = (addr - pcigart_start) / ATI_PCIGART_PAGE_SIZE;
 
+  assert ((pcigart_mem_map[num] & 0xc) == 0xc);
+
   switch (option_interface)
     {
     case IF_IGP:
