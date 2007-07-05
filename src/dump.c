@@ -97,10 +97,20 @@ static int
 dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_opcode, unsigned int *mem_map)
 {
+  int i;
+  unsigned int proc;
+
   printf ("%s: type = %d cnt = %d opcode = 0x%02x\n", __func__, packet_type,
 	  packet_cnt, packet_opcode);
 
-  return packet_cnt + 1;
+  proc = packet_cnt + 1;
+
+  for (i = 0; i < proc; i++)
+    {
+      printf ("%s: 0x%08x\n", __func__, mem_map[i]);
+    }
+
+  return proc;
 }
 
 static void
