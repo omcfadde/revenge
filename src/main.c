@@ -46,28 +46,28 @@ opengl_open (void)
 
   if (SDL_Init (SDL_INIT_VIDEO) < 0)
     {
-      printf ("%s\n", SDL_GetError ());
+      printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
       assert (0);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, 16) < 0)
     {
-      printf ("%s\n", SDL_GetError ());
+      printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
       assert (0);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, 0) < 0)
     {
-      printf ("%s\n", SDL_GetError ());
+      printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
       assert (0);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_STENCIL_SIZE, 8) < 0)
     {
-      printf ("%s\n", SDL_GetError ());
+      printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
       assert (0);
     }
@@ -76,7 +76,7 @@ opengl_open (void)
 				    /* SDL_FULLSCREEN | */
 				    SDL_NOFRAME | SDL_OPENGL)))
     {
-      printf ("%s\n", SDL_GetError ());
+      printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
       assert (0);
     }

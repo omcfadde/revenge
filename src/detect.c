@@ -90,7 +90,8 @@ detect_agp_aperture (void)
 	{
 	  agp_addr = start;
 	  agp_len = end - start + 1;
-	  printf ("AGP Aperture 0x%08x (0x%08x)\n", agp_addr, agp_len);
+	  printf ("%s: agp_addr = 0x%08x agp_len = 0x%08x\n", __func__,
+		  agp_addr, agp_len);
 	  fclose (file);
 	  return;
 	}
@@ -105,26 +106,29 @@ void
 detect_pcigart_aperture (void)
 {
   pcigart_addr = register_read_pcie (RADEON_PCIE_TX_GART_BASE);
-  pcigart_len = /* 1024 * 32 */ 32768;
-  printf ("PCI GART Aperture 0x%08x (0x%08x)\n", pcigart_addr, pcigart_len);
-
+  pcigart_len = 1024 * 32;
   pcigart_start = register_read_pcie (RADEON_PCIE_TX_GART_START_LO);
   pcigart_end = register_read_pcie (RADEON_PCIE_TX_GART_END_LO);
-  printf ("PCI GART Start/End 0x%08x 0x%08x\n", pcigart_start, pcigart_end);
+  printf
+    ("%s: pcigart_addr = 0x%08x pcigart_len = 0x%08x pcigart_start = 0x%08x pcigart_end = 0x%08x\n",
+     __func__, pcigart_addr, pcigart_len, pcigart_start, pcigart_end);
 }
 
 void
 detect_igpgart_aperture (void)
 {
-  unsigned int agp_base;
-  pcigart_addr = register_read_igp (RADEON_IGPGART_BASE_ADDR);
-  pcigart_len = /* 1024 * 32 */ 32768;
-  printf ("IGP GART Aperture 0x%08x (0x%08x)\n", pcigart_addr, pcigart_len);
+  unsigned int agp_addr;
 
-  agp_base = register_read (RADEON_MC_AGP_LOCATION);
-  pcigart_start = (agp_base & 0xffff) << 16;
-  pcigart_end = (agp_base & 0xffff0000);
-  printf ("IGP GART Start/End 0x%08x 0x%08x\n", pcigart_start, pcigart_end);
+  pcigart_addr = register_read_igp (RADEON_IGPGART_BASE_ADDR);
+  pcigart_len = 1024 * 32;
+
+  agp_addr = register_read (RADEON_MC_AGP_LOCATION);
+  pcigart_start = (agp_addr & 0xffff) << 16;
+  pcigart_end = (agp_addr & 0xffff0000);
+
+  printf
+    ("%s: pcigart_addr = 0x%08x pcigart_len = 0x%08x pcigart_start = 0x%08x pcigart_end = 0x%08x\n",
+     __func__, pcigart_addr, pcigart_len, pcigart_start, pcigart_end);
 }
 
 static unsigned int
@@ -176,12 +180,12 @@ detect_reg_aperture (void)
 		      len = pdev->size[i];
 
 		      if (!(flag & PCI_BASE_ADDRESS_MEM_PREFETCH)
-			  && len == 65536)
+			  && len == 64 * 1024)
 			{
 			  reg_addr = (unsigned int) addr;
 			  reg_len = (unsigned int) len;
-			  printf ("Register Aperture 0x%08x (0x%08x)\n",
-				  reg_addr, reg_len);
+			  printf ("%s: reg_addr = 0x%08x reg_len = 0x%08x\n",
+				  __func__, reg_addr, reg_len);
 			}
 		    }
 		}
