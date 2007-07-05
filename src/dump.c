@@ -124,6 +124,8 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 
   for (i = head; i < tail; i += proc + 1)
     {
+      assert (mem_map[i]);
+
       packet_type = (mem_map[i] >> 30) & 0x3;
       packet_cnt = (mem_map[i] >> 16) & 0x3fff;
       packet_bit15 = (mem_map[i] >> 15) & 0x1;
@@ -131,33 +133,26 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
 
       packet_opcode = (mem_map[i] >> 8) & 0xff;
 
-      if (mem_map[i])
+      switch (packet_type)
 	{
-	  switch (packet_type)
-	    {
-	    case 0x0:
-	      proc =
-		dump_packet0 (packet_type, packet_cnt, packet_bit15,
-			      packet_reg, &mem_map[i + 1]);
-	      break;
-	    case 0x2:
-	      proc =
-		dump_packet2 (packet_type, packet_cnt, packet_bit15,
-			      packet_reg, &mem_map[i + 1]);
-	      break;
-	    case 0x3:
-	      proc =
-		dump_packet3 (packet_type, packet_cnt, packet_opcode,
-			      &mem_map[i + 1]);
-	      break;
-	    default:
-	      assert (0);
-	      break;
-	    }
-	}
-      else
-	{
-	  proc = 0;
+	case 0x0:
+	  proc =
+	    dump_packet0 (packet_type, packet_cnt, packet_bit15, packet_reg,
+			  &mem_map[i + 1]);
+	  break;
+	case 0x2:
+	  proc =
+	    dump_packet2 (packet_type, packet_cnt, packet_bit15, packet_reg,
+			  &mem_map[i + 1]);
+	  break;
+	case 0x3:
+	  proc =
+	    dump_packet3 (packet_type, packet_cnt, packet_opcode,
+			  &mem_map[i + 1]);
+	  break;
+	default:
+	  assert (0);
+	  break;
 	}
 
       assert (i + proc + 1 <= tail);
