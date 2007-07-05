@@ -27,12 +27,13 @@
 #include "detect.h"
 #include "main.h"
 
-static unsigned int *
+void *
 memory_read_agp (unsigned int addr, unsigned int size)
 {
-  unsigned int *tmp;
+  void *tmp;
 
-  tmp = (unsigned int *) malloc (size * 4);
+/* FIXME: void * */
+  tmp = (void *) malloc (size * 4);
   memcpy (tmp, (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr)),
 	  size * 4);
 
@@ -62,12 +63,12 @@ gart_to_phys (unsigned int addr)
   return phys_addr;
 }
 
-static unsigned int *
+static void *
 memory_read_pcigart (unsigned int addr, unsigned int size)
 {
   int i;
-  unsigned int *page_mem_map;
-  unsigned int *tmp;
+  void *page_mem_map;
+  void *tmp;
   unsigned int page_addr, page_phys_addr;
 
   size = (size + (ATI_PCIGART_PAGE_SIZE - 1)) & ~(ATI_PCIGART_PAGE_SIZE - 1);
@@ -75,7 +76,7 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
   assert ((addr % ATI_PCIGART_PAGE_SIZE) == 0);
   assert ((size % ATI_PCIGART_PAGE_SIZE) == 0);
 
-  tmp = (unsigned int *) malloc (size);
+  tmp = (void *) malloc (size);
 
   for (i = 0; i < size; i += ATI_PCIGART_PAGE_SIZE)
     {
@@ -89,8 +90,7 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
 	  assert (0);
 	}
 
-      memcpy ((unsigned int *) ((char *) tmp + i), page_mem_map,
-	      ATI_PCIGART_PAGE_SIZE);
+      memcpy (tmp + i, page_mem_map, ATI_PCIGART_PAGE_SIZE);
 
       if (munmap (page_mem_map, ATI_PCIGART_PAGE_SIZE) < 0)
 	{
@@ -101,10 +101,10 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
   return tmp;
 }
 
-unsigned int *
+void *
 memory_read (unsigned int addr, unsigned int size)
 {
-  unsigned int *mem_map;
+  void *mem_map;
 
   switch (option_interface)
     {

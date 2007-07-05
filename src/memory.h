@@ -20,6 +20,6 @@
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
 
-unsigned int *memory_read (unsigned int addr, unsigned int size);
+void *memory_read (unsigned int addr, unsigned int size);
 
 #endif
