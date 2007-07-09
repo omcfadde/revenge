@@ -178,7 +178,7 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 
   if (!option_disable_ib)
     {
-      ib_mem_map = memory_read (ib_addr, ib_size);
+      ib_mem_map = memory_read (ib_addr, ib_size * 4);
       dump_packets (0, ib_size, ib_mem_map);
       free (ib_mem_map);
     }
