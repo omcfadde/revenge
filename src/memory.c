@@ -27,6 +27,9 @@
 #include "detect.h"
 #include "main.h"
 
+#define round_up(x, y) (((x) + (y) - 1) & ~((y) - 1))
+#define round_down(x, y) ((x) & ~((y) - 1))
+
 void *
 memory_read_agp (unsigned int addr, unsigned int size)
 {
@@ -71,10 +74,8 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
   void *tmp;
   unsigned int page_addr, page_phys_addr;
 
-  size = (size + (ATI_PCIGART_PAGE_SIZE - 1)) & ~(ATI_PCIGART_PAGE_SIZE - 1);
-
   assert ((addr % ATI_PCIGART_PAGE_SIZE) == 0);
-  assert ((size % ATI_PCIGART_PAGE_SIZE) == 0);
+  size = round_up (size, ATI_PCIGART_PAGE_SIZE);
 
   tmp = (void *) malloc (size);
 
