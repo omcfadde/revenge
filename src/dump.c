@@ -178,8 +178,8 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 
   if (!option_disable_ib)
     {
-      printf ("%s: ib_addr = 0x%08x\n", __func__, ib_addr);
-      printf ("%s: ib_size = 0x%08x\n", __func__, ib_size);
+      printf ("%s: ib_addr = 0x%08x ib_size = 0x%08x\n", __func__, ib_addr,
+	      ib_size);
 
       ib_mem_map = memory_read (ib_addr, ib_size * 4);
       dump_packets (0, ib_size, ib_mem_map);
@@ -194,9 +194,8 @@ dump_rb_pre (void)
   rb_head = register_read (RADEON_CP_RB_RPTR);
   rb_size = (1 << ((register_read (RADEON_CP_RB_CNTL) & 0xff) + 1));
 
-  printf ("%s: rb_addr = 0x%08x\n", __func__, rb_addr);
-  printf ("%s: rb_head = 0x%08x\n", __func__, rb_head);
-  printf ("%s: rb_size = 0x%08x\n", __func__, rb_size);
+  printf ("%s: rb_addr = 0x%08x rb_head = 0x%08x rb_size = 0x%08x\n",
+	  __func__, rb_addr, rb_head, rb_size);
 }
 
 void
