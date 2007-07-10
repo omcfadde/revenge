@@ -191,7 +191,10 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 void
 dump_rb_pre (char *filename)
 {
-  dump_file = fopen (filename, "w");
+  if (!(dump_file = fopen (filename, "w")))
+    {
+      assert (0);
+    }
 
   rb_addr = register_read (RADEON_CP_RB_BASE);
   rb_head = register_read (RADEON_CP_RB_RPTR);
