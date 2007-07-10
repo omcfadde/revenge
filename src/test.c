@@ -68,13 +68,14 @@ static struct test_t tests[] = {
 void
 test (void)
 {
+  char filename[BUFSIZ];
   struct test_t *test;
 
   for (test = tests; test->name; test++)
     {
-      printf ("%s: %s\n", __func__, test->name);
+      snprintf (filename, BUFSIZ, "revenge-%s.txt", test->name);
       quiescent ();
-      dump_rb_pre ();
+      dump_rb_pre (filename);
       test->func ();
       quiescent ();
       dump_rb_post ();
