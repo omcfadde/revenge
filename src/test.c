@@ -86,12 +86,24 @@ test_tri_off_point (void)
   glDisable (GL_POLYGON_OFFSET_POINT);
 }
 
+static void
+test_clip_plane (void)
+{
+  GLdouble plane[] = { 0.1, 0.2, 0.3, 0.4 };
+
+  glClipPlane (GL_CLIP_PLANE0, plane);
+  glEnable (GL_CLIP_PLANE0);
+  tri ();
+  glDisable (GL_CLIP_PLANE0);
+}
+
 static struct test_t tests[] = {
   {"test_null", test_null},
   {"test_tri", test_tri},
   {"test_tri_off_fill", test_tri_off_fill},
   {"test_tri_off_line", test_tri_off_line},
   {"test_tri_off_point", test_tri_off_point},
+  {"test_clip_plane", test_clip_plane},
   {NULL, NULL}
 };
 
