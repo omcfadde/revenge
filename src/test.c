@@ -59,9 +59,39 @@ test_tri (void)
   tri ();
 }
 
+static void
+test_tri_off_fill (void)
+{
+  glPolygonOffset (0.1, 0.2);
+  glEnable (GL_POLYGON_OFFSET_FILL);
+  tri ();
+  glDisable (GL_POLYGON_OFFSET_FILL);
+}
+
+static void
+test_tri_off_line (void)
+{
+  glPolygonOffset (0.1, 0.2);
+  glEnable (GL_POLYGON_OFFSET_LINE);
+  tri ();
+  glDisable (GL_POLYGON_OFFSET_LINE);
+}
+
+static void
+test_tri_off_point (void)
+{
+  glPolygonOffset (0.1, 0.2);
+  glEnable (GL_POLYGON_OFFSET_POINT);
+  tri ();
+  glDisable (GL_POLYGON_OFFSET_POINT);
+}
+
 static struct test_t tests[] = {
   {"test_null", test_null},
   {"test_tri", test_tri},
+  {"test_tri_off_fill", test_tri_off_fill},
+  {"test_tri_off_line", test_tri_off_line},
+  {"test_tri_off_point", test_tri_off_point},
   {NULL, NULL}
 };
 
