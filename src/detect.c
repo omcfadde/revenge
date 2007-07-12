@@ -141,7 +141,9 @@ get_conf_long (unsigned char *config, unsigned int pos)
 void
 detect_reg_aperture (void)
 {
-  char filter_slot[] = "00.0", filter_id[] = "1002:";
+  char filter_id[] = "1002:";
+  char filter_slot[5];
+  int bus;
   int i;
   pciaddr_t addr, len;
   struct pci_access *pacc;
@@ -150,49 +152,56 @@ detect_reg_aperture (void)
   unsigned char *pci_config;
   unsigned int flag;
 
-  pacc = pci_alloc ();
-  pci_init (pacc);
-  pci_filter_init (pacc, &filter);
-  pci_filter_parse_slot (&filter, filter_slot);
-  pci_filter_parse_id (&filter, filter_id);
-  pci_scan_bus (pacc);
-
-  for (pdev = pacc->devices; pdev != NULL; pdev = pdev->next)
+  for (bus = 0; bus < 8; bus++)
     {
-      if (pci_filter_match (&filter, pdev))
+      snprintf (filter_slot, 5, "0%d.0", bus);
+
+      pacc = pci_alloc ();
+      pci_init (pacc);
+      pci_filter_init (pacc, &filter);
+      pci_filter_parse_slot (&filter, filter_slot);
+      pci_filter_parse_id (&filter, filter_id);
+      pci_scan_bus (pacc);
+
+      for (pdev = pacc->devices; pdev != NULL; pdev = pdev->next)
 	{
-	  pci_config = (unsigned char *) malloc (64);
-	  if (pci_read_block (pdev, 0, pci_config, 64))
+	  if (pci_filter_match (&filter, pdev))
 	    {
-	      pci_setup_cache (pdev, pci_config, 64);
-	      pci_fill_info (pdev,
-			     PCI_FILL_IDENT | PCI_FILL_CLASS | PCI_FILL_IRQ |
-			     PCI_FILL_BASES | PCI_FILL_ROM_BASE |
-			     PCI_FILL_SIZES);
-	      for (i = 0; i < 6; i++)
+	      pci_config = (unsigned char *) malloc (64);
+	      if (pci_read_block (pdev, 0, pci_config, 64))
 		{
-		  flag =
-		    get_conf_long (pci_config, PCI_BASE_ADDRESS_0 + (4 * i));
-
-		  if (!(flag & PCI_BASE_ADDRESS_SPACE_IO))
+		  pci_setup_cache (pdev, pci_config, 64);
+		  pci_fill_info (pdev,
+				 PCI_FILL_IDENT | PCI_FILL_CLASS |
+				 PCI_FILL_IRQ | PCI_FILL_BASES |
+				 PCI_FILL_ROM_BASE | PCI_FILL_SIZES);
+		  for (i = 0; i < 6; i++)
 		    {
-		      addr = pdev->base_addr[i] & PCI_ADDR_MEM_MASK;
-		      len = pdev->size[i];
+		      flag =
+			get_conf_long (pci_config,
+				       PCI_BASE_ADDRESS_0 + (4 * i));
 
-		      if (!(flag & PCI_BASE_ADDRESS_MEM_PREFETCH)
-			  && len == 64 * 1024)
+		      if (!(flag & PCI_BASE_ADDRESS_SPACE_IO))
 			{
-			  reg_addr = (unsigned int) addr;
-			  reg_len = (unsigned int) len;
-			  printf ("%s: reg_addr = 0x%08x reg_len = 0x%08x\n",
-				  __func__, reg_addr, reg_len);
+			  addr = pdev->base_addr[i] & PCI_ADDR_MEM_MASK;
+			  len = pdev->size[i];
+
+			  if (!(flag & PCI_BASE_ADDRESS_MEM_PREFETCH)
+			      && len == 64 * 1024)
+			    {
+			      reg_addr = (unsigned int) addr;
+			      reg_len = (unsigned int) len;
+			      printf
+				("%s: reg_addr = 0x%08x reg_len = 0x%08x\n",
+				 __func__, reg_addr, reg_len);
+			      return;
+			    }
 			}
 		    }
 		}
+	      free (pci_config);
 	    }
-	  free (pci_config);
 	}
+      pci_cleanup (pacc);
     }
-
-  pci_cleanup (pacc);
 }
