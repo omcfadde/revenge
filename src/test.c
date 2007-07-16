@@ -60,7 +60,7 @@ test_tri (void)
 }
 
 static void
-test_tri_off_fill (void)
+gl_polygon_offset_fill (void)
 {
   glPolygonOffset (0.1, 0.2);
   glEnable (GL_POLYGON_OFFSET_FILL);
@@ -69,7 +69,7 @@ test_tri_off_fill (void)
 }
 
 static void
-test_tri_off_line (void)
+gl_polygon_offset_line (void)
 {
   glPolygonOffset (0.1, 0.2);
   glEnable (GL_POLYGON_OFFSET_LINE);
@@ -78,7 +78,7 @@ test_tri_off_line (void)
 }
 
 static void
-test_tri_off_point (void)
+gl_polygon_offset_point (void)
 {
   glPolygonOffset (0.1, 0.2);
   glEnable (GL_POLYGON_OFFSET_POINT);
@@ -87,7 +87,7 @@ test_tri_off_point (void)
 }
 
 static void
-test_clip_plane (void)
+gl_clip_plane0 (void)
 {
   GLdouble plane[] = { 0.1, 0.2, 0.3, 0.4 };
 
@@ -100,10 +100,13 @@ test_clip_plane (void)
 static struct test_t tests[] = {
   {"test_null", test_null},
   {"test_tri", test_tri},
-  {"test_tri_off_fill", test_tri_off_fill},
-  {"test_tri_off_line", test_tri_off_line},
-  {"test_tri_off_point", test_tri_off_point},
-  {"test_clip_plane", test_clip_plane},
+
+  {"gl_polygon_offset_fill", gl_polygon_offset_fill},
+  {"gl_polygon_offset_line", gl_polygon_offset_line},
+  {"gl_polygon_offset_point", gl_polygon_offset_point},
+
+  {"gl_clip_plane0", gl_clip_plane0},
+
   {NULL, NULL}
 };
 
