@@ -59,7 +59,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int *mem_map)
 {
   int i;
-  unsigned int mapped_reg;
+  unsigned int reg;
   unsigned int proc;
 
   fprintf (dump_file, "%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n",
@@ -69,15 +69,8 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 
   for (i = 0; i < proc; i++)
     {
-      if (packet_bit15)
-	{
-	  mapped_reg = packet_reg;
-	}
-      else
-	{
-	  mapped_reg = packet_reg + (i << 2);
-	}
-      dump_reg (mapped_reg, mem_map[i]);
+      reg = packet_bit15 ? packet_reg : packet_reg + (i << 2);
+      dump_reg (reg, mem_map[i]);
     }
 
   return proc;
