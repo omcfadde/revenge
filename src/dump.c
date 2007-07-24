@@ -126,6 +126,8 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
    * $4 = 11111111111111111001111111111111
    */
 
+  assert (tail >= head);
+
   for (i = head; i < tail; i += proc + 1)
     {
       assert (mem_map[i]);
