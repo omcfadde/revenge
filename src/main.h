@@ -102,6 +102,7 @@
 #define RADEON_IGPGART_ENABLE           0x38
 #define RADEON_IGPGART_UNK_39           0x39
 
+extern int option_debug;
 extern int option_disable_ib;
 extern int option_interface;
 extern int option_verbose;

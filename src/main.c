@@ -35,6 +35,7 @@
 
 #include "config.h"
 
+int option_debug = 0;
 int option_disable_ib = 0;
 int option_interface = 1;
 int option_verbose = 0;
@@ -89,10 +90,11 @@ opengl_close (void)
 }
 
 static struct option long_options[] = {
-  {"igp", no_argument, &option_interface, IF_IGP},
   {"agp", no_argument, &option_interface, IF_AGP},
-  {"pcie", no_argument, &option_interface, IF_PCIE},
+  {"debug", no_argument, &option_debug, 1},
   {"disable-ib", no_argument, &option_disable_ib, 1},
+  {"igp", no_argument, &option_interface, IF_IGP},
+  {"pcie", no_argument, &option_interface, IF_PCIE},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };
@@ -160,6 +162,10 @@ main (int argc, char **argv)
 	  assert (0);
 	}
     }
+
+  // FIXME
+  mkdir ("revenge", 0777);
+  chdir ("revenge");
 
   opengl_open ();
   test ();

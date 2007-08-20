@@ -90,8 +90,11 @@ detect_agp_aperture (void)
 	{
 	  agp_addr = start;
 	  agp_len = end - start + 1;
-	  printf ("%s: agp_addr = 0x%08x agp_len = 0x%08x\n", __func__,
-		  agp_addr, agp_len);
+	  if (option_debug)
+	    {
+	      printf ("%s: agp_addr = 0x%08x agp_len = 0x%08x\n", __func__,
+		      agp_addr, agp_len);
+	    }
 	  fclose (file);
 	  return;
 	}
@@ -109,9 +112,12 @@ detect_pcigart_aperture (void)
   pcigart_len = 1024 * 32;
   pcigart_start = register_read_pcie (RADEON_PCIE_TX_GART_START_LO);
   pcigart_end = register_read_pcie (RADEON_PCIE_TX_GART_END_LO);
-  printf
-    ("%s: pcigart_addr = 0x%08x pcigart_len = 0x%08x pcigart_start = 0x%08x pcigart_end = 0x%08x\n",
-     __func__, pcigart_addr, pcigart_len, pcigart_start, pcigart_end);
+  if (option_debug)
+    {
+      printf
+	("%s: pcigart_addr = 0x%08x pcigart_len = 0x%08x pcigart_start = 0x%08x pcigart_end = 0x%08x\n",
+	 __func__, pcigart_addr, pcigart_len, pcigart_start, pcigart_end);
+    }
 }
 
 void
@@ -126,9 +132,12 @@ detect_igpgart_aperture (void)
   pcigart_start = (agp_addr & 0xffff) << 16;
   pcigart_end = (agp_addr & 0xffff0000);
 
-  printf
-    ("%s: pcigart_addr = 0x%08x pcigart_len = 0x%08x pcigart_start = 0x%08x pcigart_end = 0x%08x\n",
-     __func__, pcigart_addr, pcigart_len, pcigart_start, pcigart_end);
+  if (option_debug)
+    {
+      printf
+	("%s: pcigart_addr = 0x%08x pcigart_len = 0x%08x pcigart_start = 0x%08x pcigart_end = 0x%08x\n",
+	 __func__, pcigart_addr, pcigart_len, pcigart_start, pcigart_end);
+    }
 }
 
 static unsigned int
@@ -191,9 +200,12 @@ detect_reg_aperture (void)
 			    {
 			      reg_addr = (unsigned int) addr;
 			      reg_len = (unsigned int) len;
-			      printf
-				("%s: reg_addr = 0x%08x reg_len = 0x%08x\n",
-				 __func__, reg_addr, reg_len);
+			      if (option_debug)
+				{
+				  printf
+				    ("%s: reg_addr = 0x%08x reg_len = 0x%08x\n",
+				     __func__, reg_addr, reg_len);
+				}
 			      return;
 			    }
 			}

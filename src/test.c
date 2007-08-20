@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -113,16 +115,19 @@ static struct test_t tests[] = {
 void
 test (void)
 {
-  char filename[BUFSIZ];
   struct test_t *test;
 
   for (test = tests; test->name; test++)
     {
-      snprintf (filename, BUFSIZ, "revenge-%s.txt", test->name);
+      mkdir (test->name, 0777);
+      chdir (test->name);
+
       quiescent ();
-      dump_rb_pre (filename);
+      dump_rb_pre ();
       test->func ();
       quiescent ();
       dump_rb_post ();
+
+      chdir ("..");
     }
 }

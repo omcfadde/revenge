@@ -26,7 +26,6 @@
 #include "memory.h"
 #include "register.h"
 
-static FILE *dump_file = NULL;
 static unsigned int ib_addr = 0, ib_size = 0;
 static unsigned int rb_addr = 0, rb_head = 0, rb_size = 0, rb_tail = 0;
 
@@ -35,7 +34,10 @@ static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 static void
 dump_reg (unsigned int key, unsigned int val)
 {
-  fprintf (dump_file, "%s: key = 0x%04x val = 0x%08x\n", __func__, key, val);
+  if (option_debug)
+    {
+      printf ("%s: key = 0x%04x val = 0x%08x\n", __func__, key, val);
+    }
 
   switch (key)
     {
@@ -62,8 +64,11 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
   unsigned int reg;
   unsigned int proc;
 
-  fprintf (dump_file, "%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n",
-	   __func__, packet_type, packet_cnt, packet_bit15, packet_reg);
+  if (option_debug)
+    {
+      printf ("%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n", __func__,
+	      packet_type, packet_cnt, packet_bit15, packet_reg);
+    }
 
   proc = packet_cnt + 1;
 
@@ -81,8 +86,11 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_bit15, unsigned int packet_reg,
 	      unsigned int *mem_map)
 {
-  fprintf (dump_file, "%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n",
-	   __func__, packet_type, packet_cnt, packet_bit15, packet_reg);
+  if (option_debug)
+    {
+      printf ("%s: type = %d cnt = %d bit15 = %d reg = 0x%04x\n", __func__,
+	      packet_type, packet_cnt, packet_bit15, packet_reg);
+    }
 
   return 0;
 }
@@ -94,22 +102,30 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
   int i;
   unsigned int proc;
 
-  fprintf (dump_file, "%s: type = %d cnt = %d opcode = 0x%02x\n", __func__,
-	   packet_type, packet_cnt, packet_opcode);
+  if (option_debug)
+    {
+      printf ("%s: type = %d cnt = %d opcode = 0x%02x\n", __func__,
+	      packet_type, packet_cnt, packet_opcode);
+    }
 
   proc = packet_cnt + 1;
 
   for (i = 0; i < proc; i++)
     {
-      fprintf (dump_file, "%s: 0x%08x\n", __func__, mem_map[i]);
+      if (option_debug)
+	{
+	  printf ("%s: 0x%08x\n", __func__, mem_map[i]);
+	}
     }
 
   return proc;
 }
 
 static void
-dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
+dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map,
+	      char *name)
 {
+  FILE *file;
   int i;
   unsigned int packet_type, packet_cnt, packet_bit15, packet_reg,
     packet_opcode;
@@ -126,6 +142,11 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
    * $4 = 11111111111111111001111111111111
    */
 
+  if (!(file = fopen (name, "w")))
+    {
+      assert (0);
+    }
+
   assert (tail >= head);
 
   for (i = head; i < tail; i += proc + 1)
@@ -138,6 +159,8 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
       packet_reg = ((mem_map[i] >> 0) & 0x1fff) << 2;
 
       packet_opcode = (mem_map[i] >> 8) & 0xff;
+
+      fprintf (file, "%08x\n", mem_map[i]);
 
       switch (packet_type)
 	{
@@ -165,54 +188,61 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map)
     }
 
   assert (i == tail);
+
+  fclose (file);
 }
 
 static void
 dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
+  char buf[BUFSIZ];
   unsigned int *ib_mem_map;
 
   if (!option_disable_ib)
     {
-      fprintf (dump_file, "%s: ib_addr = 0x%08x ib_size = 0x%08x\n", __func__,
-	       ib_addr, ib_size);
+      if (option_debug)
+	{
+	  printf ("%s: ib_addr = 0x%08x ib_size = 0x%08x\n", __func__,
+		  ib_addr, ib_size);
+	}
 
+      snprintf (buf, BUFSIZ, "ib-%08x.txt", ib_addr);
       ib_mem_map = memory_read (ib_addr, ib_size * 4);
-      dump_packets (0, ib_size, ib_mem_map);
+      dump_packets (0, ib_size, ib_mem_map, buf);
       free (ib_mem_map);
     }
 }
 
 void
-dump_rb_pre (char *filename)
+dump_rb_pre (void)
 {
-  if (!(dump_file = fopen (filename, "w")))
-    {
-      assert (0);
-    }
-
   rb_addr = register_read (RADEON_CP_RB_BASE);
   rb_head = register_read (RADEON_CP_RB_RPTR);
   rb_size = (1 << ((register_read (RADEON_CP_RB_CNTL) & 0xff) + 1));
 
-  fprintf (dump_file,
-	   "%s: rb_addr = 0x%08x rb_head = 0x%08x rb_size = 0x%08x\n",
-	   __func__, rb_addr, rb_head, rb_size);
+  if (option_debug)
+    {
+      printf ("%s: rb_addr = 0x%08x rb_head = 0x%08x rb_size = 0x%08x\n",
+	      __func__, rb_addr, rb_head, rb_size);
+    }
 }
 
 void
 dump_rb_post (void)
 {
+  char buf[BUFSIZ];
   unsigned int *rb_mem_map;
 
   rb_tail = register_read (RADEON_CP_RB_RPTR);
 
-  fprintf (dump_file, "%s: rb_tail = 0x%08x (%d)\n", __func__, rb_tail,
-	   rb_tail - rb_head);
+  if (option_debug)
+    {
+      printf ("%s: rb_tail = 0x%08x (%d)\n", __func__, rb_tail,
+	      rb_tail - rb_head);
+    }
 
+  snprintf (buf, BUFSIZ, "rb-%08x.txt", rb_addr);
   rb_mem_map = memory_read (rb_addr, rb_size * 4);
-  dump_packets (rb_head, rb_tail, rb_mem_map);
+  dump_packets (rb_head, rb_tail, rb_mem_map, buf);
   free (rb_mem_map);
-
-  fclose (dump_file);
 }
