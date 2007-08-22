@@ -28,12 +28,15 @@
 
 static unsigned int ib_addr = 0, ib_size = 0;
 static unsigned int rb_addr = 0, rb_head = 0, rb_size = 0, rb_tail = 0;
+static unsigned int tx_width = 0, tx_height = 0, tx_offset = 0;
 
 static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 
 static void
 dump_reg (unsigned int key, unsigned int val)
 {
+  int i;
+
   if (option_debug)
     {
       printf ("%s: key = 0x%04x val = 0x%08x\n", __func__, key, val);
@@ -52,6 +55,24 @@ dump_reg (unsigned int key, unsigned int val)
     default:
       /* empty */
       break;
+    }
+
+  for (i = 0; i < 16; i++)
+    {
+      if (key == R300_TX_SIZE_0 + (i << 2))
+	{
+	  tx_width =
+	    (val >> R300_TX_WIDTHMASK_SHIFT) & R300_TX_WIDTHMASK_MASK;
+	  tx_height =
+	    (val >> R300_TX_HEIGHTMASK_SHIFT) & R300_TX_HEIGHTMASK_MASK;
+	}
+
+      if (key == R300_TX_OFFSET_0 + (i << 2))
+	{
+	  tx_offset = (val >> R300_TXO_OFFSET_SHIFT) & R300_TXO_OFFSET_MASK;
+	}
+
+      /* TODO */
     }
 }
 

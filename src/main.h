@@ -102,6 +102,25 @@
 #define RADEON_IGPGART_ENABLE           0x38
 #define RADEON_IGPGART_UNK_39           0x39
 
+#define R300_TX_SIZE_0                      0x4480
+#       define R300_TX_WIDTHMASK_SHIFT           0
+#       define R300_TX_WIDTHMASK_MASK            (2047 << 0)
+#       define R300_TX_HEIGHTMASK_SHIFT          11
+#       define R300_TX_HEIGHTMASK_MASK           (2047 << 11)
+#       define R300_TX_UNK23                     (1 << 23)
+#       define R300_TX_SIZE_SHIFT                26	/* largest of width, height */
+#       define R300_TX_SIZE_MASK                 (15 << 26)
+
+#define R300_TX_OFFSET_0                    0x4540
+/* BEGIN: Guess from R200 */
+#       define R300_TXO_ENDIAN_NO_SWAP           (0 << 0)
+#       define R300_TXO_ENDIAN_BYTE_SWAP         (1 << 0)
+#       define R300_TXO_ENDIAN_WORD_SWAP         (2 << 0)
+#       define R300_TXO_ENDIAN_HALFDW_SWAP       (3 << 0)
+#       define R300_TXO_OFFSET_MASK              /* 0xffffffe0 */ 0x7ffffff
+#       define R300_TXO_OFFSET_SHIFT             5
+/* END */
+
 extern int option_debug;
 extern int option_disable_ib;
 extern int option_interface;
