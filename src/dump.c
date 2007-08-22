@@ -33,6 +33,13 @@ static unsigned int tx_width = 0, tx_height = 0, tx_offset = 0;
 static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 
 static void
+dump_tx (unsigned int tx_width, unsigned int tx_height,
+	 unsigned int tx_offset)
+{
+  /* TODO */
+}
+
+static void
 dump_reg (unsigned int key, unsigned int val)
 {
   int i;
@@ -69,7 +76,7 @@ dump_reg (unsigned int key, unsigned int val)
 	  tx_offset = (val >> R300_TXO_OFFSET_SHIFT) & R300_TXO_OFFSET_MASK;
 	}
 
-      /* TODO */
+      dump_tx (tx_width, tx_height, tx_offset);
     }
 }
 
