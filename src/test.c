@@ -27,9 +27,9 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "dump.h"
-#include "main.h"
-#include "test.h"
+#include <dump.h>
+#include <main.h>
+#include <test.h>
 
 static inline void
 quiescent (void)

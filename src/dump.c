@@ -21,10 +21,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "detect.h"
-#include "main.h"
-#include "memory.h"
-#include "register.h"
+#include <detect.h>
+#include <main.h>
+#include <memory.h>
+#include <register.h>
 
 static unsigned int ib_addr = 0, ib_size = 0;
 static unsigned int rb_addr = 0, rb_head = 0, rb_size = 0, rb_tail = 0;

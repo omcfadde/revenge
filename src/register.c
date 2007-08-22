@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "main.h"
+#include <main.h>
 
 unsigned int
 register_read (unsigned int key)

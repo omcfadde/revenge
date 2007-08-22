@@ -29,11 +29,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "detect.h"
-#include "main.h"
-#include "test.h"
+#include <config.h>
 
-#include "config.h"
+#include <detect.h>
+#include <main.h>
+#include <test.h>
 
 char *option_output = NULL;
 int option_debug = 0;
