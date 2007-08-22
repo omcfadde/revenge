@@ -119,6 +119,8 @@ test (void)
 
   for (test = tests; test->name; test++)
     {
+      printf ("%s: %s\n", __func__, test->name);
+
       mkdir (test->name, 0777);
       chdir (test->name);
 
