@@ -206,7 +206,7 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 		  ib_addr, ib_size);
 	}
 
-      snprintf (buf, BUFSIZ, "ib-%08x.txt", ib_addr);
+      snprintf (buf, BUFSIZ, "ib_%08x.txt", ib_addr);
       ib_mem_map = memory_read (ib_addr, ib_size * 4);
       dump_packets (0, ib_size, ib_mem_map, buf);
       free (ib_mem_map);
@@ -241,7 +241,7 @@ dump_rb_post (void)
 	      rb_tail - rb_head);
     }
 
-  snprintf (buf, BUFSIZ, "rb-%08x.txt", rb_addr);
+  snprintf (buf, BUFSIZ, "rb_%08x.txt", rb_addr);
   rb_mem_map = memory_read (rb_addr, rb_size * 4);
   dump_packets (rb_head, rb_tail, rb_mem_map, buf);
   free (rb_mem_map);
