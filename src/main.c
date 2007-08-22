@@ -35,6 +35,7 @@
 
 #include "config.h"
 
+char *option_output = NULL;
 int option_debug = 0;
 int option_disable_ib = 0;
 int option_interface = 1;
@@ -91,11 +92,12 @@ opengl_close (void)
 
 static struct option long_options[] = {
   {"agp", no_argument, &option_interface, IF_AGP},
-  {"igp", no_argument, &option_interface, IF_IGP},
-  {"pci-e", no_argument, &option_interface, IF_PCIE},
-
+  {"brief", no_argument, &option_verbose, 0},
   {"debug", no_argument, &option_debug, 1},
   {"disable-ib", no_argument, &option_disable_ib, 1},
+  {"igp", no_argument, &option_interface, IF_IGP},
+  {"output", required_argument, 0, 'o'},
+  {"pci-e", no_argument, &option_interface, IF_PCIE},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };
@@ -111,20 +113,40 @@ main (int argc, char **argv)
   int i = 0;
   int opt;
 
-  while ((opt = getopt_long (argc, argv, "v", long_options, &i)) != -1)
+  while ((opt = getopt_long (argc, argv, "bdio:v", long_options, &i)) != -1)
     {
       switch (opt)
 	{
-	case 0:
-	  /* empty */
+	case 'b':
+	  option_verbose = 0;
+	  break;
+	case 'd':
+	  option_debug = 1;
+	  break;
+	case 'i':
+	  option_disable_ib = 1;
+	  break;
+	case 'o':
+	  option_output = strdup (optarg);
 	  break;
 	case 'v':
 	  option_verbose = 1;
+	  break;
+	case '?':
+	case 0:
+	  /* empty */
 	  break;
 	default:
 	  abort ();
 	  break;
 	}
+    }
+
+  if (option_output)
+    {
+      mkdir (option_output, 0777);
+      chdir (option_output);
+      free (option_output);
     }
 
   if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
@@ -163,10 +185,6 @@ main (int argc, char **argv)
 	  assert (0);
 	}
     }
-
-  // FIXME
-  mkdir ("revenge", 0777);
-  chdir ("revenge");
 
   opengl_open ();
   test ();
