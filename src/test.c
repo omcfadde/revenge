@@ -51,12 +51,12 @@ tri (void)
 }
 
 static void
-test_null (void)
+gl_null (void)
 {
 }
 
 static void
-test_tri (void)
+gl_triangle (void)
 {
   tri ();
 }
@@ -100,8 +100,8 @@ gl_clip_plane0 (void)
 }
 
 static struct test_t tests[] = {
-  {"test_null", test_null},
-  {"test_tri", test_tri},
+  {"gl_null", gl_null},
+  {"gl_triangle", gl_triangle},
 
   {"gl_polygon_offset_fill", gl_polygon_offset_fill},
   {"gl_polygon_offset_line", gl_polygon_offset_line},
