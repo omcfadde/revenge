@@ -38,7 +38,7 @@
 char *option_output = NULL;
 int option_debug = 0;
 int option_disable_ib = 0;
-int option_interface = 1;
+int option_interface = IF_AGP;
 int option_verbose = 0;
 
 static void
@@ -162,8 +162,9 @@ main (int argc, char **argv)
       assert (0);
     }
 
-  if (option_interface == IF_AGP)
+  switch (option_interface)
     {
+    case IF_AGP:
       detect_agp_aperture ();
       if ((agp_mem_map =
 	   mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
@@ -171,19 +172,28 @@ main (int argc, char **argv)
 	{
 	  assert (0);
 	}
-    }
-  else
-    {
-      if (option_interface == IF_IGP)
-	detect_igpgart_aperture ();
-      else
-	detect_pcigart_aperture ();
+      break;
+    case IF_PCIE:
+      detect_pcigart_aperture ();
       if ((pcigart_mem_map =
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)
 	{
 	  assert (0);
 	}
+      break;
+    case IF_IGP:
+      detect_igpgart_aperture ();
+      if ((pcigart_mem_map =
+	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
+		 mem_fd, pcigart_addr)) == MAP_FAILED)
+	{
+	  assert (0);
+	}
+      break;
+    default:
+      assert (0);
+      break;
     }
 
   opengl_open ();
