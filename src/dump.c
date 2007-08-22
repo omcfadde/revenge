@@ -42,19 +42,16 @@ dump_reg (unsigned int key, unsigned int val)
       printf ("%s: key = 0x%04x val = 0x%08x\n", __func__, key, val);
     }
 
-  switch (key)
+  if (key == RADEON_CP_IB_BASE)
     {
-    case RADEON_CP_IB_BASE:
       ib_addr = val;
-      break;
-    case RADEON_CP_IB_BUFSZ:
+    }
+
+  if (key == RADEON_CP_IB_BUFSZ)
+    {
       ib_size = val;
       dump_ib (ib_addr, ib_size);
       ib_addr = ib_size = 0;
-      break;
-    default:
-      /* empty */
-      break;
     }
 
   for (i = 0; i < 16; i++)
