@@ -19,6 +19,7 @@
 
 #include <GL/gl.h>
 #include <GL/glext.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,6 +31,9 @@
 #include <dump.h>
 #include <main.h>
 #include <test.h>
+
+#define TEXTURE_WIDTH 16
+#define TEXTURE_HEIGHT 16
 
 static inline void
 quiescent (void)
@@ -46,6 +50,19 @@ tri (void)
   glBegin (GL_TRIANGLES);
   glVertex3f (1.0, 0.0, 0.0);
   glVertex3f (0.0, 1.0, 0.0);
+  glVertex3f (0.0, 0.0, 1.0);
+  glEnd ();
+}
+
+void
+tex_tri (void)
+{
+  glBegin (GL_TRIANGLES);
+  glMultiTexCoord2f (GL_TEXTURE0, 1.0, 0.0);
+  glVertex3f (1.0, 0.0, 0.0);
+  glMultiTexCoord2f (GL_TEXTURE0, 0.0, 1.0);
+  glVertex3f (0.0, 1.0, 0.0);
+  glMultiTexCoord2f (GL_TEXTURE0, 0.0, 0.0);
   glVertex3f (0.0, 0.0, 1.0);
   glEnd ();
 }
@@ -99,6 +116,56 @@ gl_clip_plane0 (void)
   glDisable (GL_CLIP_PLANE0);
 }
 
+static void *
+create_random_texture (int w, int h)
+{
+  uint32_t *texture;
+  int i;
+
+  texture = malloc (w * h * sizeof (uint32_t));
+  if (!texture)
+    {
+      printf ("can not allocate mem for texture\n");
+      return NULL;
+    }
+
+  for (i = 0; i < w * h; i++)
+    {
+      texture[i] = random ();
+    }
+
+  return texture;
+}
+
+static void
+gl_texture (void)
+{
+  GLuint tid;
+  int *texture = NULL;
+
+  if (!(texture = create_random_texture (TEXTURE_WIDTH, TEXTURE_HEIGHT)))
+    {
+      return;
+    }
+
+  glGenTextures (1, &tid);
+  glActiveTexture (GL_TEXTURE0_ARB);
+  glEnable (GL_TEXTURE_2D);
+
+  glBindTexture (GL_TEXTURE_2D, tid);
+  glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_WIDTH,
+		TEXTURE_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+  tex_tri ();
+
+  glActiveTexture (GL_TEXTURE0_ARB);
+  glDisable (GL_TEXTURE_2D);
+
+  free (texture);
+}
+
 static struct test_t tests[] = {
   {"gl_null", gl_null},
   {"gl_triangle", gl_triangle},
@@ -108,6 +175,8 @@ static struct test_t tests[] = {
   {"gl_polygon_offset_point", gl_polygon_offset_point},
 
   {"gl_clip_plane0", gl_clip_plane0},
+
+  {"gl_texture", gl_texture},
 
   {NULL, NULL}
 };

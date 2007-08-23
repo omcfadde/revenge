@@ -74,9 +74,9 @@ dump_reg (unsigned int key, unsigned int val)
       if (key == R300_TX_OFFSET_0 + (i << 2))
 	{
 	  tx_offset = (val >> R300_TXO_OFFSET_SHIFT) & R300_TXO_OFFSET_MASK;
+	  dump_tx (tx_width, tx_height, tx_offset);
+	  tx_width = tx_height = tx_offset = 0;
 	}
-
-      dump_tx (tx_width, tx_height, tx_offset);
     }
 }
 
