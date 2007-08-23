@@ -28,15 +28,18 @@
 
 static unsigned int ib_addr = 0, ib_size = 0;
 static unsigned int rb_addr = 0, rb_head = 0, rb_size = 0, rb_tail = 0;
-static unsigned int tx_width = 0, tx_height = 0, tx_offset = 0;
+static unsigned int tx_addr = 0, tx_width = 0, tx_height = 0;
 
 static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
 
 static void
-dump_tx (unsigned int tx_width, unsigned int tx_height,
-	 unsigned int tx_offset)
+dump_tx (unsigned int tx_addr, unsigned int tx_width, unsigned int tx_height)
 {
-  /* TODO */
+  if (option_debug)
+    {
+      printf ("%s: tx_addr = 0x%08x tx_width = 0x%08x tx_height = 0x%08x\n",
+	      __func__, tx_addr, tx_width, tx_height);
+    }
 }
 
 static void
@@ -73,9 +76,9 @@ dump_reg (unsigned int key, unsigned int val)
 
       if (key == R300_TX_OFFSET_0 + (i << 2))
 	{
-	  tx_offset = (val >> R300_TXO_OFFSET_SHIFT) & R300_TXO_OFFSET_MASK;
-	  dump_tx (tx_width, tx_height, tx_offset);
-	  tx_width = tx_height = tx_offset = 0;
+	  tx_addr = (val >> R300_TXO_OFFSET_SHIFT) & R300_TXO_OFFSET_MASK;
+	  dump_tx (tx_addr, tx_width, tx_height);
+	  tx_addr = tx_width = tx_height = 0;
 	}
     }
 }

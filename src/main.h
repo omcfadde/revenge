@@ -108,9 +108,9 @@
 
 #define R300_TX_SIZE_0                      0x4480
 #       define R300_TX_WIDTHMASK_SHIFT           0
-#       define R300_TX_WIDTHMASK_MASK            (2047 << 0)
+#       define R300_TX_WIDTHMASK_MASK            0x7ff
 #       define R300_TX_HEIGHTMASK_SHIFT          11
-#       define R300_TX_HEIGHTMASK_MASK           (2047 << 11)
+#       define R300_TX_HEIGHTMASK_MASK           0x7ff
 #       define R300_TX_UNK23                     (1 << 23)
 #       define R300_TX_SIZE_SHIFT                26	/* largest of width, height */
 #       define R300_TX_SIZE_MASK                 (15 << 26)
