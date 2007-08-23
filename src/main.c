@@ -104,6 +104,7 @@ static struct option long_options[] = {
 
 int mem_fd = -1;
 unsigned int *agp_mem_map = NULL;
+unsigned int *fb_mem_map = NULL;
 unsigned int *pcigart_mem_map = NULL;
 unsigned int *reg_mem_map = NULL;
 
@@ -162,6 +163,14 @@ main (int argc, char **argv)
       assert (0);
     }
 
+  detect_fb_aperture ();
+  if ((fb_mem_map =
+       mmap (NULL, fb_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
+	     fb_addr)) == MAP_FAILED)
+    {
+      assert (0);
+    }
+
   switch (option_interface)
     {
     case IF_AGP:
@@ -201,6 +210,11 @@ main (int argc, char **argv)
   opengl_close ();
 
   if (munmap (reg_mem_map, reg_len) < 0)
+    {
+      assert (0);
+    }
+
+  if (munmap (fb_mem_map, fb_len) < 0)
     {
       assert (0);
     }

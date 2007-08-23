@@ -22,13 +22,16 @@
 
 extern unsigned int agp_addr;
 extern unsigned int agp_len;
+extern unsigned int fb_addr;
+extern unsigned int fb_len;
 extern unsigned int pcigart_addr;
-extern unsigned int pcigart_len;
 extern unsigned int pcigart_end;
+extern unsigned int pcigart_len;
 extern unsigned int pcigart_start;
 extern unsigned int reg_addr;
 extern unsigned int reg_len;
 void detect_agp_aperture (void);
+void detect_fb_aperture (void);
 void detect_pcigart_aperture (void);
 void detect_igpgart_aperture (void);
 void detect_reg_aperture (void);

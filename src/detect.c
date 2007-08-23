@@ -30,10 +30,12 @@
 unsigned int agp_addr = 0;
 unsigned int agp_len = 0;
 
-unsigned int pcigart_addr = 0;
-unsigned int pcigart_len = 0;
+unsigned int fb_addr = 0;
+unsigned int fb_len = 0;
 
+unsigned int pcigart_addr = 0;
 unsigned int pcigart_end = 0;
+unsigned int pcigart_len = 0;
 unsigned int pcigart_start = 0;
 
 unsigned int reg_addr = 0;
@@ -103,6 +105,29 @@ detect_agp_aperture (void)
   fclose (file);
 
   assert (0);
+}
+
+void
+detect_fb_aperture (void)
+{
+  /* R300 */
+  fb_addr = (register_read (RADEON_MC_FB_LOCATION) & 0xffff) << 16;
+  fb_len =
+    ((register_read (RADEON_MC_FB_LOCATION) & 0xffff0000) + 0x10000) -
+    fb_addr;
+
+  if (!fb_addr)
+    {
+      /* R500 */
+      fb_addr = register_read (AVIVO_CRTC1_FB_LOCATION);
+      fb_len = register_read (AVIVO_CRTC1_FB_END) - fb_addr;
+    }
+
+  if (option_debug)
+    {
+      printf ("%s: fb_addr = 0x%08x fb_len = 0x%08x\n", __func__, fb_addr,
+	      fb_len);
+    }
 }
 
 void
