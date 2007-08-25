@@ -86,7 +86,7 @@ dump_reg (unsigned int key, unsigned int val)
 static int
 dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_bit15, unsigned int packet_reg,
-	      unsigned int *mem_map)
+	      unsigned int *mem_map, FILE * file)
 {
   int i;
   unsigned int reg;
@@ -102,6 +102,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 
   for (i = 0; i < proc; i++)
     {
+      fprintf (file, "%08x\n", mem_map[i]);
       reg = packet_bit15 ? packet_reg : packet_reg + (i << 2);
       dump_reg (reg, mem_map[i]);
     }
@@ -112,7 +113,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 static int
 dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_bit15, unsigned int packet_reg,
-	      unsigned int *mem_map)
+	      unsigned int *mem_map, FILE * file)
 {
   if (option_debug)
     {
@@ -125,7 +126,7 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 
 static int
 dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
-	      unsigned int packet_opcode, unsigned int *mem_map)
+	      unsigned int packet_opcode, unsigned int *mem_map, FILE * file)
 {
   int i;
   unsigned int proc;
@@ -140,6 +141,7 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 
   for (i = 0; i < proc; i++)
     {
+      fprintf (file, "%08x\n", mem_map[i]);
       if (option_debug)
 	{
 	  printf ("%s: 0x%08x\n", __func__, mem_map[i]);
@@ -195,17 +197,17 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map,
 	case 0x0:
 	  proc =
 	    dump_packet0 (packet_type, packet_cnt, packet_bit15, packet_reg,
-			  &mem_map[i + 1]);
+			  &mem_map[i + 1], file);
 	  break;
 	case 0x2:
 	  proc =
 	    dump_packet2 (packet_type, packet_cnt, packet_bit15, packet_reg,
-			  &mem_map[i + 1]);
+			  &mem_map[i + 1], file);
 	  break;
 	case 0x3:
 	  proc =
 	    dump_packet3 (packet_type, packet_cnt, packet_opcode,
-			  &mem_map[i + 1]);
+			  &mem_map[i + 1], file);
 	  break;
 	default:
 	  assert (0);
