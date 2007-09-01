@@ -276,3 +276,39 @@ dump_rb_post (void)
   dump_packets (rb_head, rb_tail, rb_mem_map, buf);
   free (rb_mem_map);
 }
+
+void
+dump_device_id (void)
+{
+  FILE *file;
+
+  if (!(file = fopen ("device_id.txt", "w")))
+    {
+      assert (0);
+    }
+
+  fprintf (file, "%04x\n", reg_device_id);
+
+  fclose (file);
+}
+
+void
+dump_device_name (void)
+{
+  FILE *file;
+
+  if (!(file = fopen ("device_name.txt", "w")))
+    {
+      assert (0);
+    }
+
+  fprintf (file, "%s\n", reg_device_name);
+
+  fclose (file);
+}
+
+void
+dump_lspci (void)
+{
+  system ("lspci -v > lspci.txt");
+}

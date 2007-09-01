@@ -22,5 +22,8 @@
 
 void dump_rb_pre (void);
 void dump_rb_post (void);
+void dump_device_id (void);
+void dump_device_name (void);
+void dump_lspci (void);
 
 #endif

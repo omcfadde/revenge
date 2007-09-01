@@ -38,7 +38,9 @@ unsigned int pcigart_end = 0;
 unsigned int pcigart_len = 0;
 unsigned int pcigart_start = 0;
 
+char reg_device_name[BUFSIZ];
 unsigned int reg_addr = 0;
+unsigned int reg_device_id = 0;
 unsigned int reg_len = 0;
 
 static int
@@ -183,6 +185,7 @@ detect_reg_aperture (void)
   struct pci_access *pacc;
   struct pci_dev *pdev;
   struct pci_filter filter;
+  u16 device_id;
   unsigned char *pci_config;
   unsigned int flag;
 
@@ -219,12 +222,20 @@ detect_reg_aperture (void)
 			{
 			  addr = pdev->base_addr[i] & PCI_ADDR_MEM_MASK;
 			  len = pdev->size[i];
+			  device_id = pdev->device_id;
 
 			  if (!(flag & PCI_BASE_ADDRESS_MEM_PREFETCH)
 			      && len == 64 * 1024)
 			    {
 			      reg_addr = (unsigned int) addr;
 			      reg_len = (unsigned int) len;
+			      reg_device_id = (unsigned int) device_id;
+			      pci_lookup_name (pacc, reg_device_name, BUFSIZ,
+					       PCI_LOOKUP_VENDOR |
+					       PCI_LOOKUP_DEVICE,
+					       pdev->vendor_id,
+					       pdev->device_id);
+
 			      if (option_debug)
 				{
 				  printf

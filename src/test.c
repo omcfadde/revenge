@@ -186,6 +186,10 @@ test (void)
 {
   struct test_t *test;
 
+  dump_device_id ();
+  dump_device_name ();
+  dump_lspci ();
+
   for (test = tests; test->name; test++)
     {
       printf ("%s: %s\n", __func__, test->name);
