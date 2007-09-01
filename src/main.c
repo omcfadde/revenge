@@ -111,6 +111,7 @@ unsigned int *reg_mem_map = NULL;
 int
 main (int argc, char **argv)
 {
+  char buf[BUFSIZ];
   int i = 0;
   int opt;
 
@@ -141,13 +142,6 @@ main (int argc, char **argv)
 	  abort ();
 	  break;
 	}
-    }
-
-  if (option_output)
-    {
-      mkdir (option_output, 0777);
-      chdir (option_output);
-      free (option_output);
     }
 
   if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
@@ -203,6 +197,19 @@ main (int argc, char **argv)
     default:
       assert (0);
       break;
+    }
+
+  if (option_output)
+    {
+      mkdir (option_output, 0777);
+      chdir (option_output);
+      free (option_output);
+    }
+  else
+    {
+      snprintf (buf, BUFSIZ, "%s-%04x", PACKAGE_NAME, reg_device_id);
+      mkdir (buf, 0777);
+      chdir (buf);
     }
 
   opengl_open ();
