@@ -35,13 +35,27 @@
 #define TEXTURE_WIDTH 16
 #define TEXTURE_HEIGHT 16
 
-static inline void
-quiescent (void)
+static void
+test_quiescent (void)
 {
   struct timespec req = { 1, 0 };
 
   glFinish ();
   nanosleep (&req, NULL);
+}
+
+static void
+test_prologue (void)
+{
+  test_quiescent ();
+  dump_rb_pre ();
+}
+
+static void
+test_epilogue (void)
+{
+  test_quiescent ();
+  dump_rb_post ();
 }
 
 static void
@@ -70,39 +84,49 @@ tex_tri (void)
 static void
 gl_null (void)
 {
+  test_prologue ();
+  test_epilogue ();
 }
 
 static void
 gl_triangle (void)
 {
+  test_prologue ();
   tri ();
+  test_epilogue ();
 }
 
 static void
 gl_polygon_offset_fill (void)
 {
+  test_prologue ();
   glPolygonOffset (0.1, 0.2);
   glEnable (GL_POLYGON_OFFSET_FILL);
   tri ();
   glDisable (GL_POLYGON_OFFSET_FILL);
+  test_epilogue ();
 }
 
 static void
 gl_polygon_offset_line (void)
 {
+  test_prologue ();
   glPolygonOffset (0.1, 0.2);
   glEnable (GL_POLYGON_OFFSET_LINE);
   tri ();
   glDisable (GL_POLYGON_OFFSET_LINE);
+  test_epilogue ();
 }
 
 static void
 gl_polygon_offset_point (void)
 {
+  test_prologue ();
   glPolygonOffset (0.1, 0.2);
   glEnable (GL_POLYGON_OFFSET_POINT);
   tri ();
   glDisable (GL_POLYGON_OFFSET_POINT);
+  test_epilogue ();
 }
 
 static void
@@ -110,10 +134,12 @@ gl_clip_plane0 (void)
 {
   GLdouble plane[] = { 0.1, 0.2, 0.3, 0.4 };
 
+  test_prologue ();
   glClipPlane (GL_CLIP_PLANE0, plane);
   glEnable (GL_CLIP_PLANE0);
   tri ();
   glDisable (GL_CLIP_PLANE0);
+  test_epilogue ();
 }
 
 static void *
@@ -148,6 +174,7 @@ gl_texture (void)
       return;
     }
 
+  test_prologue ();
   glGenTextures (1, &tid);
   glActiveTexture (GL_TEXTURE0_ARB);
   glEnable (GL_TEXTURE_2D);
@@ -163,27 +190,31 @@ gl_texture (void)
   glActiveTexture (GL_TEXTURE0_ARB);
   glDisable (GL_TEXTURE_2D);
 
+  test_epilogue ();
+
   free (texture);
 }
 
+#define _(x) #x, x
+
 static struct test_t tests[] = {
-  {"gl_null", gl_null},
-  {"gl_triangle", gl_triangle},
-
-  {"gl_polygon_offset_fill", gl_polygon_offset_fill},
-  {"gl_polygon_offset_line", gl_polygon_offset_line},
-  {"gl_polygon_offset_point", gl_polygon_offset_point},
-
-  {"gl_clip_plane0", gl_clip_plane0},
-
-  {"gl_texture", gl_texture},
-
-  {NULL, NULL}
+  {_(gl_null)},
+  {_(gl_triangle)},
+  {_(gl_polygon_offset_fill)},
+  {_(gl_polygon_offset_line)},
+  {_(gl_polygon_offset_point)},
+  {_(gl_clip_plane0)},
+  {_(gl_texture)},
 };
+
+#undef _
+
+static int num_tests = sizeof (tests) / sizeof (tests[0]);
 
 void
 test (void)
 {
+  int i;
   struct test_t *test;
 
   dump_device_id ();
@@ -192,18 +223,15 @@ test (void)
   dump_fglrxinfo ();
   dump_lspci ();
 
-  for (test = tests; test->name; test++)
+  for (i = 0; i < num_tests; i++)
     {
-      printf ("%s: %s\n", __func__, test->name);
+      test = &tests[i];
 
       mkdir (test->name, 0777);
       chdir (test->name);
 
-      quiescent ();
-      dump_rb_pre ();
+      printf ("%d/%d %s\n", i + 1, num_tests, test->name);
       test->func ();
-      quiescent ();
-      dump_rb_post ();
 
       chdir ("..");
     }
