@@ -188,6 +188,8 @@ test (void)
 
   dump_device_id ();
   dump_device_name ();
+  dump_fglrx_version ();
+  dump_fglrxinfo ();
   dump_lspci ();
 
   for (test = tests; test->name; test++)

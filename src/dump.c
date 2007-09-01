@@ -308,6 +308,19 @@ dump_device_name (void)
 }
 
 void
+dump_fglrx_version (void)
+{
+  system
+    ("fglrxinfo | sed -n 's/.*(\\([^)]*\\)).*/\\1/p' > fglrx_version.txt");
+}
+
+void
+dump_fglrxinfo (void)
+{
+  system ("fglrxinfo -v > fglrxinfo.txt");
+}
+
+void
 dump_lspci (void)
 {
   system ("lspci -v > lspci.txt");
