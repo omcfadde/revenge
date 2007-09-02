@@ -19,6 +19,7 @@
 
 #include <GL/gl.h>
 #include <GL/glext.h>
+#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -227,12 +228,29 @@ test (void)
     {
       test = &tests[i];
 
-      mkdir (test->name, 0777);
-      chdir (test->name);
+      if (mkdir (test->name, 0777) < 0)
+	{
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
+
+      if (chdir (test->name) < 0)
+	{
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
 
       printf ("%d/%d %s\n", i + 1, num_tests, test->name);
+
       test->func ();
 
-      chdir ("..");
+      if (chdir ("..") < 0)
+	{
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
     }
 }
