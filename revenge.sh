@@ -86,7 +86,7 @@ x=$?
 echo
 
 if [ "$x" -eq 0 ]; then
-	echo "Please send $(ls revenge-*.tar.bz2) to revenge@freedesktop.org."
+	echo "Please send $(ls revenge-*.tar.bz2) to foo@bar.baz."
 else
 	echo "Revenge failed to successfully generate a dump!"
 	echo "Please report the error message(s) to z3ro in #dri-devel on irc.freenode.net."
