@@ -230,9 +230,12 @@ test (void)
 
       if (mkdir (test->name, 0777) < 0)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
-	  exit (EXIT_FAILURE);
+	  if (errno != EEXIST)
+	    {
+	      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		       strerror (errno));
+	      exit (EXIT_FAILURE);
+	    }
 	}
 
       if (chdir (test->name) < 0)
