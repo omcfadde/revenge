@@ -9,6 +9,7 @@ AC_CONFIG_HEADER([config.h])
 
 # Checks for programs.
 AC_PROG_CC
+AC_PROG_MAKE_SET
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lGL':
@@ -22,15 +23,15 @@ AC_CHECK_LIB([z], [main])
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
+AC_CHECK_HEADERS([fcntl.h memory.h stdint.h stdlib.h string.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_C_INLINE
+AC_TYPE_UINT32_T
 
 # Checks for library functions.
-AC_PROG_GCC_TRADITIONAL
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([strdup])
+AC_FUNC_MMAP
+AC_CHECK_FUNCS([mkdir munmap strerror])
 
 AC_CONFIG_FILES([Makefile
 		 src/Makefile])
