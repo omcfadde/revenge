@@ -209,7 +209,8 @@ main (int argc, char **argv)
       break;
     }
 
-  snprintf (buf, BUFSIZ, "%s-%04x", PACKAGE_NAME, reg_device_id);
+  snprintf (buf, BUFSIZ, "%s-%s-%04x", PACKAGE_NAME, PACKAGE_VERSION,
+	    reg_device_id);
   mkdir (buf, 0777);
   chdir (buf);
 
@@ -260,8 +261,11 @@ main (int argc, char **argv)
       exit (EXIT_FAILURE);
     }
 
-  snprintf (buf, BUFSIZ, "tar -cjf %s-%04x.tar.bz2 %s-%04x/", PACKAGE_NAME,
-	    reg_device_id, PACKAGE_NAME, reg_device_id);
+  chdir ("..");
+
+  snprintf (buf, BUFSIZ,
+	    "tar -cjf %1$s-%2$s-%3$04x.tar.bz2 %1$s-%2$s-%3$04x/",
+	    PACKAGE_NAME, PACKAGE_VERSION, reg_device_id);
   system (buf);
 
   return 0;
