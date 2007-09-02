@@ -18,8 +18,10 @@
  */
 
 #include <assert.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <detect.h>
 #include <main.h>
@@ -174,7 +176,9 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map,
 
   if (!(file = fopen (name, "w")))
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   assert (tail >= head);
@@ -284,7 +288,9 @@ dump_device_id (void)
 
   if (!(file = fopen ("device_id.txt", "w")))
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   fprintf (file, "%04x\n", reg_device_id);
@@ -299,7 +305,9 @@ dump_device_name (void)
 
   if (!(file = fopen ("device_name.txt", "w")))
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   fprintf (file, "%s\n", reg_device_name);

@@ -18,6 +18,7 @@
  */
 
 #include <assert.h>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -88,14 +89,18 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
 	   mmap (NULL, ATI_PCIGART_PAGE_SIZE, PROT_READ | PROT_WRITE,
 		 MAP_SHARED, mem_fd, page_phys_addr)) == MAP_FAILED)
 	{
-	  assert (0);
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
 	}
 
       memcpy (tmp + i, page_mem_map, ATI_PCIGART_PAGE_SIZE);
 
       if (munmap (page_mem_map, ATI_PCIGART_PAGE_SIZE) < 0)
 	{
-	  assert (0);
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
 	}
     }
 

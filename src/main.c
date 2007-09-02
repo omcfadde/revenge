@@ -20,10 +20,12 @@
 
 #include <SDL.h>
 #include <assert.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -49,28 +51,28 @@ opengl_open (void)
     {
       printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
-      assert (0);
+      exit (EXIT_FAILURE);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_DEPTH_SIZE, 16) < 0)
     {
       printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
-      assert (0);
+      exit (EXIT_FAILURE);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_DOUBLEBUFFER, 0) < 0)
     {
       printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
-      assert (0);
+      exit (EXIT_FAILURE);
     }
 
   if (SDL_GL_SetAttribute (SDL_GL_STENCIL_SIZE, 8) < 0)
     {
       printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
-      assert (0);
+      exit (EXIT_FAILURE);
     }
 
   if (!(Surface = SDL_SetVideoMode (640, 480, 0,
@@ -79,7 +81,7 @@ opengl_open (void)
     {
       printf ("%s: %s\n", __func__, SDL_GetError ());
       SDL_Quit ();
-      assert (0);
+      exit (EXIT_FAILURE);
     }
 }
 
@@ -142,7 +144,9 @@ main (int argc, char **argv)
 
   if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   detect_reg_aperture ();
@@ -150,7 +154,9 @@ main (int argc, char **argv)
        mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 	     reg_addr)) == MAP_FAILED)
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   detect_fb_aperture ();
@@ -158,7 +164,9 @@ main (int argc, char **argv)
        mmap (NULL, fb_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 	     fb_addr)) == MAP_FAILED)
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   switch (option_interface)
@@ -169,7 +177,9 @@ main (int argc, char **argv)
 	   mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 		 agp_addr)) == MAP_FAILED)
 	{
-	  assert (0);
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
 	}
       break;
     case IF_PCIE:
@@ -178,7 +188,9 @@ main (int argc, char **argv)
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)
 	{
-	  assert (0);
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
 	}
       break;
     case IF_IGP:
@@ -187,7 +199,9 @@ main (int argc, char **argv)
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)
 	{
-	  assert (0);
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
 	}
       break;
     default:
@@ -204,31 +218,45 @@ main (int argc, char **argv)
 
   if (munmap (reg_mem_map, reg_len) < 0)
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   if (munmap (fb_mem_map, fb_len) < 0)
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   switch (option_interface)
     {
     case IF_AGP:
       if (munmap (agp_mem_map, agp_len) < 0)
-	assert (0);
+	{
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
       break;
     case IF_PCIE:
     case IF_IGP:
     default:
       if (munmap (pcigart_mem_map, pcigart_len) < 0)
-	assert (0);
+	{
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
       break;
     }
 
   if (close (mem_fd) < 0)
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   snprintf (buf, BUFSIZ, "tar -cjf %s-%04x.tar.bz2 %s-%04x/", PACKAGE_NAME,

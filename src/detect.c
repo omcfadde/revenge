@@ -19,6 +19,7 @@
 
 #include <assert.h>
 #include <ctype.h>
+#include <errno.h>
 #include <pci/pci.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,7 +63,9 @@ detect_agp_aperture (void)
 
   if (!(file = fopen ("/proc/iomem", "r")))
     {
-      assert (0);
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
     }
 
   while (fgets (buf, BUFSIZ, file))
