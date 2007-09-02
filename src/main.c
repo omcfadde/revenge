@@ -209,6 +209,7 @@ main (int argc, char **argv)
       break;
     }
 
+  snprintf (buf, BUFSIZ, "%s-%04x", PACKAGE_NAME, reg_device_id);
   mkdir (buf, 0777);
   chdir (buf);
 
