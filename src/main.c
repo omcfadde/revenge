@@ -35,7 +35,6 @@
 #include <main.h>
 #include <test.h>
 
-char *option_output = NULL;
 int option_debug = 0;
 int option_disable_ib = 0;
 int option_interface = IF_AGP;
@@ -115,7 +114,7 @@ main (int argc, char **argv)
   int i = 0;
   int opt;
 
-  while ((opt = getopt_long (argc, argv, "bdio:v", long_options, &i)) != -1)
+  while ((opt = getopt_long (argc, argv, "bdiv", long_options, &i)) != -1)
     {
       switch (opt)
 	{
@@ -127,9 +126,6 @@ main (int argc, char **argv)
 	  break;
 	case 'i':
 	  option_disable_ib = 1;
-	  break;
-	case 'o':
-	  option_output = strdup (optarg);
 	  break;
 	case 'v':
 	  option_verbose = 1;
@@ -199,18 +195,8 @@ main (int argc, char **argv)
       break;
     }
 
-  if (option_output)
-    {
-      mkdir (option_output, 0777);
-      chdir (option_output);
-      free (option_output);
-    }
-  else
-    {
-      snprintf (buf, BUFSIZ, "%s-%04x", PACKAGE_NAME, reg_device_id);
-      mkdir (buf, 0777);
-      chdir (buf);
-    }
+  mkdir (buf, 0777);
+  chdir (buf);
 
   opengl_open ();
   test ();
@@ -244,6 +230,10 @@ main (int argc, char **argv)
     {
       assert (0);
     }
+
+  snprintf (buf, BUFSIZ, "tar -cjf %s-%04x.tar.bz2 %s-%04x/", PACKAGE_NAME,
+	    reg_device_id, PACKAGE_NAME, reg_device_id);
+  system (buf);
 
   return 0;
 }
