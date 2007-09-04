@@ -45,6 +45,7 @@
 #include <gl_null.h>
 #include <gl_point_size.h>
 #include <gl_primitives.h>
+#include <gl_render_mode.h>
 #include <gl_scissor_test.h>
 #include <gl_shade_model.h>
 
@@ -131,6 +132,9 @@ static struct test_t tests[] = {
   {_(gl_null)},
   {_(gl_point_size)},
   {_(gl_primitives)},
+  {_(gl_render_mode_feedback)},
+  {_(gl_render_mode_render)},
+  {_(gl_render_mode_select)},
   {_(gl_scissor_test)},
   {_(gl_shade_model)},
 };

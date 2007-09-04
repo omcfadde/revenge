@@ -31,6 +31,8 @@ revenge_SOURCES = \
 		  gl_point_size.h \
 		  gl_primitives.c \
 		  gl_primitives.h \
+		  gl_render_mode.c \
+		  gl_render_mode.h \
 		  gl_scissor_test.c \
 		  gl_scissor_test.h \
 		  gl_shade_model.c \
