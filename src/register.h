@@ -20,6 +20,9 @@
 #ifndef __REGISTER_H__
 #define __REGISTER_H__
 
+#include <stdio.h>
+#include <stdlib.h>
+
 unsigned int register_read (unsigned int key);
 void register_write (unsigned int key, unsigned int val);
 unsigned int register_read_pcie (unsigned int key);

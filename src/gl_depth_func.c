@@ -17,28 +17,48 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_H__
-#define __DETECT_H__
-
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-extern unsigned int agp_addr;
-extern unsigned int agp_len;
-extern unsigned int fb_addr;
-extern unsigned int fb_len;
-extern unsigned int pcigart_addr;
-extern unsigned int pcigart_end;
-extern unsigned int pcigart_len;
-extern unsigned int pcigart_start;
-extern char reg_device_name[BUFSIZ];
-extern unsigned int reg_addr;
-extern unsigned int reg_device_id;
-extern unsigned int reg_len;
-void detect_agp_aperture (void);
-void detect_fb_aperture (void);
-void detect_pcigart_aperture (void);
-void detect_igpgart_aperture (void);
-void detect_reg_aperture (void);
+#include <test.h>
 
-#endif
+typedef struct
+{
+  unsigned int id;
+  char *name;
+} data_store;
+
+#define N_(name)	name, # name
+
+void
+gl_depth_func (void)
+{
+  data_store depth_func[] = {
+    {N_(GL_NEVER)},
+    {N_(GL_LESS)},
+    {N_(GL_EQUAL)},
+    {N_(GL_LEQUAL)},
+    {N_(GL_GREATER)},
+    {N_(GL_NOTEQUAL)},
+    {N_(GL_GEQUAL)},
+    {N_(GL_ALWAYS)},
+  };
+
+  int i;
+
+  for (i = 0; i < sizeof (depth_func) / sizeof (depth_func[0]); i++)
+    {
+      test_prologue (depth_func[i].name);
+      glEnable (GL_DEPTH_TEST);
+      glDepthFunc (depth_func[i].id);
+      tri ();
+      glDisable (GL_DEPTH_TEST);
+      test_epilogue (true);
+    }
+
+  glDepthFunc (GL_LESS);
+  glDisable (GL_DEPTH_TEST);
+}

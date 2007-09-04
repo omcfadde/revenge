@@ -33,8 +33,28 @@
 #include <main.h>
 #include <test.h>
 
-#define TEXTURE_WIDTH 16
-#define TEXTURE_HEIGHT 16
+#include <gl_clip_plane.h>
+#include <gl_cull_face.h>
+#include <gl_depth_func.h>
+#include <gl_depth_mask.h>
+#include <gl_depth_range.h>
+#include <gl_front_face.h>
+#include <gl_line_width.h>
+#include <gl_null.h>
+#include <gl_point_size.h>
+#include <gl_primitives.h>
+#include <gl_scissor_test.h>
+#include <gl_shade_model.h>
+
+void
+tri (void)
+{
+  glBegin (GL_TRIANGLES);
+  glVertex3f (1.0, 0.0, 0.0);
+  glVertex3f (0.0, 1.0, 0.0);
+  glVertex3f (0.0, 0.0, 1.0);
+  glEnd ();
+}
 
 static void
 test_quiescent (void)
@@ -45,167 +65,67 @@ test_quiescent (void)
   nanosleep (&req, NULL);
 }
 
-static void
-test_prologue (void)
+void
+test_prologue (char *buf)
 {
   test_quiescent ();
   dump_rb_pre ();
-}
 
-static void
-test_epilogue (void)
-{
-  test_quiescent ();
-  dump_rb_post ();
-}
+  if (buf)
+    {
+      printf ("        %s\n", buf);
 
-static void
-tri (void)
-{
-  glBegin (GL_TRIANGLES);
-  glVertex3f (1.0, 0.0, 0.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
+      if (mkdir (buf, 0777) < 0)
+	{
+	  if (errno != EEXIST)
+	    {
+	      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		       strerror (errno));
+	      exit (EXIT_FAILURE);
+	    }
+	}
+
+      if (chdir (buf) < 0)
+	{
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
+    }
 }
 
 void
-tex_tri (void)
+test_epilogue (bool buf)
 {
-  glBegin (GL_TRIANGLES);
-  glMultiTexCoord2f (GL_TEXTURE0, 1.0, 0.0);
-  glVertex3f (1.0, 0.0, 0.0);
-  glMultiTexCoord2f (GL_TEXTURE0, 0.0, 1.0);
-  glVertex3f (0.0, 1.0, 0.0);
-  glMultiTexCoord2f (GL_TEXTURE0, 0.0, 0.0);
-  glVertex3f (0.0, 0.0, 1.0);
-  glEnd ();
-}
+  test_quiescent ();
+  dump_rb_post ();
 
-static void
-gl_null (void)
-{
-  test_prologue ();
-  test_epilogue ();
-}
-
-static void
-gl_triangle (void)
-{
-  test_prologue ();
-  tri ();
-  test_epilogue ();
-}
-
-static void
-gl_polygon_offset_fill (void)
-{
-  test_prologue ();
-  glPolygonOffset (0.1, 0.2);
-  glEnable (GL_POLYGON_OFFSET_FILL);
-  tri ();
-  glDisable (GL_POLYGON_OFFSET_FILL);
-  test_epilogue ();
-}
-
-static void
-gl_polygon_offset_line (void)
-{
-  test_prologue ();
-  glPolygonOffset (0.1, 0.2);
-  glEnable (GL_POLYGON_OFFSET_LINE);
-  tri ();
-  glDisable (GL_POLYGON_OFFSET_LINE);
-  test_epilogue ();
-}
-
-static void
-gl_polygon_offset_point (void)
-{
-  test_prologue ();
-  glPolygonOffset (0.1, 0.2);
-  glEnable (GL_POLYGON_OFFSET_POINT);
-  tri ();
-  glDisable (GL_POLYGON_OFFSET_POINT);
-  test_epilogue ();
-}
-
-static void
-gl_clip_plane0 (void)
-{
-  GLdouble plane[] = { 0.1, 0.2, 0.3, 0.4 };
-
-  test_prologue ();
-  glClipPlane (GL_CLIP_PLANE0, plane);
-  glEnable (GL_CLIP_PLANE0);
-  tri ();
-  glDisable (GL_CLIP_PLANE0);
-  test_epilogue ();
-}
-
-static void *
-create_random_texture (int w, int h)
-{
-  uint32_t *texture;
-  int i;
-
-  texture = malloc (w * h * sizeof (uint32_t));
-  if (!texture)
+  if (buf)
     {
-      printf ("can not allocate mem for texture\n");
-      return NULL;
+      if (chdir ("..") < 0)
+	{
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
     }
-
-  for (i = 0; i < w * h; i++)
-    {
-      texture[i] = random ();
-    }
-
-  return texture;
-}
-
-static void
-gl_texture (void)
-{
-  GLuint tid;
-  int *texture = NULL;
-
-  if (!(texture = create_random_texture (TEXTURE_WIDTH, TEXTURE_HEIGHT)))
-    {
-      return;
-    }
-
-  test_prologue ();
-  glGenTextures (1, &tid);
-  glActiveTexture (GL_TEXTURE0_ARB);
-  glEnable (GL_TEXTURE_2D);
-
-  glBindTexture (GL_TEXTURE_2D, tid);
-  glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, texture);
-  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-  tex_tri ();
-
-  glActiveTexture (GL_TEXTURE0_ARB);
-  glDisable (GL_TEXTURE_2D);
-
-  test_epilogue ();
-
-  free (texture);
 }
 
 #define _(x) #x, x
 
 static struct test_t tests[] = {
+  {_(gl_clip_plane)},
+  {_(gl_cull_face)},
+  {_(gl_depth_func)},
+  {_(gl_depth_mask)},
+  {_(gl_depth_range)},
+  {_(gl_front_face)},
+  {_(gl_line_width)},
   {_(gl_null)},
-  {_(gl_triangle)},
-  {_(gl_polygon_offset_fill)},
-  {_(gl_polygon_offset_line)},
-  {_(gl_polygon_offset_point)},
-  {_(gl_clip_plane0)},
-  {_(gl_texture)},
+  {_(gl_point_size)},
+  {_(gl_primitives)},
+  {_(gl_scissor_test)},
+  {_(gl_shade_model)},
 };
 
 #undef _

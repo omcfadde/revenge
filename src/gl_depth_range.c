@@ -17,28 +17,32 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_H__
-#define __DETECT_H__
-
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-extern unsigned int agp_addr;
-extern unsigned int agp_len;
-extern unsigned int fb_addr;
-extern unsigned int fb_len;
-extern unsigned int pcigart_addr;
-extern unsigned int pcigart_end;
-extern unsigned int pcigart_len;
-extern unsigned int pcigart_start;
-extern char reg_device_name[BUFSIZ];
-extern unsigned int reg_addr;
-extern unsigned int reg_device_id;
-extern unsigned int reg_len;
-void detect_agp_aperture (void);
-void detect_fb_aperture (void);
-void detect_pcigart_aperture (void);
-void detect_igpgart_aperture (void);
-void detect_reg_aperture (void);
+#include <test.h>
 
-#endif
+void
+gl_depth_range (void)
+{
+  char buf[BUFSIZ];
+
+  snprintf (buf, BUFSIZ, "%f_%f", 0.1, 0.5);
+  test_prologue (buf);
+  glEnable (GL_DEPTH_TEST);
+  glDepthRange (0.1, 0.5);
+  tri ();
+  glDisable (GL_DEPTH_TEST);
+  test_epilogue (true);
+
+  snprintf (buf, BUFSIZ, "%f_%f", 0.0, 1.0);
+  test_prologue (buf);
+  glEnable (GL_DEPTH_TEST);
+  glDepthRange (0.0, 1.0);
+  tri ();
+  glDisable (GL_DEPTH_TEST);
+  test_epilogue (true);
+}

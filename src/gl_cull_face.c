@@ -17,28 +17,43 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_H__
-#define __DETECT_H__
-
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-extern unsigned int agp_addr;
-extern unsigned int agp_len;
-extern unsigned int fb_addr;
-extern unsigned int fb_len;
-extern unsigned int pcigart_addr;
-extern unsigned int pcigart_end;
-extern unsigned int pcigart_len;
-extern unsigned int pcigart_start;
-extern char reg_device_name[BUFSIZ];
-extern unsigned int reg_addr;
-extern unsigned int reg_device_id;
-extern unsigned int reg_len;
-void detect_agp_aperture (void);
-void detect_fb_aperture (void);
-void detect_pcigart_aperture (void);
-void detect_igpgart_aperture (void);
-void detect_reg_aperture (void);
+#include <test.h>
 
-#endif
+typedef struct
+{
+  unsigned int id;
+  char *name;
+} data_store;
+
+#define N_(name)	name, # name
+
+void
+gl_cull_face (void)
+{
+  data_store cull_face[] = {
+    {N_(GL_FRONT)},
+    {N_(GL_BACK)},
+    {N_(GL_FRONT_AND_BACK)},
+  };
+
+  int i;
+
+  for (i = 0; i < sizeof (cull_face) / sizeof (cull_face[0]); i++)
+    {
+      test_prologue (cull_face[i].name);
+      glEnable (GL_CULL_FACE);
+      glCullFace (cull_face[i].id);
+      tri ();
+      glDisable (GL_CULL_FACE);
+      test_epilogue (true);
+    }
+
+  glCullFace (GL_BACK);
+  glDisable (GL_CULL_FACE);
+}

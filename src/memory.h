@@ -20,6 +20,9 @@
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
 
+#include <stdio.h>
+#include <stdlib.h>
+
 void *memory_read (unsigned int addr, unsigned int size);
 
 #endif

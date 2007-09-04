@@ -20,6 +20,9 @@
 #ifndef __MAIN_H__
 #define __MAIN_H__
 
+#include <stdio.h>
+#include <stdlib.h>
+
 #define IF_PCIE 0
 #define IF_AGP 1
 #define IF_IGP 2

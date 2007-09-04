@@ -43,8 +43,15 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_revenge_OBJECTS = detect.$(OBJEXT) dump.$(OBJEXT) main.$(OBJEXT) \
-	memory.$(OBJEXT) register.$(OBJEXT) test.$(OBJEXT)
+am_revenge_OBJECTS = detect.$(OBJEXT) dump.$(OBJEXT) \
+	gl_clip_plane.$(OBJEXT) gl_cull_face.$(OBJEXT) \
+	gl_depth_func.$(OBJEXT) gl_depth_mask.$(OBJEXT) \
+	gl_depth_range.$(OBJEXT) gl_front_face.$(OBJEXT) \
+	gl_line_width.$(OBJEXT) gl_null.$(OBJEXT) \
+	gl_point_size.$(OBJEXT) gl_primitives.$(OBJEXT) \
+	gl_scissor_test.$(OBJEXT) gl_shade_model.$(OBJEXT) \
+	main.$(OBJEXT) memory.$(OBJEXT) register.$(OBJEXT) \
+	test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -149,6 +156,30 @@ revenge_SOURCES = \
 		  detect.h \
 		  dump.c \
 		  dump.h \
+		  gl_clip_plane.c \
+		  gl_clip_plane.h \
+		  gl_cull_face.c \
+		  gl_cull_face.h \
+		  gl_depth_func.c \
+		  gl_depth_func.h \
+		  gl_depth_mask.c \
+		  gl_depth_mask.h \
+		  gl_depth_range.c \
+		  gl_depth_range.h \
+		  gl_front_face.c \
+		  gl_front_face.h \
+		  gl_line_width.c \
+		  gl_line_width.h \
+		  gl_null.c \
+		  gl_null.h \
+		  gl_point_size.c \
+		  gl_point_size.h \
+		  gl_primitives.c \
+		  gl_primitives.h \
+		  gl_scissor_test.c \
+		  gl_scissor_test.h \
+		  gl_shade_model.c \
+		  gl_shade_model.h \
 		  main.c \
 		  main.h \
 		  memory.c \
@@ -226,6 +257,18 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_clip_plane.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_cull_face.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_depth_func.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_depth_mask.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_depth_range.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_front_face.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_line_width.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_null.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_point_size.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_primitives.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_scissor_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_shade_model.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/register.Po@am__quote@

@@ -17,28 +17,36 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_H__
-#define __DETECT_H__
-
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-extern unsigned int agp_addr;
-extern unsigned int agp_len;
-extern unsigned int fb_addr;
-extern unsigned int fb_len;
-extern unsigned int pcigart_addr;
-extern unsigned int pcigart_end;
-extern unsigned int pcigart_len;
-extern unsigned int pcigart_start;
-extern char reg_device_name[BUFSIZ];
-extern unsigned int reg_addr;
-extern unsigned int reg_device_id;
-extern unsigned int reg_len;
-void detect_agp_aperture (void);
-void detect_fb_aperture (void);
-void detect_pcigart_aperture (void);
-void detect_igpgart_aperture (void);
-void detect_reg_aperture (void);
+#include <test.h>
 
-#endif
+void
+gl_clip_plane (void)
+{
+  int i, max_planes;
+  GLdouble planes[4];
+  char buf[BUFSIZ];
+
+  glGetIntegerv (GL_MAX_CLIP_PLANES, &max_planes);
+
+  for (i = 0; i < max_planes; i++)
+    {
+      planes[0] = (1.0 * (float) i);
+      planes[1] = planes[0] + 10.0;
+      planes[2] = planes[0] + 100.0;
+      planes[3] = planes[0] + 1000.0;
+
+      snprintf (buf, BUFSIZ, "GL_CLIP_PLANE%d", i);
+      test_prologue (buf);
+      glEnable (GL_CLIP_PLANE0 + i);
+      glClipPlane (GL_CLIP_PLANE0 + i, planes);
+      tri ();
+      glDisable (GL_CLIP_PLANE0 + i);
+      test_epilogue (true);
+    }
+}

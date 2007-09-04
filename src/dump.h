@@ -20,6 +20,9 @@
 #ifndef __DUMP_H__
 #define __DUMP_H__
 
+#include <stdio.h>
+#include <stdlib.h>
+
 void dump_rb_pre (void);
 void dump_rb_post (void);
 void dump_device_id (void);

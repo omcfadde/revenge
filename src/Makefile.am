@@ -7,6 +7,30 @@ revenge_SOURCES = \
 		  detect.h \
 		  dump.c \
 		  dump.h \
+		  gl_clip_plane.c \
+		  gl_clip_plane.h \
+		  gl_cull_face.c \
+		  gl_cull_face.h \
+		  gl_depth_func.c \
+		  gl_depth_func.h \
+		  gl_depth_mask.c \
+		  gl_depth_mask.h \
+		  gl_depth_range.c \
+		  gl_depth_range.h \
+		  gl_front_face.c \
+		  gl_front_face.h \
+		  gl_line_width.c \
+		  gl_line_width.h \
+		  gl_null.c \
+		  gl_null.h \
+		  gl_point_size.c \
+		  gl_point_size.h \
+		  gl_primitives.c \
+		  gl_primitives.h \
+		  gl_scissor_test.c \
+		  gl_scissor_test.h \
+		  gl_shade_model.c \
+		  gl_shade_model.h \
 		  main.c \
 		  main.h \
 		  memory.c \

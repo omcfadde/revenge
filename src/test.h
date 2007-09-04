@@ -20,12 +20,19 @@
 #ifndef __TEST_H__
 #define __TEST_H__
 
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 struct test_t
 {
   char *name;
   void (*func) (void);
 };
 
+void tri (void);
+void test_prologue (char *buf);
+void test_epilogue (bool buf);
 void test (void);
 
 #endif

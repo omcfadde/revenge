@@ -17,28 +17,28 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __DETECT_H__
-#define __DETECT_H__
-
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-extern unsigned int agp_addr;
-extern unsigned int agp_len;
-extern unsigned int fb_addr;
-extern unsigned int fb_len;
-extern unsigned int pcigart_addr;
-extern unsigned int pcigart_end;
-extern unsigned int pcigart_len;
-extern unsigned int pcigart_start;
-extern char reg_device_name[BUFSIZ];
-extern unsigned int reg_addr;
-extern unsigned int reg_device_id;
-extern unsigned int reg_len;
-void detect_agp_aperture (void);
-void detect_fb_aperture (void);
-void detect_pcigart_aperture (void);
-void detect_igpgart_aperture (void);
-void detect_reg_aperture (void);
+#include <test.h>
 
-#endif
+void
+gl_point_size (void)
+{
+  char buf[BUFSIZ];
+  int i;
+
+  for (i = 1; i < 16; i++)
+    {
+      snprintf (buf, BUFSIZ, "%f", (float) i);
+      test_prologue (buf);
+      glPointSize ((float) i);
+      tri ();
+      test_epilogue (true);
+    }
+
+  glPointSize (1.0);
+}
