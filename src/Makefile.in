@@ -44,7 +44,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = detect.$(OBJEXT) dump.$(OBJEXT) \
-	gl_alpha_test.$(OBJEXT) gl_clear.$(OBJEXT) \
+	gl_alpha_test.$(OBJEXT) gl_blend.$(OBJEXT) gl_clear.$(OBJEXT) \
 	gl_clip_plane.$(OBJEXT) gl_cull_face.$(OBJEXT) \
 	gl_depth_func.$(OBJEXT) gl_depth_mask.$(OBJEXT) \
 	gl_depth_range.$(OBJEXT) gl_front_face.$(OBJEXT) \
@@ -159,6 +159,8 @@ revenge_SOURCES = \
 		  dump.h \
 		  gl_alpha_test.c \
 		  gl_alpha_test.h \
+		  gl_blend.c \
+		  gl_blend.h \
 		  gl_clear.c \
 		  gl_clear.h \
 		  gl_clip_plane.c \
@@ -265,6 +267,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_alpha_test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_blend.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_clear.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_clip_plane.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_cull_face.Po@am__quote@
