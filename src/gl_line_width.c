@@ -31,7 +31,7 @@ gl_line_width (void)
   char buf[BUFSIZ];
   int i;
 
-  for (i = 1; i < 16; i++)
+  for (i = 1; i <= 4; i++)
     {
       snprintf (buf, BUFSIZ, "%f", (float) i);
       test_prologue (buf);
