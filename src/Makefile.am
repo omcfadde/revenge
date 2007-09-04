@@ -9,6 +9,8 @@ revenge_SOURCES = \
 		  dump.h \
 		  gl_alpha_test.c \
 		  gl_alpha_test.h \
+		  gl_clear.c \
+		  gl_clear.h \
 		  gl_clip_plane.c \
 		  gl_clip_plane.h \
 		  gl_cull_face.c \

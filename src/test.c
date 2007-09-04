@@ -34,6 +34,7 @@
 #include <test.h>
 
 #include <gl_alpha_test.h>
+#include <gl_clear.h>
 #include <gl_clip_plane.h>
 #include <gl_cull_face.h>
 #include <gl_depth_func.h>
@@ -116,6 +117,10 @@ test_epilogue (bool buf)
 
 static struct test_t tests[] = {
   {_(gl_alpha_test)},
+  {_(gl_clear_accum_buffer)},
+  {_(gl_clear_color_buffer)},
+  {_(gl_clear_depth_buffer)},
+  {_(gl_clear_stencil_buffer)},
   {_(gl_clip_plane)},
   {_(gl_cull_face)},
   {_(gl_depth_func)},
