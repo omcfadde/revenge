@@ -46,10 +46,13 @@ gl_depth_mask (void)
   for (i = 0; i < sizeof (depth_mask) / sizeof (depth_mask[0]); i++)
     {
       test_prologue (depth_mask[i].name);
+      glEnable (GL_DEPTH_TEST);
       glDepthMask (depth_mask[i].id);
       tri ();
+      glDisable (GL_DEPTH_TEST);
       test_epilogue (true);
     }
 
   glDepthMask (GL_TRUE);
+  glDisable (GL_DEPTH_TEST);
 }
