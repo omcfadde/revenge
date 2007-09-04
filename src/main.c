@@ -209,7 +209,7 @@ main (int argc, char **argv)
       break;
     }
 
-  snprintf (buf, BUFSIZ, "%s-%s-%04x", PACKAGE_NAME, PACKAGE_VERSION,
+  snprintf (buf, BUFSIZ, "%1$s-%2$s-%3$04x", PACKAGE_NAME, PACKAGE_VERSION,
 	    reg_device_id);
 
   if (mkdir (buf, 0777) < 0)
