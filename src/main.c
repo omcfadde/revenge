@@ -29,6 +29,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <time.h>
 #include <unistd.h>
 
 #include <config.h>
@@ -115,6 +116,10 @@ main (int argc, char **argv)
   char buf[BUFSIZ];
   int i = 0;
   int opt;
+  int revenge_rand;
+
+  srand (time (NULL));
+  revenge_rand = rand () & 0xffff;
 
   while ((opt = getopt_long (argc, argv, "bdiv", long_options, &i)) != -1)
     {
@@ -209,8 +214,8 @@ main (int argc, char **argv)
       break;
     }
 
-  snprintf (buf, BUFSIZ, "%1$s-%2$s-%3$04x", PACKAGE_NAME, PACKAGE_VERSION,
-	    reg_device_id);
+  snprintf (buf, BUFSIZ, "%1$s-%2$s-%3$04x-%4$04x", PACKAGE_NAME,
+	    PACKAGE_VERSION, reg_device_id, revenge_rand);
 
   if (mkdir (buf, 0777) < 0)
     {
@@ -284,8 +289,8 @@ main (int argc, char **argv)
     }
 
   snprintf (buf, BUFSIZ,
-	    "tar -cjf %1$s-%2$s-%3$04x.tar.bz2 %1$s-%2$s-%3$04x/",
-	    PACKAGE_NAME, PACKAGE_VERSION, reg_device_id);
+	    "tar -cjf %1$s-%2$s-%3$04x-%4$04x.tar.bz2 %1$s-%2$s-%3$04x-%4$04x/",
+	    PACKAGE_NAME, PACKAGE_VERSION, reg_device_id, revenge_rand);
   system (buf);
 
   return 0;
