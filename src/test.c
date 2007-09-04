@@ -33,6 +33,7 @@
 #include <main.h>
 #include <test.h>
 
+#include <gl_alpha_test.h>
 #include <gl_clip_plane.h>
 #include <gl_cull_face.h>
 #include <gl_depth_func.h>
@@ -114,6 +115,7 @@ test_epilogue (bool buf)
 #define _(x) #x, x
 
 static struct test_t tests[] = {
+  {_(gl_alpha_test)},
   {_(gl_clip_plane)},
   {_(gl_cull_face)},
   {_(gl_depth_func)},

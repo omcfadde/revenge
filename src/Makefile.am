@@ -7,6 +7,8 @@ revenge_SOURCES = \
 		  detect.h \
 		  dump.c \
 		  dump.h \
+		  gl_alpha_test.c \
+		  gl_alpha_test.h \
 		  gl_clip_plane.c \
 		  gl_clip_plane.h \
 		  gl_cull_face.c \

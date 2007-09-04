@@ -44,14 +44,14 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_revenge_OBJECTS = detect.$(OBJEXT) dump.$(OBJEXT) \
-	gl_clip_plane.$(OBJEXT) gl_cull_face.$(OBJEXT) \
-	gl_depth_func.$(OBJEXT) gl_depth_mask.$(OBJEXT) \
-	gl_depth_range.$(OBJEXT) gl_front_face.$(OBJEXT) \
-	gl_line_width.$(OBJEXT) gl_null.$(OBJEXT) \
-	gl_point_size.$(OBJEXT) gl_primitives.$(OBJEXT) \
-	gl_scissor_test.$(OBJEXT) gl_shade_model.$(OBJEXT) \
-	main.$(OBJEXT) memory.$(OBJEXT) register.$(OBJEXT) \
-	test.$(OBJEXT)
+	gl_alpha_test.$(OBJEXT) gl_clip_plane.$(OBJEXT) \
+	gl_cull_face.$(OBJEXT) gl_depth_func.$(OBJEXT) \
+	gl_depth_mask.$(OBJEXT) gl_depth_range.$(OBJEXT) \
+	gl_front_face.$(OBJEXT) gl_line_width.$(OBJEXT) \
+	gl_null.$(OBJEXT) gl_point_size.$(OBJEXT) \
+	gl_primitives.$(OBJEXT) gl_scissor_test.$(OBJEXT) \
+	gl_shade_model.$(OBJEXT) main.$(OBJEXT) memory.$(OBJEXT) \
+	register.$(OBJEXT) test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -156,6 +156,8 @@ revenge_SOURCES = \
 		  detect.h \
 		  dump.c \
 		  dump.h \
+		  gl_alpha_test.c \
+		  gl_alpha_test.h \
 		  gl_clip_plane.c \
 		  gl_clip_plane.h \
 		  gl_cull_face.c \
@@ -257,6 +259,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_alpha_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_clip_plane.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_cull_face.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_depth_func.Po@am__quote@
