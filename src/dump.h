@@ -29,6 +29,7 @@ void dump_device_id (void);
 void dump_device_name (void);
 void dump_fglrx_version (void);
 void dump_fglrxinfo (void);
+void dump_interface (void);
 void dump_lspci (void);
 
 #endif

@@ -331,6 +331,37 @@ dump_fglrxinfo (void)
 }
 
 void
+dump_interface (void)
+{
+  FILE *file;
+
+  if (!(file = fopen ("interface.txt", "w")))
+    {
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
+    }
+
+  switch (option_interface)
+    {
+    case IF_PCIE:
+      fprintf (file, "PCI-E\n");
+      break;
+    case IF_AGP:
+      fprintf (file, "AGP\n");
+      break;
+    case IF_IGP:
+      fprintf (file, "IGP\n");
+      break;
+    default:
+      assert (0);
+      break;
+    }
+
+  fclose (file);
+}
+
+void
 dump_lspci (void)
 {
   system ("lspci -v > lspci.txt");

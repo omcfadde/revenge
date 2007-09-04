@@ -144,6 +144,7 @@ test (void)
   dump_device_name ();
   dump_fglrx_version ();
   dump_fglrxinfo ();
+  dump_interface ();
   dump_lspci ();
 
   for (i = 0; i < num_tests; i++)
