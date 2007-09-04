@@ -57,8 +57,14 @@ gl_alpha_test (void)
 	{
 	  snprintf (buf, BUFSIZ, "%s_%f", alpha_test[i].name, j);
 	  test_prologue (buf);
+	  glEnable (GL_ALPHA_TEST);
+	  glAlphaFunc (alpha_test[i].id);
 	  tri ();
 	  test_epilogue (true);
 	}
     }
+
+
+  glAlphaFunc (GL_ALWAYS);
+  glDisable (GL_ALPHA_TEST);
 }
