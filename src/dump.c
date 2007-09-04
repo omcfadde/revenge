@@ -28,7 +28,7 @@
 #include <memory.h>
 #include <register.h>
 
-static unsigned int ib_addr = 0, ib_size = 0;
+static unsigned int ib_addr = 0, ib_num = 0, ib_size = 0;
 static unsigned int rb_addr = 0, rb_head = 0, rb_size = 0, rb_tail = 0;
 static unsigned int tx_addr = 0, tx_width = 0, tx_height = 0;
 
@@ -240,16 +240,18 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 		  ib_addr, ib_size);
 	}
 
-      snprintf (buf, BUFSIZ, "ib_%08x.txt", ib_addr);
+      snprintf (buf, BUFSIZ, "ib_%04d.txt", ib_num);
       ib_mem_map = memory_read (ib_addr, ib_size * 4);
       dump_packets (0, ib_size, ib_mem_map, buf);
       free (ib_mem_map);
+      ib_num++;
     }
 }
 
 void
 dump_rb_pre (void)
 {
+  ib_num = 0;
   rb_addr = register_read (RADEON_CP_RB_BASE);
   rb_head = register_read (RADEON_CP_RB_RPTR);
   rb_size = (1 << ((register_read (RADEON_CP_RB_CNTL) & 0xff) + 1));
@@ -275,7 +277,7 @@ dump_rb_post (void)
 	      rb_tail - rb_head);
     }
 
-  snprintf (buf, BUFSIZ, "rb_%08x.txt", rb_addr);
+  snprintf (buf, BUFSIZ, "rb.txt");
   rb_mem_map = memory_read (rb_addr, rb_size * 4);
   dump_packets (rb_head, rb_tail, rb_mem_map, buf);
   free (rb_mem_map);
