@@ -37,6 +37,7 @@
 #include <gl_blend.h>
 #include <gl_clear.h>
 #include <gl_clip_plane.h>
+#include <gl_color_logic_op.h>
 #include <gl_cull_face.h>
 #include <gl_depth_func.h>
 #include <gl_depth_mask.h>
@@ -126,6 +127,7 @@ static struct test_t tests[] = {
   {_(gl_clear_depth_buffer)},
   {_(gl_clear_stencil_buffer)},
   {_(gl_clip_plane)},
+  {_(gl_color_logic_op)},
   {_(gl_cull_face)},
   {_(gl_depth_func)},
   {_(gl_depth_mask)},

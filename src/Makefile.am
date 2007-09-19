@@ -15,6 +15,8 @@ revenge_SOURCES = \
 		  gl_clear.h \
 		  gl_clip_plane.c \
 		  gl_clip_plane.h \
+		  gl_color_logic_op.c \
+		  gl_color_logic_op.h \
 		  gl_cull_face.c \
 		  gl_cull_face.h \
 		  gl_depth_func.c \
