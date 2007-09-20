@@ -43,6 +43,7 @@
 #include <gl_depth_mask.h>
 #include <gl_depth_range.h>
 #include <gl_front_face.h>
+#include <gl_line_smooth.h>
 #include <gl_line_smooth_hint.h>
 #include <gl_line_width.h>
 #include <gl_null.h>
@@ -134,7 +135,8 @@ static struct test_t tests[] = {
   {_(gl_depth_mask)},
   {_(gl_depth_range)},
   {_(gl_front_face)},
-  {_(gl_line_smooth_hint)},
+  {_(gl_line_smooth)},
+  /* {_(gl_line_smooth_hint)}, */
   {_(gl_line_width)},
   {_(gl_null)},
   {_(gl_point_size)},
