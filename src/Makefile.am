@@ -27,6 +27,8 @@ revenge_SOURCES = \
 		  gl_depth_range.h \
 		  gl_front_face.c \
 		  gl_front_face.h \
+		  gl_line_smooth_hint.c \
+		  gl_line_smooth_hint.h \
 		  gl_line_width.c \
 		  gl_line_width.h \
 		  gl_null.c \
