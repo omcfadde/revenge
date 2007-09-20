@@ -217,11 +217,9 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map,
 	  assert (0);
 	  break;
 	}
-
-      assert (i + proc + 1 <= tail);
     }
 
-  assert (i == tail);
+  assert (i - tail <= 1);
 
   fclose (file);
 }
