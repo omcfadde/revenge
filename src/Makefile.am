@@ -45,6 +45,8 @@ revenge_SOURCES = \
 		  gl_scissor_test.h \
 		  gl_shade_model.c \
 		  gl_shade_model.h \
+		  gl_texture.c \
+		  gl_texture.h \
 		  main.c \
 		  main.h \
 		  memory.c \

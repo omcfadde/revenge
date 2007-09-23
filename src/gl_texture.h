@@ -17,23 +17,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef __TEST_H__
-#define __TEST_H__
+#ifndef __GL_TEXTURE_H__
+#define __GL_TEXTURE_H__
 
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-struct test_t
-{
-  char *name;
-  void (*func) (void);
-};
-
-void tri (void);
-void tex_tri (void);
-void test_prologue (char *buf);
-void test_epilogue (bool buf);
-void test (void);
+void gl_texture (void);
 
 #endif

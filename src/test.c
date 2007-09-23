@@ -52,6 +52,7 @@
 #include <gl_render_mode.h>
 #include <gl_scissor_test.h>
 #include <gl_shade_model.h>
+#include <gl_texture.h>
 
 void
 tri (void)
@@ -59,6 +60,19 @@ tri (void)
   glBegin (GL_TRIANGLES);
   glVertex3f (1.0, 0.0, 0.0);
   glVertex3f (0.0, 1.0, 0.0);
+  glVertex3f (0.0, 0.0, 1.0);
+  glEnd ();
+}
+
+void
+tex_tri (void)
+{
+  glBegin (GL_TRIANGLES);
+  glTexCoord2f (1.0, 0.0);
+  glVertex3f (1.0, 0.0, 0.0);
+  glTexCoord2f (0.0, 1.0);
+  glVertex3f (0.0, 1.0, 0.0);
+  glTexCoord2f (0.0, 0.0);
   glVertex3f (0.0, 0.0, 1.0);
   glEnd ();
 }
@@ -146,6 +160,7 @@ static struct test_t tests[] = {
   {_(gl_render_mode_select)},
   {_(gl_scissor_test)},
   {_(gl_shade_model)},
+  {_(gl_texture)},
 };
 
 #undef _
