@@ -47,6 +47,8 @@ revenge_SOURCES = \
 		  gl_shade_model.h \
 		  gl_texture.c \
 		  gl_texture.h \
+		  gl_texture_mag_filter.c \
+		  gl_texture_mag_filter.h \
 		  gl_texture_min_filter.c \
 		  gl_texture_min_filter.h \
 		  main.c \

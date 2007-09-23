@@ -53,6 +53,7 @@
 #include <gl_scissor_test.h>
 #include <gl_shade_model.h>
 #include <gl_texture.h>
+#include <gl_texture_mag_filter.h>
 #include <gl_texture_min_filter.h>
 
 void
@@ -162,6 +163,7 @@ static struct test_t tests[] = {
   {_(gl_scissor_test)},
   {_(gl_shade_model)},
   {_(gl_texture)},
+  {_(gl_texture_mag_filter)},
   {_(gl_texture_min_filter)},
 };
 
