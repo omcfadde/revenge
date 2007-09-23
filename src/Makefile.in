@@ -53,8 +53,9 @@ am_revenge_OBJECTS = detect.$(OBJEXT) dump.$(OBJEXT) \
 	gl_null.$(OBJEXT) gl_point_size.$(OBJEXT) \
 	gl_primitives.$(OBJEXT) gl_render_mode.$(OBJEXT) \
 	gl_scissor_test.$(OBJEXT) gl_shade_model.$(OBJEXT) \
-	gl_texture.$(OBJEXT) main.$(OBJEXT) memory.$(OBJEXT) \
-	register.$(OBJEXT) test.$(OBJEXT)
+	gl_texture.$(OBJEXT) gl_texture_min_filter.$(OBJEXT) \
+	main.$(OBJEXT) memory.$(OBJEXT) register.$(OBJEXT) \
+	test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -199,6 +200,8 @@ revenge_SOURCES = \
 		  gl_shade_model.h \
 		  gl_texture.c \
 		  gl_texture.h \
+		  gl_texture_min_filter.c \
+		  gl_texture_min_filter.h \
 		  main.c \
 		  main.h \
 		  memory.c \
@@ -296,6 +299,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_scissor_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_shade_model.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture_min_filter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/register.Po@am__quote@

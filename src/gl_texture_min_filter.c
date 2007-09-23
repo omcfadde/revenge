@@ -27,6 +27,14 @@
 
 #include <test.h>
 
+typedef struct
+{
+  unsigned int id;
+  char *name;
+} data_store;
+
+#define N_(name)	name, # name
+
 #define TEXTURE_WIDTH 16
 #define TEXTURE_HEIGHT 16
 
@@ -52,37 +60,51 @@ random_texture (int width, int height)
 }
 
 void
-gl_texture (void)
+gl_texture_min_filter (void)
 {
+  data_store texture_min_filter[] = {
+    {N_(GL_NEAREST)},
+    {N_(GL_LINEAR)},
+    {N_(GL_NEAREST_MIPMAP_NEAREST)},
+    {N_(GL_LINEAR_MIPMAP_NEAREST)},
+    {N_(GL_NEAREST_MIPMAP_LINEAR)},
+    {N_(GL_LINEAR_MIPMAP_LINEAR)},
+  };
+
   GLuint *texture = NULL;;
   GLuint texName;
+  int i;
 
   if (!(texture = random_texture (TEXTURE_WIDTH, TEXTURE_HEIGHT)))
     {
       return;
     }
 
-  test_prologue (NULL);
+  for (i = 0;
+       i < sizeof (texture_min_filter) / sizeof (texture_min_filter[0]); i++)
+    {
+      test_prologue (texture_min_filter[i].name);
 
-  glEnable (GL_TEXTURE_2D);
+      glEnable (GL_TEXTURE_2D);
 
-  glGenTextures (1, &texName);
-  glBindTexture (GL_TEXTURE_2D, texName);
+      glGenTextures (1, &texName);
+      glBindTexture (GL_TEXTURE_2D, texName);
 
-  glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-		   /* GL_NEAREST_MIPMAP_LINEAR */ GL_NEAREST);
-  glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+      glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+		       texture_min_filter[i].id);
+      glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+      glTexParameterf (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-  glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_WIDTH, TEXTURE_HEIGHT, 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, texture);
+      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, TEXTURE_WIDTH, TEXTURE_HEIGHT,
+		    0, GL_RGBA, GL_UNSIGNED_BYTE, texture);
 
-  tex_tri ();
+      tex_tri ();
 
-  glDisable (GL_TEXTURE_2D);
+      glDisable (GL_TEXTURE_2D);
 
-  test_epilogue (false);
+      test_epilogue (true);
+    }
 
   free (texture);
 }
