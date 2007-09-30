@@ -40,6 +40,7 @@
 
 int option_debug = 0;
 int option_disable_ib = 0;
+int option_fast = 0;
 int option_interface = IF_AGP;
 int option_verbose = 0;
 
@@ -97,6 +98,7 @@ static struct option long_options[] = {
   {"brief", no_argument, &option_verbose, 0},
   {"debug", no_argument, &option_debug, 1},
   {"disable-ib", no_argument, &option_disable_ib, 1},
+  {"fast", no_argument, &option_fast, 1},
   {"igp", no_argument, &option_interface, IF_IGP},
   {"output", required_argument, 0, 'o'},
   {"pci-e", no_argument, &option_interface, IF_PCIE},
@@ -121,7 +123,7 @@ main (int argc, char **argv)
   srand (time (NULL));
   revenge_rand = rand () & 0xffff;
 
-  while ((opt = getopt_long (argc, argv, "bdiv", long_options, &i)) != -1)
+  while ((opt = getopt_long (argc, argv, "bdfiv", long_options, &i)) != -1)
     {
       switch (opt)
 	{
@@ -130,6 +132,9 @@ main (int argc, char **argv)
 	  break;
 	case 'd':
 	  option_debug = 1;
+	  break;
+	case 'f':
+	  option_fast = 1;
 	  break;
 	case 'i':
 	  option_disable_ib = 1;

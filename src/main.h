@@ -128,9 +128,9 @@
 #       define R300_TXO_OFFSET_SHIFT             5
 /* END */
 
-extern char *option_output;
 extern int option_debug;
 extern int option_disable_ib;
+extern int option_fast;
 extern int option_interface;
 extern int option_verbose;
 extern int mem_fd;

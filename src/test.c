@@ -85,7 +85,11 @@ test_quiescent (void)
   struct timespec req = { 1, 0 };
 
   glFinish ();
-  nanosleep (&req, NULL);
+
+  if (!option_fast)
+    {
+      nanosleep (&req, NULL);
+    }
 }
 
 void
