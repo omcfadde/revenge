@@ -181,6 +181,8 @@ test (void)
   int i;
   struct test_t *test;
 
+  detect_max_texture_units ();
+
   dump_device_id ();
   dump_device_name ();
   dump_fglrx_version ();

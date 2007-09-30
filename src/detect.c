@@ -17,6 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <GL/gl.h>
+#include <GL/glext.h>
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
@@ -43,6 +45,8 @@ char reg_device_name[BUFSIZ];
 unsigned int reg_addr = 0;
 unsigned int reg_device_id = 0;
 unsigned int reg_len = 0;
+
+unsigned int  gl_max_texture_units = 0;
 
 static int
 is_agp_iomem (int level, char *name)
@@ -254,5 +258,17 @@ detect_reg_aperture (void)
 	    }
 	}
       pci_cleanup (pacc);
+    }
+}
+
+void
+detect_max_texture_units (void)
+{
+  glGetIntegerv (GL_MAX_TEXTURE_UNITS, &gl_max_texture_units);
+
+  if (option_debug)
+    {
+      printf ("%s: gl_max_texture_units = %d\n", __func__,
+	      gl_max_texture_units);
     }
 }

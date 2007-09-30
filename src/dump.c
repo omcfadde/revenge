@@ -66,7 +66,7 @@ dump_reg (unsigned int key, unsigned int val)
       ib_addr = ib_size = 0;
     }
 
-  for (i = 0; i < /* FIXME */ 16; i++)
+  for (i = 0; i < gl_max_texture_units; i++)
     {
       if (key == R300_TX_SIZE_0 + (i << 2))
 	{
