@@ -51,6 +51,10 @@ revenge_SOURCES = \
 		  gl_texture_mag_filter.h \
 		  gl_texture_min_filter.c \
 		  gl_texture_min_filter.h \
+		  gl_texture_wrap_s.c \
+		  gl_texture_wrap_s.h \
+		  gl_texture_wrap_t.c \
+		  gl_texture_wrap_t.h \
 		  main.c \
 		  main.h \
 		  memory.c \

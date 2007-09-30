@@ -55,6 +55,8 @@
 #include <gl_texture.h>
 #include <gl_texture_mag_filter.h>
 #include <gl_texture_min_filter.h>
+#include <gl_texture_wrap_s.h>
+#include <gl_texture_wrap_t.h>
 
 void
 tri (void)
@@ -169,6 +171,8 @@ static struct test_t tests[] = {
   {_(gl_texture)},
   {_(gl_texture_mag_filter)},
   {_(gl_texture_min_filter)},
+  {_(gl_texture_wrap_s)},
+  {_(gl_texture_wrap_t)},
 };
 
 #undef _
