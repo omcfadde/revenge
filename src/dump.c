@@ -88,7 +88,7 @@ dump_reg (unsigned int key, unsigned int val)
 static int
 dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_bit15, unsigned int packet_reg,
-	      unsigned long *mem_map, FILE * file)
+	      unsigned int *mem_map, FILE * file)
 {
   int i;
   unsigned int reg;
@@ -104,7 +104,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 
   for (i = 0; i < proc; i++)
     {
-      fprintf (file, "%08lx\n", mem_map[i]);
+      fprintf (file, "%08x\n", mem_map[i]);
       reg = packet_bit15 ? packet_reg : packet_reg + (i << 2);
       dump_reg (reg, mem_map[i]);
     }
@@ -115,7 +115,7 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 static int
 dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_bit15, unsigned int packet_reg,
-	      unsigned long *mem_map, FILE * file)
+	      unsigned int *mem_map, FILE * file)
 {
   if (option_debug)
     {
@@ -128,7 +128,7 @@ dump_packet2 (unsigned int packet_type, unsigned int packet_cnt,
 
 static int
 dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
-	      unsigned int packet_opcode, unsigned long *mem_map, FILE * file)
+	      unsigned int packet_opcode, unsigned int *mem_map, FILE * file)
 {
   int i;
   unsigned int proc;
@@ -143,10 +143,10 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 
   for (i = 0; i < proc; i++)
     {
-      fprintf (file, "%08lx\n", mem_map[i]);
+      fprintf (file, "%08x\n", mem_map[i]);
       if (option_debug)
 	{
-	  printf ("%s: 0x%08lx\n", __func__, mem_map[i]);
+	  printf ("%s: 0x%08x\n", __func__, mem_map[i]);
 	}
     }
 
@@ -154,7 +154,7 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 }
 
 static void
-dump_packets (unsigned int head, unsigned int tail, unsigned long *mem_map,
+dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map,
 	      char *name)
 {
   FILE *file;
@@ -194,7 +194,7 @@ dump_packets (unsigned int head, unsigned int tail, unsigned long *mem_map,
 
       packet_opcode = (mem_map[i] >> 8) & 0xff;
 
-      fprintf (file, "%08lx\n", mem_map[i]);
+      fprintf (file, "%08x\n", mem_map[i]);
 
       switch (packet_type)
 	{
@@ -228,7 +228,7 @@ static void
 dump_ib (unsigned int ib_addr, unsigned int ib_size)
 {
   char buf[BUFSIZ];
-  unsigned long *ib_mem_map;
+  unsigned int *ib_mem_map;
 
   if (!option_disable_ib)
     {
@@ -265,7 +265,7 @@ void
 dump_rb_post (void)
 {
   char buf[BUFSIZ];
-  unsigned long *rb_mem_map;
+  unsigned int *rb_mem_map;
 
   rb_tail = register_read (RADEON_CP_RB_RPTR);
 

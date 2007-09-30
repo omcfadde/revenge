@@ -37,7 +37,7 @@ memory_read_agp (unsigned int addr, unsigned int size)
 {
   void *tmp;
 
-  /* FIXME: void *, x86_64... */
+/* FIXME: void * */
   tmp = (void *) malloc (size);
   memcpy (tmp, (unsigned int *) ((char *) agp_mem_map + (addr - agp_addr)),
 	  size);
