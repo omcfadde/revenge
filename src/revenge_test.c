@@ -29,6 +29,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <revenge_detect.h>
 #include <revenge_dump.h>
 #include <revenge_main.h>
 #include <revenge_test.h>

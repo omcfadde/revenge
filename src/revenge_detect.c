@@ -46,7 +46,7 @@ unsigned int reg_addr = 0;
 unsigned int reg_device_id = 0;
 unsigned int reg_len = 0;
 
-unsigned int  gl_max_texture_units = 0;
+int gl_max_texture_units = 0;
 
 static int
 is_agp_iomem (int level, char *name)

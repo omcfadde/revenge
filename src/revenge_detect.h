@@ -35,7 +35,7 @@ extern char reg_device_name[BUFSIZ];
 extern unsigned int reg_addr;
 extern unsigned int reg_device_id;
 extern unsigned int reg_len;
-extern unsigned int gl_max_texture_units;
+extern int gl_max_texture_units;
 void detect_agp_aperture (void);
 void detect_fb_aperture (void);
 void detect_pcigart_aperture (void);
