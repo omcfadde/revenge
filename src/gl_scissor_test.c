@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <test.h>
+#include <revenge_test.h>
 
 void
 gl_scissor_test (void)

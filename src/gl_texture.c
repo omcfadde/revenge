@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <test.h>
+#include <revenge_test.h>
 
 #define TEXTURE_WIDTH 16
 #define TEXTURE_HEIGHT 16

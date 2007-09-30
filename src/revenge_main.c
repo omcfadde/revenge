@@ -34,9 +34,9 @@
 
 #include <config.h>
 
-#include <detect.h>
-#include <main.h>
-#include <test.h>
+#include <revenge_detect.h>
+#include <revenge_main.h>
+#include <revenge_test.h>
 
 int option_debug = 0;
 int option_disable_ib = 0;

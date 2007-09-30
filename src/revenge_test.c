@@ -29,9 +29,9 @@
 #include <time.h>
 #include <unistd.h>
 
-#include <dump.h>
-#include <main.h>
-#include <test.h>
+#include <revenge_dump.h>
+#include <revenge_main.h>
+#include <revenge_test.h>
 
 #include <gl_alpha_test.h>
 #include <gl_blend.h>

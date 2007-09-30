@@ -3,10 +3,6 @@ AM_CFLAGS = -DGL_GLEXT_PROTOTYPES -Wall `sdl-config --cflags`
 bin_PROGRAMS = revenge
 
 revenge_SOURCES = \
-		  detect.c \
-		  detect.h \
-		  dump.c \
-		  dump.h \
 		  gl_alpha_test.c \
 		  gl_alpha_test.h \
 		  gl_blend.c \
@@ -55,11 +51,15 @@ revenge_SOURCES = \
 		  gl_texture_wrap_s.h \
 		  gl_texture_wrap_t.c \
 		  gl_texture_wrap_t.h \
-		  main.c \
-		  main.h \
-		  memory.c \
-		  memory.h \
-		  register.c \
-		  register.h \
-		  test.c \
-		  test.h
+		  revenge_detect.c \
+		  revenge_detect.h \
+		  revenge_dump.c \
+		  revenge_dump.h \
+		  revenge_main.c \
+		  revenge_main.h \
+		  revenge_memory.c \
+		  revenge_memory.h \
+		  revenge_register.c \
+		  revenge_register.h \
+		  revenge_test.c \
+		  revenge_test.h

@@ -23,10 +23,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <detect.h>
-#include <main.h>
-#include <memory.h>
-#include <register.h>
+#include <revenge_detect.h>
+#include <revenge_main.h>
+#include <revenge_memory.h>
+#include <revenge_register.h>
 
 static unsigned int ib_addr = 0, ib_num = 0, ib_size = 0;
 static unsigned int rb_addr = 0, rb_head = 0, rb_size = 0, rb_tail = 0;

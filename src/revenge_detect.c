@@ -27,8 +27,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <main.h>
-#include <register.h>
+#include <revenge_main.h>
+#include <revenge_register.h>
 
 unsigned int agp_addr = 0;
 unsigned int agp_len = 0;

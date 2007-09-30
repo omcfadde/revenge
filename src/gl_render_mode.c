@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <test.h>
+#include <revenge_test.h>
 
 void
 gl_render_mode_render (void)

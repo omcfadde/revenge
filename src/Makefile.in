@@ -43,20 +43,22 @@ CONFIG_CLEAN_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am_revenge_OBJECTS = detect.$(OBJEXT) dump.$(OBJEXT) \
-	gl_alpha_test.$(OBJEXT) gl_blend.$(OBJEXT) gl_clear.$(OBJEXT) \
-	gl_clip_plane.$(OBJEXT) gl_color_logic_op.$(OBJEXT) \
-	gl_cull_face.$(OBJEXT) gl_depth_func.$(OBJEXT) \
-	gl_depth_mask.$(OBJEXT) gl_depth_range.$(OBJEXT) \
-	gl_front_face.$(OBJEXT) gl_line_smooth.$(OBJEXT) \
-	gl_line_smooth_hint.$(OBJEXT) gl_line_width.$(OBJEXT) \
-	gl_null.$(OBJEXT) gl_point_size.$(OBJEXT) \
-	gl_primitives.$(OBJEXT) gl_render_mode.$(OBJEXT) \
-	gl_scissor_test.$(OBJEXT) gl_shade_model.$(OBJEXT) \
-	gl_texture.$(OBJEXT) gl_texture_mag_filter.$(OBJEXT) \
+am_revenge_OBJECTS = gl_alpha_test.$(OBJEXT) gl_blend.$(OBJEXT) \
+	gl_clear.$(OBJEXT) gl_clip_plane.$(OBJEXT) \
+	gl_color_logic_op.$(OBJEXT) gl_cull_face.$(OBJEXT) \
+	gl_depth_func.$(OBJEXT) gl_depth_mask.$(OBJEXT) \
+	gl_depth_range.$(OBJEXT) gl_front_face.$(OBJEXT) \
+	gl_line_smooth.$(OBJEXT) gl_line_smooth_hint.$(OBJEXT) \
+	gl_line_width.$(OBJEXT) gl_null.$(OBJEXT) \
+	gl_point_size.$(OBJEXT) gl_primitives.$(OBJEXT) \
+	gl_render_mode.$(OBJEXT) gl_scissor_test.$(OBJEXT) \
+	gl_shade_model.$(OBJEXT) gl_texture.$(OBJEXT) \
+	gl_texture_mag_filter.$(OBJEXT) \
 	gl_texture_min_filter.$(OBJEXT) gl_texture_wrap_s.$(OBJEXT) \
-	gl_texture_wrap_t.$(OBJEXT) main.$(OBJEXT) memory.$(OBJEXT) \
-	register.$(OBJEXT) test.$(OBJEXT)
+	gl_texture_wrap_t.$(OBJEXT) revenge_detect.$(OBJEXT) \
+	revenge_dump.$(OBJEXT) revenge_main.$(OBJEXT) \
+	revenge_memory.$(OBJEXT) revenge_register.$(OBJEXT) \
+	revenge_test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -157,10 +159,6 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = -DGL_GLEXT_PROTOTYPES -Wall `sdl-config --cflags`
 revenge_SOURCES = \
-		  detect.c \
-		  detect.h \
-		  dump.c \
-		  dump.h \
 		  gl_alpha_test.c \
 		  gl_alpha_test.h \
 		  gl_blend.c \
@@ -209,14 +207,18 @@ revenge_SOURCES = \
 		  gl_texture_wrap_s.h \
 		  gl_texture_wrap_t.c \
 		  gl_texture_wrap_t.h \
-		  main.c \
-		  main.h \
-		  memory.c \
-		  memory.h \
-		  register.c \
-		  register.h \
-		  test.c \
-		  test.h
+		  revenge_detect.c \
+		  revenge_detect.h \
+		  revenge_dump.c \
+		  revenge_dump.h \
+		  revenge_main.c \
+		  revenge_main.h \
+		  revenge_memory.c \
+		  revenge_memory.h \
+		  revenge_register.c \
+		  revenge_register.h \
+		  revenge_test.c \
+		  revenge_test.h
 
 all: all-am
 
@@ -284,8 +286,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detect.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dump.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_alpha_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_blend.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_clear.Po@am__quote@
@@ -310,10 +310,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture_min_filter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture_wrap_s.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture_wrap_t.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memory.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/register.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_detect.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_dump.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_memory.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_register.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_test.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
