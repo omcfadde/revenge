@@ -105,10 +105,10 @@ static struct option long_options[] = {
 };
 
 int mem_fd = -1;
-unsigned int *agp_mem_map = NULL;
-unsigned int *fb_mem_map = NULL;
-unsigned int *pcigart_mem_map = NULL;
-unsigned int *reg_mem_map = NULL;
+unsigned long *agp_mem_map = NULL;
+unsigned long *fb_mem_map = NULL;
+unsigned long *pcigart_mem_map = NULL;
+unsigned long *reg_mem_map = NULL;
 
 int
 main (int argc, char **argv)

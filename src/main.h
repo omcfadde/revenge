@@ -134,10 +134,10 @@ extern int option_disable_ib;
 extern int option_interface;
 extern int option_verbose;
 extern int mem_fd;
-extern unsigned int *agp_mem_map;
-extern unsigned int *fb_mem_map;
-extern unsigned int *pcigart_mem_map;
-extern unsigned int *reg_mem_map;
+extern unsigned long *agp_mem_map;
+extern unsigned long *fb_mem_map;
+extern unsigned long *pcigart_mem_map;
+extern unsigned long *reg_mem_map;
 int main (int argc, char **argv);
 
 #endif
