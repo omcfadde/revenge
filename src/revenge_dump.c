@@ -239,7 +239,7 @@ dump_ib (unsigned int ib_addr, unsigned int ib_size)
 	}
 
       snprintf (buf, BUFSIZ, "ib_%04d.txt", ib_num);
-      ib_mem_map = memory_read (ib_addr, ib_size * 4);
+      ib_mem_map = memory_read (ib_addr, ib_size << 2);
       dump_packets (0, ib_size, ib_mem_map, buf);
       free (ib_mem_map);
       ib_num++;
@@ -276,7 +276,7 @@ dump_rb_post (void)
     }
 
   snprintf (buf, BUFSIZ, "rb.txt");
-  rb_mem_map = memory_read (rb_addr, rb_size * 4);
+  rb_mem_map = memory_read (rb_addr, rb_size << 2);
   dump_packets (rb_head, rb_tail, rb_mem_map, buf);
   free (rb_mem_map);
 }
