@@ -32,10 +32,10 @@ static unsigned int ib_addr = 0, ib_num = 0, ib_size = 0;
 static unsigned int rb_addr = 0, rb_head = 0, rb_size = 0, rb_tail = 0;
 static unsigned int tx_addr = 0, tx_width = 0, tx_height = 0;
 
-static void dump_ib (unsigned int ib_addr, unsigned int ib_size);
+static void dump_ib (void);
 
 static void
-dump_tx (unsigned int tx_addr, unsigned int tx_width, unsigned int tx_height)
+dump_tx (void)
 {
   if (option_debug)
     {
@@ -62,7 +62,7 @@ dump_reg (unsigned int key, unsigned int val)
   if (key == RADEON_CP_IB_BUFSZ)
     {
       ib_size = val;
-      dump_ib (ib_addr, ib_size);
+      dump_ib ();
       ib_addr = ib_size = 0;
     }
 
@@ -79,7 +79,7 @@ dump_reg (unsigned int key, unsigned int val)
       if (key == R300_TX_OFFSET_0 + (i << 2))
 	{
 	  tx_addr = (val >> R300_TXO_OFFSET_SHIFT) & R300_TXO_OFFSET_MASK;
-	  dump_tx (tx_addr, tx_width, tx_height);
+	  dump_tx ();
 	  tx_addr = tx_width = tx_height = 0;
 	}
     }
@@ -214,7 +214,7 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map,
 }
 
 static void
-dump_ib (unsigned int ib_addr, unsigned int ib_size)
+dump_ib (void)
 {
   char buf[BUFSIZ];
   unsigned int *ib_mem_map;
