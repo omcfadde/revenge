@@ -163,17 +163,6 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map,
     packet_opcode;
   unsigned int proc;
 
-  /*
-   * (gdb) p/t 0x3 << 30
-   * $1 = 11000000000000000000000000000000
-   * (gdb) p/t 0x3 << 30 | 0x3fff << 16
-   * $2 = 11111111111111110000000000000000
-   * (gdb) p/t 0x3 << 30 | 0x3fff << 16 | 1 << 15
-   * $3 = 11111111111111111000000000000000
-   * (gdb) p/t 0x3 << 30 | 0x3fff << 16 | 1 << 15 | 0x1fff
-   * $4 = 11111111111111111001111111111111
-   */
-
   if (!(file = fopen (name, "w")))
     {
       fprintf (stderr, "%s: %s\n", program_invocation_short_name,
