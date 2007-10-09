@@ -35,30 +35,6 @@ typedef struct
 
 #define N_(name)	name, # name
 
-#define TEXTURE_WIDTH 16
-#define TEXTURE_HEIGHT 16
-
-static GLuint *
-random_texture (int width, int height)
-{
-  GLuint *texture = NULL;
-  int i;
-
-  if (!(texture = (GLuint *) malloc (width * height * sizeof (GLuint))))
-    {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
-      return NULL;
-    }
-
-  for (i = 0; i < width * height; i++)
-    {
-      texture[i] = random ();
-    }
-
-  return texture;
-}
-
 void
 gl_texture_wrap_t (void)
 {

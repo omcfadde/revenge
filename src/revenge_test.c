@@ -82,6 +82,27 @@ tex_tri (void)
   glEnd ();
 }
 
+GLuint *
+random_texture (int width, int height)
+{
+  GLuint *texture = NULL;
+  int i;
+
+  if (!(texture = (GLuint *) malloc (width * height * sizeof (GLuint))))
+    {
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      return NULL;
+    }
+
+  for (i = 0; i < width * height; i++)
+    {
+      texture[i] = random ();
+    }
+
+  return texture;
+}
+
 static void
 test_quiescent (void)
 {

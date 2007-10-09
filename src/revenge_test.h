@@ -20,9 +20,14 @@
 #ifndef __TEST_H__
 #define __TEST_H__
 
+#include <GL/gl.h>
+#include <GL/glext.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#define TEXTURE_WIDTH 16
+#define TEXTURE_HEIGHT 16
 
 struct test_t
 {
@@ -32,6 +37,7 @@ struct test_t
 
 void tri (void);
 void tex_tri (void);
+GLuint *random_texture (int width, int height);
 void test_prologue (char *buf);
 void test_epilogue (bool buf);
 void test (void);
