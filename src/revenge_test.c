@@ -107,7 +107,7 @@ random_texture (int width, int height)
 static void
 test_quiescent (void)
 {
-  struct timespec req = { 1, 0 };
+  struct timespec req = { 0, 250000000 };
 
   glFinish ();
 
