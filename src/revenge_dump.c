@@ -92,7 +92,6 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 {
   int i;
   unsigned int reg;
-  unsigned int proc;
 
   if (option_debug)
     {
@@ -100,16 +99,14 @@ dump_packet0 (unsigned int packet_type, unsigned int packet_cnt,
 	      packet_type, packet_cnt, packet_bit15, packet_reg);
     }
 
-  proc = packet_cnt + 1;
-
-  for (i = 0; i < proc; i++)
+  for (i = 0; i < packet_cnt + 1; i++)
     {
       fprintf (file, "%08x\n", mem_map[i]);
       reg = packet_bit15 ? packet_reg : packet_reg + (i << 2);
       dump_reg (reg, mem_map[i]);
     }
 
-  return proc;
+  return packet_cnt + 1;
 }
 
 static int
@@ -131,7 +128,6 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 	      unsigned int packet_opcode, unsigned int *mem_map, FILE * file)
 {
   int i;
-  unsigned int proc;
 
   if (option_debug)
     {
@@ -139,9 +135,7 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 	      packet_type, packet_cnt, packet_opcode);
     }
 
-  proc = packet_cnt + 1;
-
-  for (i = 0; i < proc; i++)
+  for (i = 0; i < packet_cnt + 1; i++)
     {
       fprintf (file, "%08x\n", mem_map[i]);
       if (option_debug)
@@ -150,7 +144,7 @@ dump_packet3 (unsigned int packet_type, unsigned int packet_cnt,
 	}
     }
 
-  return proc;
+  return packet_cnt + 1;
 }
 
 static void
