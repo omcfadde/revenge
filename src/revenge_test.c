@@ -213,6 +213,7 @@ test (void)
   dump_device_name ();
   dump_fglrx_version ();
   dump_fglrxinfo ();
+  dump_glxinfo ();
   dump_interface ();
   dump_lspci ();
 

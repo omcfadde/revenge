@@ -318,6 +318,12 @@ dump_fglrxinfo (void)
 }
 
 void
+dump_glxinfo (void)
+{
+  system ("glxinfo -v 2> /dev/null > glxinfo.txt");
+}
+
+void
 dump_interface (void)
 {
   FILE *file;
