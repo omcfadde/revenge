@@ -37,7 +37,13 @@ memory_read_agp (unsigned int addr, unsigned int size)
 {
   void *tmp;
 
-  tmp = (void *) malloc (size);
+  if (!(tmp = (void *) malloc (size)))
+    {
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
+    }
+
   memcpy (tmp, agp_mem_map + ((addr - agp_addr) >> 2), size);
 
   return tmp;
@@ -82,7 +88,12 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
   start_page_addr = round_down (addr, ATI_PCIGART_PAGE_SIZE);
   end_page_addr = start_page_addr + buf_size;
 
-  mem_map = (void *) malloc (buf_size);
+  if (!(mem_map = (void *) malloc (buf_size)))
+    {
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
+    }
 
 #if 0
   printf
@@ -114,7 +125,12 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
 	}
     }
 
-  dest = (void *) malloc (size);
+  if (!(dest = (void *) malloc (size)))
+    {
+      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	       strerror (errno));
+      exit (EXIT_FAILURE);
+    }
   memcpy (dest, mem_map + addr_mod, size);
   free (mem_map);
 

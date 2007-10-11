@@ -211,7 +211,12 @@ detect_reg_aperture (void)
 	{
 	  if (pci_filter_match (&filter, pdev))
 	    {
-	      pci_config = (unsigned char *) malloc (64);
+	      if (!(pci_config = (unsigned char *) malloc (64)))
+		{
+		  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+			   strerror (errno));
+		  exit (EXIT_FAILURE);
+		}
 	      if (pci_read_block (pdev, 0, pci_config, 64))
 		{
 		  pci_setup_cache (pdev, pci_config, 64);
