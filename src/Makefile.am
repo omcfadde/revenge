@@ -55,6 +55,8 @@ revenge_SOURCES = \
 		  revenge_detect.h \
 		  revenge_dump.c \
 		  revenge_dump.h \
+		  revenge_dump_misc.c \
+		  revenge_dump_misc.h \
 		  revenge_main.c \
 		  revenge_main.h \
 		  revenge_memory.c \

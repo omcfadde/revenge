@@ -31,6 +31,7 @@
 
 #include <revenge_detect.h>
 #include <revenge_dump.h>
+#include <revenge_dump_misc.h>
 #include <revenge_main.h>
 #include <revenge_test.h>
 

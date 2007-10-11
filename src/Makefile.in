@@ -56,9 +56,9 @@ am_revenge_OBJECTS = gl_alpha_test.$(OBJEXT) gl_blend.$(OBJEXT) \
 	gl_texture_mag_filter.$(OBJEXT) \
 	gl_texture_min_filter.$(OBJEXT) gl_texture_wrap_s.$(OBJEXT) \
 	gl_texture_wrap_t.$(OBJEXT) revenge_detect.$(OBJEXT) \
-	revenge_dump.$(OBJEXT) revenge_main.$(OBJEXT) \
-	revenge_memory.$(OBJEXT) revenge_register.$(OBJEXT) \
-	revenge_test.$(OBJEXT)
+	revenge_dump.$(OBJEXT) revenge_dump_misc.$(OBJEXT) \
+	revenge_main.$(OBJEXT) revenge_memory.$(OBJEXT) \
+	revenge_register.$(OBJEXT) revenge_test.$(OBJEXT)
 revenge_OBJECTS = $(am_revenge_OBJECTS)
 revenge_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)@am__isrc@
@@ -211,6 +211,8 @@ revenge_SOURCES = \
 		  revenge_detect.h \
 		  revenge_dump.c \
 		  revenge_dump.h \
+		  revenge_dump_misc.c \
+		  revenge_dump_misc.h \
 		  revenge_main.c \
 		  revenge_main.h \
 		  revenge_memory.c \
@@ -312,6 +314,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture_wrap_t.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_detect.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_dump.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_dump_misc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_memory.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/revenge_register.Po@am__quote@
