@@ -308,13 +308,13 @@ void
 dump_fglrx_version (void)
 {
   system
-    ("fglrxinfo | sed -n 's/.*(\\([^)]*\\)).*/\\1/p' > fglrx_version.txt");
+    ("fglrxinfo 2> /dev/null | sed -n 's/.*(\\([^)]*\\)).*/\\1/p' > fglrx_version.txt");
 }
 
 void
 dump_fglrxinfo (void)
 {
-  system ("fglrxinfo -v > fglrxinfo.txt");
+  system ("fglrxinfo -v 2> /dev/null > fglrxinfo.txt");
 }
 
 void
@@ -351,5 +351,5 @@ dump_interface (void)
 void
 dump_lspci (void)
 {
-  system ("lspci -v > lspci.txt");
+  system ("lspci -v 2> /dev/null > lspci.txt");
 }
