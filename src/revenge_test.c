@@ -54,6 +54,10 @@
 #include <gl_render_mode.h>
 #include <gl_scissor_test.h>
 #include <gl_shade_model.h>
+#include <gl_stencil_func.h>
+#include <gl_stencil_mask.h>
+#include <gl_stencil_op.h>
+#include <gl_stencil_test.h>
 #include <gl_texture.h>
 #include <gl_texture_mag_filter.h>
 #include <gl_texture_min_filter.h>
@@ -191,6 +195,12 @@ static struct test_t tests[] = {
   {_(gl_render_mode_select)},
   {_(gl_scissor_test)},
   {_(gl_shade_model)},
+  {_(gl_stencil_func)},
+  {_(gl_stencil_mask)},
+  {_(gl_stencil_op_fail)},
+  {_(gl_stencil_op_zfail)},
+  {_(gl_stencil_op_zpass)},
+  {_(gl_stencil_test)},
   {_(gl_texture)},
   {_(gl_texture_mag_filter)},
   {_(gl_texture_min_filter)},

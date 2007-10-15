@@ -52,7 +52,9 @@ am_revenge_OBJECTS = gl_alpha_test.$(OBJEXT) gl_blend.$(OBJEXT) \
 	gl_line_width.$(OBJEXT) gl_null.$(OBJEXT) \
 	gl_point_size.$(OBJEXT) gl_primitives.$(OBJEXT) \
 	gl_render_mode.$(OBJEXT) gl_scissor_test.$(OBJEXT) \
-	gl_shade_model.$(OBJEXT) gl_texture.$(OBJEXT) \
+	gl_shade_model.$(OBJEXT) gl_stencil_func.$(OBJEXT) \
+	gl_stencil_mask.$(OBJEXT) gl_stencil_op.$(OBJEXT) \
+	gl_stencil_test.$(OBJEXT) gl_texture.$(OBJEXT) \
 	gl_texture_mag_filter.$(OBJEXT) \
 	gl_texture_min_filter.$(OBJEXT) gl_texture_wrap_s.$(OBJEXT) \
 	gl_texture_wrap_t.$(OBJEXT) revenge_detect.$(OBJEXT) \
@@ -197,6 +199,17 @@ revenge_SOURCES = \
 		  gl_scissor_test.h \
 		  gl_shade_model.c \
 		  gl_shade_model.h \
+		  gl_stencil_func.c \
+		  gl_stencil_func.h \
+		  gl_stencil_func.o \
+		  gl_stencil_mask.c \
+		  gl_stencil_mask.h \
+		  gl_stencil_mask.o \
+		  gl_stencil_op.c \
+		  gl_stencil_op.h \
+		  gl_stencil_test.c \
+		  gl_stencil_test.h \
+		  gl_stencil_test.o \
 		  gl_texture.c \
 		  gl_texture.h \
 		  gl_texture_mag_filter.c \
@@ -307,6 +320,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_render_mode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_scissor_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_shade_model.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_stencil_func.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_stencil_mask.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_stencil_op.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_stencil_test.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture_mag_filter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gl_texture_min_filter.Po@am__quote@
