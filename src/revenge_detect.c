@@ -143,9 +143,10 @@ void
 detect_pcigart_aperture (void)
 {
   pcigart_addr = register_read_pcie (RADEON_PCIE_TX_GART_BASE);
-  pcigart_len = 1024 * 32;
   pcigart_start = register_read_pcie (RADEON_PCIE_TX_GART_START_LO);
   pcigart_end = register_read_pcie (RADEON_PCIE_TX_GART_END_LO);
+  pcigart_len = pcigart_end - pcigart_start;
+
   if (option_debug)
     {
       printf
@@ -159,12 +160,12 @@ detect_igpgart_aperture (void)
 {
   unsigned int agp_addr;
 
-  pcigart_addr = register_read_igp (RADEON_IGPGART_BASE_ADDR);
-  pcigart_len = 1024 * 32;
-
   agp_addr = register_read (RADEON_MC_AGP_LOCATION);
+
+  pcigart_addr = register_read_igp (RADEON_IGPGART_BASE_ADDR);
   pcigart_start = (agp_addr & 0xffff) << 16;
-  pcigart_end = (agp_addr & 0xffff0000);
+  pcigart_end = agp_addr & 0xffff0000;
+  pcigart_len = pcigart_end - pcigart_start;
 
   if (option_debug)
     {
