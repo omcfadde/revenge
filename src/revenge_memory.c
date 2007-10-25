@@ -50,7 +50,7 @@ memory_read_agp (unsigned int addr, unsigned int size)
 }
 
 static unsigned int
-gart_to_phys (unsigned int addr)
+memory_gart_to_phys (unsigned int addr)
 {
   int num;
   unsigned int phys_addr;
@@ -68,6 +68,14 @@ gart_to_phys (unsigned int addr)
       phys_addr = (pcigart_mem_map[num] & ~0xc) << 8;
       break;
     }
+
+  if (option_debug && option_verbose)
+    {
+      printf ("%s: addr = 0x%08x phys_addr = 0x%08x (0x%08x)\n", __func__,
+	      addr, phys_addr, num);
+    }
+
+  assert ((phys_addr % ATI_PCIGART_PAGE_SIZE) == 0);
 
   return phys_addr;
 }
@@ -109,7 +117,7 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
       if ((page_mem_map =
 	   mmap (NULL, ATI_PCIGART_PAGE_SIZE, PROT_READ | PROT_WRITE,
 		 MAP_SHARED, mem_fd,
-		 gart_to_phys (start_page_addr))) == MAP_FAILED)
+		 memory_gart_to_phys (start_page_addr))) == MAP_FAILED)
 	{
 	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
 		   strerror (errno));
