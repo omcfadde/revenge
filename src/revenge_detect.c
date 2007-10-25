@@ -19,7 +19,6 @@
 
 #include <GL/gl.h>
 #include <GL/glext.h>
-#include <assert.h>
 #include <ctype.h>
 #include <errno.h>
 #include <pci/pci.h>
@@ -112,8 +111,6 @@ detect_agp_aperture (void)
     }
 
   fclose (file);
-
-  assert (0);
 }
 
 void
