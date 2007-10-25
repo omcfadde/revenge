@@ -95,11 +95,12 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
       exit (EXIT_FAILURE);
     }
 
-#if 0
-  printf
-    ("%s: addr = 0x%08x size = 0x%08x start_page_addr = 0x%08x end_page_addr = 0x%08x\n",
-     __func__, addr, size, start_page_addr, end_page_addr);
-#endif
+  if (option_debug && option_verbose)
+    {
+      printf
+	("%s: addr = 0x%08x size = 0x%08x start_page_addr = 0x%08x end_page_addr = 0x%08x\n",
+	 __func__, addr, size, start_page_addr, end_page_addr);
+    }
 
   for (mem_map_ptr = mem_map; start_page_addr < end_page_addr;
        start_page_addr += ATI_PCIGART_PAGE_SIZE, mem_map_ptr +=
