@@ -121,6 +121,23 @@ test_quiescent (void)
     }
 }
 
+static void
+test_clear (void)
+{
+  struct timespec req = { 1, 0 };
+
+  glClearColor (0.0, 0.0, 0.0, 0.0);
+  glClearDepth (1.0);
+  glClearAccum (0.0, 0.0, 0.0, 0.0);
+  glClearStencil (0);
+  glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_ACCUM_BUFFER_BIT |
+	   GL_STENCIL_BUFFER_BIT);
+
+  glFinish ();
+
+  nanosleep (&req, NULL);
+}
+
 void
 test_prologue (char *buf)
 {
@@ -227,6 +244,8 @@ test (void)
   dump_glxinfo ();
   dump_interface ();
   dump_lspci ();
+
+  test_clear ();
 
   for (i = 0; i < num_tests; i++)
     {
