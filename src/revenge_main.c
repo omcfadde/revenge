@@ -41,7 +41,7 @@
 int option_debug = 0;
 int option_disable_ib = 0;
 int option_fast = 0;
-int option_interface = IF_AGP;
+int option_interface = INTERFACE_AGP;
 int option_verbose = 0;
 
 static void
@@ -94,14 +94,14 @@ opengl_close (void)
 }
 
 static struct option long_options[] = {
-  {"agp", no_argument, &option_interface, IF_AGP},
+  {"agp", no_argument, &option_interface, INTERFACE_AGP},
   {"brief", no_argument, &option_verbose, 0},
   {"debug", no_argument, &option_debug, 1},
   {"disable-ib", no_argument, &option_disable_ib, 1},
   {"fast", no_argument, &option_fast, 1},
-  {"igp", no_argument, &option_interface, IF_IGP},
+  {"igp", no_argument, &option_interface, INTERFACE_IGP},
   {"output", required_argument, 0, 'o'},
-  {"pci-e", no_argument, &option_interface, IF_PCIE},
+  {"pci-e", no_argument, &option_interface, INTERFACE_PCI_E},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };
@@ -181,7 +181,7 @@ main (int argc, char **argv)
 
   switch (option_interface)
     {
-    case IF_AGP:
+    case INTERFACE_AGP:
       detect_agp_aperture ();
       if ((agp_mem_map =
 	   mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
@@ -192,7 +192,7 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	}
       break;
-    case IF_PCIE:
+    case INTERFACE_PCI_E:
       detect_pcigart_aperture ();
       if ((pcigart_mem_map =
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
@@ -203,7 +203,7 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	}
       break;
-    case IF_IGP:
+    case INTERFACE_IGP:
       detect_igpgart_aperture ();
       if ((pcigart_mem_map =
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
@@ -259,7 +259,7 @@ main (int argc, char **argv)
 
   switch (option_interface)
     {
-    case IF_AGP:
+    case INTERFACE_AGP:
       if (munmap (agp_mem_map, agp_len) < 0)
 	{
 	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
@@ -267,8 +267,8 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	}
       break;
-    case IF_PCIE:
-    case IF_IGP:
+    case INTERFACE_PCI_E:
+    case INTERFACE_IGP:
     default:
       if (munmap (pcigart_mem_map, pcigart_len) < 0)
 	{

@@ -23,9 +23,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define IF_PCIE 0
-#define IF_AGP 1
-#define IF_IGP 2
+enum interface_t
+{
+  INTERFACE_AGP,
+  INTERFACE_IGP,
+  INTERFACE_PCI_E,
+};
 
 #define AVIVO_CRTC1_FB_LOCATION				0x6110
 #define AVIVO_CRTC1_FB_END					0x6118

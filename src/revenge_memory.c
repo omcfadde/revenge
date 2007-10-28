@@ -61,7 +61,7 @@ memory_gart_to_phys (unsigned int addr)
 
   switch (option_interface)
     {
-    case IF_IGP:
+    case INTERFACE_IGP:
       phys_addr = (pcigart_mem_map[num] & ~0xc);
       break;
     default:
@@ -153,7 +153,7 @@ memory_read (unsigned int addr, unsigned int size)
 
   switch (option_interface)
     {
-    case IF_AGP:
+    case INTERFACE_AGP:
       mem_map = memory_read_agp (addr, size);
       break;
     default:

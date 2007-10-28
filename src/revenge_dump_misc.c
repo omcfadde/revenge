@@ -93,13 +93,13 @@ dump_interface (void)
 
   switch (option_interface)
     {
-    case IF_PCIE:
+    case INTERFACE_PCI_E:
       fprintf (file, "PCI-E\n");
       break;
-    case IF_AGP:
+    case INTERFACE_AGP:
       fprintf (file, "AGP\n");
       break;
-    case IF_IGP:
+    case INTERFACE_IGP:
       fprintf (file, "IGP\n");
       break;
     default:
