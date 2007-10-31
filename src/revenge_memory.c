@@ -69,13 +69,15 @@ memory_gart_to_phys (unsigned int addr)
       break;
     }
 
+  phys_addr = phys_addr & ~(ATI_PCIGART_PAGE_SIZE - 1);
+
   if (option_debug && option_verbose)
     {
       printf ("%s: addr = 0x%08x phys_addr = 0x%08x (%d)\n", __func__,
 	      addr, phys_addr, num);
     }
 
-  return round_down (phys_addr, ATI_PCIGART_PAGE_SIZE);
+  return phys_addr;
 }
 
 static void *
