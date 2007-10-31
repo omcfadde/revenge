@@ -91,21 +91,7 @@ dump_interface (void)
       exit (EXIT_FAILURE);
     }
 
-  switch (option_interface)
-    {
-    case INTERFACE_PCI_E:
-      fprintf (file, "PCI-E\n");
-      break;
-    case INTERFACE_AGP:
-      fprintf (file, "AGP\n");
-      break;
-    case INTERFACE_IGP:
-      fprintf (file, "IGP\n");
-      break;
-    default:
-      assert (0);
-      break;
-    }
+  fprintf (file, "%d\n", option_interface);
 
   fclose (file);
 }
