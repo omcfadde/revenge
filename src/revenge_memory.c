@@ -62,10 +62,16 @@ memory_gart_to_phys (unsigned int addr)
   switch (option_interface)
     {
     case INTERFACE_IGP:
-      phys_addr = (pcigart_mem_map[num] & ~0xc);
+      phys_addr = pcigart_mem_map[num] & ~0xc;
+      break;
+    case INTERFACE_PCI:
+      phys_addr = pcigart_mem_map[num];
+      break;
+    case INTERFACE_PCI_E:
+      phys_addr = (pcigart_mem_map[num] & ~0xc) << 8;
       break;
     default:
-      phys_addr = (pcigart_mem_map[num] & ~0xc) << 8;
+      assert (0);
       break;
     }
 
@@ -156,8 +162,13 @@ memory_read (unsigned int addr, unsigned int size)
     case INTERFACE_AGP:
       mem_map = memory_read_agp (addr, size);
       break;
-    default:
+    case INTERFACE_IGP:
+    case INTERFACE_PCI:
+    case INTERFACE_PCI_E:
       mem_map = memory_read_pcigart (addr, size);
+      break;
+    default:
+      assert (0);
       break;
     }
 

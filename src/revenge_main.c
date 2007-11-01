@@ -101,6 +101,7 @@ static struct option long_options[] = {
   {"fast", no_argument, &option_fast, 1},
   {"igp", no_argument, &option_interface, INTERFACE_IGP},
   {"output", required_argument, 0, 'o'},
+  {"pci", no_argument, &option_interface, INTERFACE_PCI},
   {"pci-e", no_argument, &option_interface, INTERFACE_PCI_E},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
@@ -192,8 +193,8 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	}
       break;
-    case INTERFACE_PCI_E:
-      detect_pcigart_aperture ();
+    case INTERFACE_IGP:
+      detect_igpgart_aperture ();
       if ((pcigart_mem_map =
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)
@@ -203,8 +204,9 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	}
       break;
-    case INTERFACE_IGP:
-      detect_igpgart_aperture ();
+    case INTERFACE_PCI:
+    case INTERFACE_PCI_E:
+      detect_pcigart_aperture ();
       if ((pcigart_mem_map =
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)
@@ -267,15 +269,18 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	}
       break;
-    case INTERFACE_PCI_E:
     case INTERFACE_IGP:
-    default:
+    case INTERFACE_PCI:
+    case INTERFACE_PCI_E:
       if (munmap (pcigart_mem_map, pcigart_len) < 0)
 	{
 	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
 		   strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
+      break;
+    default:
+      assert (0);
       break;
     }
 

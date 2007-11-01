@@ -27,6 +27,7 @@ enum interface_t
 {
   INTERFACE_AGP,
   INTERFACE_IGP,
+  INTERFACE_PCI,
   INTERFACE_PCI_E,
 };
 
