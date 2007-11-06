@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.61])
-AC_INIT([revenge], [1.0], [z3ro.geek@gmail.com])
+AC_INIT([revenge], [1.0.1], [z3ro.geek@gmail.com])
 AM_INIT_AUTOMAKE
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADER([config.h])

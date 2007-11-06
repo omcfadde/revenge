@@ -201,15 +201,12 @@ revenge_SOURCES = \
 		  gl_shade_model.h \
 		  gl_stencil_func.c \
 		  gl_stencil_func.h \
-		  gl_stencil_func.o \
 		  gl_stencil_mask.c \
 		  gl_stencil_mask.h \
-		  gl_stencil_mask.o \
 		  gl_stencil_op.c \
 		  gl_stencil_op.h \
 		  gl_stencil_test.c \
 		  gl_stencil_test.h \
-		  gl_stencil_test.o \
 		  gl_texture.c \
 		  gl_texture.h \
 		  gl_texture_mag_filter.c \
