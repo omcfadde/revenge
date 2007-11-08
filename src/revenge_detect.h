@@ -1,5 +1,6 @@
 /*
  * $Id$
+ * Copyright (C) 2007  Maciej Cencora <m.cencora@gmail.com>
  * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -39,6 +40,7 @@ extern int gl_max_texture_units;
 void detect_agp_aperture (void);
 void detect_fb_aperture (void);
 void detect_pcigart_aperture (void);
+void detect_rs690gart_aperture (void);
 void detect_igpgart_aperture (void);
 void detect_reg_aperture (void);
 void detect_max_texture_units (void);

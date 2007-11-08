@@ -1,5 +1,6 @@
 /*
  * $Id$
+ * Copyright (C) 2007  Maciej Cencora <m.cencora@gmail.com>
  * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -29,5 +30,7 @@ unsigned int register_read_pcie (unsigned int key);
 void register_write_pcie (unsigned int key, unsigned int val);
 unsigned int register_read_igp (unsigned int key);
 void register_write_igp (unsigned int key, unsigned int val);
+unsigned int register_read_rs690 (unsigned int key);
+void register_write_rs690 (unsigned int key, unsigned int val);
 
 #endif

@@ -1,5 +1,6 @@
 /*
  * $Id$
+ * Copyright (C) 2007  Maciej Cencora <m.cencora@gmail.com>
  * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -29,6 +30,7 @@ enum interface_t
   INTERFACE_IGP,
   INTERFACE_PCI,
   INTERFACE_PCI_E,
+  INTERFACE_RS690,
 };
 
 #define AVIVO_CRTC1_FB_LOCATION				0x6110
@@ -112,6 +114,16 @@ enum interface_t
 #define RADEON_IGPGART_FLUSH            0x2e
 #define RADEON_IGPGART_ENABLE           0x38
 #define RADEON_IGPGART_UNK_39           0x39
+
+#define RADEON_RS690GART_INDEX	        0x78
+#	define RADEON_RS690GART_INDEX_MASK	0x1ff
+#	define RADEON_RS690GART_INDEX_WRITEBIT	(1 << 9)
+#	define RADEON_RS690GART_INDEX_WRITEACK	0x7f 	 /* write ack value */
+#define RADEON_RS690GART_DATA		0x7c
+
+#define RADEON_RS690GART_BASE_ADDR      0x2c
+#define RADEON_RS690GART_START		0x100
+#define RADEON_RS690GART_END		0x101
 
 #define R300_TX_SIZE_0                      0x4480
 #       define R300_TX_WIDTHMASK_SHIFT           0

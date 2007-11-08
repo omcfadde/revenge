@@ -1,5 +1,6 @@
 /*
  * $Id$
+ * Copyright (C) 2007  Maciej Cencora <m.cencora@gmail.com>
  * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,6 +53,7 @@ unsigned int
 register_read_igp (unsigned int key)
 {
   unsigned int ret;
+
   register_write (RADEON_IGPGART_INDEX, key & 0x7f);
   ret = register_read (RADEON_IGPGART_DATA);
   register_write (RADEON_IGPGART_INDEX, 0x7f);
@@ -64,4 +66,21 @@ register_write_igp (unsigned int key, unsigned int val)
   register_write (RADEON_IGPGART_INDEX, (key & 0x7f) | (1 << 8));
   register_write (RADEON_IGPGART_DATA, val);
   register_write (RADEON_IGPGART_INDEX, 0x7f);
+}
+
+unsigned int
+register_read_rs690 (unsigned int key)
+{
+  register_write (RADEON_RS690GART_INDEX, key & RADEON_RS690GART_INDEX_MASK);
+  return register_read (RADEON_RS690GART_DATA);
+}
+
+void
+register_write_rs690 (unsigned int key, unsigned int val)
+{
+  register_write (RADEON_RS690GART_INDEX,
+		  (key & RADEON_RS690GART_INDEX_MASK) |
+		  RADEON_RS690GART_INDEX_WRITEBIT);
+  register_write (RADEON_RS690GART_DATA, val);
+  register_write (RADEON_RS690GART_INDEX, RADEON_RS690GART_INDEX_WRITEACK);
 }

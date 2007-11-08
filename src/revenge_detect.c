@@ -1,5 +1,6 @@
 /*
  * $Id$
+ * Copyright (C) 2007  Maciej Cencora <m.cencora@gmail.com>
  * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -142,6 +143,22 @@ detect_pcigart_aperture (void)
   pcigart_addr = register_read_pcie (RADEON_PCIE_TX_GART_BASE);
   pcigart_start = register_read_pcie (RADEON_PCIE_TX_GART_START_LO);
   pcigart_end = register_read_pcie (RADEON_PCIE_TX_GART_END_LO);
+  pcigart_len = pcigart_end - pcigart_start;
+
+  if (option_debug)
+    {
+      printf
+	("%s: pcigart_addr = 0x%08x pcigart_len = 0x%08x pcigart_start = 0x%08x pcigart_end = 0x%08x\n",
+	 __func__, pcigart_addr, pcigart_len, pcigart_start, pcigart_end);
+    }
+}
+
+void
+detect_rs690gart_aperture (void)
+{
+  pcigart_addr = register_read_rs690 (RADEON_RS690GART_BASE_ADDR);
+  pcigart_start = register_read_rs690 (RADEON_RS690GART_START);
+  pcigart_end = register_read_rs690 (RADEON_RS690GART_END);
   pcigart_len = pcigart_end - pcigart_start;
 
   if (option_debug)

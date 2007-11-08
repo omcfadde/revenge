@@ -1,6 +1,7 @@
 /*
  * $Id$
  * Copyright (C) 2007  Christoph Brill <egore911@egore911.de>
+ * Copyright (C) 2007  Maciej Cencora <m.cencora@gmail.com>
  * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -103,6 +104,7 @@ static struct option long_options[] = {
   {"output", required_argument, 0, 'o'},
   {"pci", no_argument, &option_interface, INTERFACE_PCI},
   {"pci-e", no_argument, &option_interface, INTERFACE_PCI_E},
+  {"rs690", no_argument, &option_interface, INTERFACE_RS690},
   {"verbose", no_argument, &option_verbose, 1},
   {0, 0, 0, 0},
 };
@@ -216,6 +218,17 @@ main (int argc, char **argv)
 	  exit (EXIT_FAILURE);
 	}
       break;
+    case INTERFACE_RS690:
+      detect_rs690gart_aperture ();
+      if ((pcigart_mem_map =
+	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
+		 mem_fd, pcigart_addr)) == MAP_FAILED)
+	{
+	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		   strerror (errno));
+	  exit (EXIT_FAILURE);
+	}
+      break;
     default:
       assert (0);
       break;
@@ -272,6 +285,7 @@ main (int argc, char **argv)
     case INTERFACE_IGP:
     case INTERFACE_PCI:
     case INTERFACE_PCI_E:
+    case INTERFACE_RS690:
       if (munmap (pcigart_mem_map, pcigart_len) < 0)
 	{
 	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,

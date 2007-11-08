@@ -62,6 +62,7 @@ memory_gart_to_phys (unsigned int addr)
   switch (option_interface)
     {
     case INTERFACE_IGP:
+    case INTERFACE_RS690:
       phys_addr = pcigart_mem_map[num] & ~0xc;
       break;
     case INTERFACE_PCI:
@@ -165,6 +166,7 @@ memory_read (unsigned int addr, unsigned int size)
     case INTERFACE_IGP:
     case INTERFACE_PCI:
     case INTERFACE_PCI_E:
+    case INTERFACE_RS690:
       mem_map = memory_read_pcigart (addr, size);
       break;
     default:
