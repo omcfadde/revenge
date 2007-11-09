@@ -24,14 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-enum interface_t
-{
-  INTERFACE_AGP,
-  INTERFACE_IGP,
-  INTERFACE_PCI,
-  INTERFACE_PCI_E,
-  INTERFACE_RS690,
-};
+/* {{{ */
 
 #define AVIVO_CRTC1_FB_LOCATION				0x6110
 #define AVIVO_CRTC1_FB_END					0x6118
@@ -118,7 +111,7 @@ enum interface_t
 #define RADEON_RS690GART_INDEX	        0x78
 #	define RADEON_RS690GART_INDEX_MASK	0x1ff
 #	define RADEON_RS690GART_INDEX_WRITEBIT	(1 << 9)
-#	define RADEON_RS690GART_INDEX_WRITEACK	0x7f 	 /* write ack value */
+#	define RADEON_RS690GART_INDEX_WRITEACK	0x7f	/* write ack value */
 #define RADEON_RS690GART_DATA		0x7c
 
 #define RADEON_RS690GART_BASE_ADDR      0x2c
@@ -144,6 +137,17 @@ enum interface_t
 #       define R300_TXO_OFFSET_SHIFT             5
 /* END */
 
+/* }}} */
+
+enum interface_t
+{
+  INTERFACE_AGP,
+  INTERFACE_IGP,
+  INTERFACE_PCI,
+  INTERFACE_PCI_E,
+  INTERFACE_RS690,
+};
+
 extern int option_debug;
 extern int option_disable_ib;
 extern int option_fast;
@@ -157,3 +161,5 @@ extern unsigned int *reg_mem_map;
 int main (int argc, char **argv);
 
 #endif
+
+/* vim: set foldenable foldmethod=marker : */
