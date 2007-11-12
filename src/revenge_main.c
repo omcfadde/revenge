@@ -208,7 +208,7 @@ main (int argc, char **argv)
       break;
     case INTERFACE_PCI:
     case INTERFACE_PCI_E:
-      detect_pcigart_aperture ();
+      detect_pciegart_aperture ();
       if ((pcigart_mem_map =
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)

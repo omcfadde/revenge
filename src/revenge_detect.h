@@ -39,7 +39,7 @@ extern unsigned int reg_len;
 extern int gl_max_texture_units;
 void detect_agp_aperture (void);
 void detect_fb_aperture (void);
-void detect_pcigart_aperture (void);
+void detect_pciegart_aperture (void);
 void detect_rs690gart_aperture (void);
 void detect_igpgart_aperture (void);
 void detect_reg_aperture (void);

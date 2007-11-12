@@ -138,7 +138,7 @@ detect_fb_aperture (void)
 }
 
 void
-detect_pcigart_aperture (void)
+detect_pciegart_aperture (void)
 {
   pcigart_addr = register_read_pcie (RADEON_PCIE_TX_GART_BASE);
   pcigart_start = register_read_pcie (RADEON_PCIE_TX_GART_START_LO);
