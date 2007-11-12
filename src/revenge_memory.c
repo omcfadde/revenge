@@ -50,26 +50,26 @@ memory_read_agp (unsigned int addr, unsigned int size)
 }
 
 static unsigned int
-memory_gart_to_phys (unsigned int addr)
+memory_virt_to_phys (unsigned int virt_addr)
 {
-  int num;
+  unsigned int page_num;
   unsigned int phys_addr;
 
-  num = (addr - pcigart_start) / ATI_PCIGART_PAGE_SIZE;
-
-  assert ((pcigart_mem_map[num] & 0xc) == 0xc);
+  page_num = (virt_addr - pcigart_start) / ATI_PCIGART_PAGE_SIZE;
 
   switch (option_interface)
     {
     case INTERFACE_IGP:
     case INTERFACE_RS690:
-      phys_addr = pcigart_mem_map[num] & ~0xc;
+      assert ((pcigart_mem_map[page_num] & 0xc) == 0xc);
+      phys_addr = pcigart_mem_map[page_num] & ~0xc;
       break;
     case INTERFACE_PCI:
-      phys_addr = pcigart_mem_map[num];
+      phys_addr = pcigart_mem_map[page_num];
       break;
     case INTERFACE_PCI_E:
-      phys_addr = (pcigart_mem_map[num] & ~0xc) << 8;
+      assert ((pcigart_mem_map[page_num] & 0xc) == 0xc);
+      phys_addr = (pcigart_mem_map[page_num] & ~0xc) << 8;
       break;
     default:
       assert (0);
@@ -80,8 +80,8 @@ memory_gart_to_phys (unsigned int addr)
 
   if (option_debug && option_verbose)
     {
-      printf ("%s: addr = 0x%08x phys_addr = 0x%08x (%d)\n", __func__,
-	      addr, phys_addr, num);
+      printf ("%s: virt_addr = 0x%08x page_num = 0x%08x phys_addr = 0x%08x\n",
+	      __func__, virt_addr, page_num, phys_addr);
     }
 
   return phys_addr;
@@ -124,7 +124,7 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
       if ((page_mem_map =
 	   mmap (NULL, ATI_PCIGART_PAGE_SIZE, PROT_READ | PROT_WRITE,
 		 MAP_SHARED, mem_fd,
-		 memory_gart_to_phys (start_page_addr))) == MAP_FAILED)
+		 memory_virt_to_phys (start_page_addr))) == MAP_FAILED)
 	{
 	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
 		   strerror (errno));
