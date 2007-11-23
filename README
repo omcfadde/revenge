@@ -1,0 +1,61 @@
+README
+******
+
+1 About Revenge
+***************
+
+Revenge is a program designed to aid in reverse engineering and
+debugging 3D programming of ATI graphics cards.
+
+   Revenge is usable by both developers and users; users may simply run
+Revenge and send the created dump tarball to the developers.
+
+   New OpenGL test may be easily added to Revenge for testing new
+features and extensions.
+
+2 Installing Revenge
+********************
+
+Briefly, the shell commands `./configure; make; make install' should
+configure, build, and install this package. Revenge requires the
+following packages, as well as a Unix-like operating system, such as
+GNU/Linux.
+
+   * pciutils (http://www.kernel.org/pub/software/utils/pciutils/)
+
+   * Simple DirectMedia Layer (http://www.libsdl.org/)
+
+   * zlib (http://www.zlib.net/)
+
+   You may also run revenge in-place, without executing `make install',
+if you prefer.
+
+3 Running Revenge
+*****************
+
+You must be root in order to run Revenge; the X server may be running
+as a user, but you may have to execute `xhost +' to disable access
+control.
+
+   You should verify you are *NOT* running any OpenGL based window
+managers such as Beryl (http://www.beryl-project.org/), Compiz
+(http://compiz.org/), etc.
+
+   Revenge currently does not auto-detect the interface used by the
+graphics card, so you must run with the appropiate siwtch. The avilable
+interface types are as follows: `--agp', `--igp', `--pci', `--pci-e',
+and `--rs690'.
+
+   The following is an usage example for Revenge; substitute `--pci-e'
+with the interface type appropriate for your card.
+
+     # revenge --pci-e
+
+   While Revenge is running please do not move the mouse or minimize
+the window, etc; it's best to simply let Revenge run without
+interference.
+
+   After executing this command and waiting some time (typically a few
+minutes) a dump tarball will be created. You should send this dump
+tarball to `revenge@freedesktop.org'.
+

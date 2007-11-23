@@ -1,0 +1,75 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename README.info
+@settitle README
+@c %**end of header
+
+@node Top
+@top README
+
+@menu
+* About Revenge::
+* Installing Revenge::
+* Running Revenge::
+@end menu
+
+@node About Revenge
+@chapter About Revenge
+
+Revenge is a program designed to aid in reverse engineering and debugging 3D
+programming of ATI graphics cards.
+
+Revenge is usable by both developers and users; users may simply run Revenge and
+send the created dump tarball to the developers.
+
+New OpenGL test may be easily added to Revenge for testing new features and
+extensions.
+
+@node Installing Revenge
+@chapter Installing Revenge
+
+Briefly, the shell commands @samp{./configure; make; make install} should
+configure, build, and install this package. Revenge requires the following
+packages, as well as a Unix-like operating system, such as GNU/Linux.
+
+@itemize
+@item
+@uref{http://www.kernel.org/pub/software/utils/pciutils/,pciutils}
+@item
+@uref{http://www.libsdl.org/,Simple DirectMedia Layer}
+@item
+@uref{http://www.zlib.net/,zlib}
+@end itemize
+
+You may also run revenge in-place, without executing @samp{make install}, if you
+prefer.
+
+@node Running Revenge
+@chapter Running Revenge
+
+You must be root in order to run Revenge; the X server may be running as a user,
+but you may have to execute @samp{xhost +} to disable access control.
+
+You should verify you are @strong{NOT} running any OpenGL based window managers
+such as @uref{http://www.beryl-project.org/,Beryl},
+@uref{http://compiz.org/,Compiz}, etc.
+
+Revenge currently does not auto-detect the interface used by the graphics card,
+so you must run with the appropiate siwtch. The avilable interface types are as
+follows: @samp{--agp}, @samp{--igp}, @samp{--pci}, @samp{--pci-e}, and
+@samp{--rs690}.
+
+The following is an usage example for Revenge; substitute @samp{--pci-e} with
+the interface type appropriate for your card.
+
+@example
+# revenge --pci-e
+@end example
+
+While Revenge is running please do not move the mouse or minimize the window,
+etc; it's best to simply let Revenge run without interference.
+
+After executing this command and waiting some time (typically a few minutes) a
+dump tarball will be created. You should send this dump tarball to
+@samp{revenge@@freedesktop.org}.
+
