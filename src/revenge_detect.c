@@ -156,8 +156,10 @@ void
 detect_rs690gart_aperture (void)
 {
   pcigart_addr = register_read_rs690 (RADEON_RS690GART_BASE_ADDR);
-  pcigart_start = register_read_rs690 (RADEON_RS690GART_START);
-  pcigart_end = register_read_rs690 (RADEON_RS690GART_END);
+  pcigart_start =
+    (register_read_rs690 (RADEON_RS690GART_LOCATION) & 0xffff) << 16;
+  pcigart_end =
+    (register_read_rs690 (RADEON_RS690GART_LOCATION) & 0xffff0000);
   pcigart_len = pcigart_end - pcigart_start;
 
   if (option_debug)

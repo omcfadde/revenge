@@ -108,15 +108,14 @@
 #define RADEON_IGPGART_ENABLE           0x38
 #define RADEON_IGPGART_UNK_39           0x39
 
-#define RADEON_RS690GART_INDEX	        0x78
-#	define RADEON_RS690GART_INDEX_MASK	0x1ff
-#	define RADEON_RS690GART_INDEX_WRITEBIT	(1 << 9)
-#	define RADEON_RS690GART_INDEX_WRITEACK	0x7f	/* write ack value */
-#define RADEON_RS690GART_DATA		0x7c
+#define RADEON_RS690GART_INDEX          0x78
+#       define RADEON_RS690GART_INDEX_MASK 0x1ff
+#       define RADEON_RS690GART_INDEX_WRITEBIT (1 << 9)
+#       define RADEON_RS690GART_INDEX_WRITEACK 0x7f     /* write ack value */
+#define RADEON_RS690GART_DATA           0x7c
 
 #define RADEON_RS690GART_BASE_ADDR      0x2c
-#define RADEON_RS690GART_START		0x100
-#define RADEON_RS690GART_END		0x101
+#define RADEON_RS690GART_LOCATION       0x101
 
 #define R300_TX_SIZE_0                      0x4480
 #       define R300_TX_WIDTHMASK_SHIFT           0
