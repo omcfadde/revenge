@@ -63,7 +63,6 @@ gl_alpha_test (void)
 	}
     }
 
-
   glAlphaFunc (GL_ALWAYS, 0.0);
   glDisable (GL_ALPHA_TEST);
 }

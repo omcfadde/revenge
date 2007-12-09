@@ -38,8 +38,8 @@ void
 gl_texture_wrap_s (void)
 {
   data_store texture_wrap[] = {
-      {N_(GL_CLAMP)},
-      {N_(GL_REPEAT)},
+    {N_(GL_CLAMP)},
+    {N_(GL_REPEAT)},
   };
 
   GLuint *texture = NULL;;
@@ -51,8 +51,7 @@ gl_texture_wrap_s (void)
       return;
     }
 
-  for (i = 0;
-       i < sizeof (texture_wrap) / sizeof (texture_wrap[0]); i++)
+  for (i = 0; i < sizeof (texture_wrap) / sizeof (texture_wrap[0]); i++)
     {
       test_prologue (texture_wrap[i].name);
 
