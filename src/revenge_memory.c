@@ -38,8 +38,8 @@ memory_read_agp (unsigned int addr, unsigned int size)
 
   if (!(tmp = (void *) malloc (size)))
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
@@ -104,8 +104,8 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
 
   if (!(mem_map = (void *) malloc (buf_size)))
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
@@ -125,8 +125,8 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
 		 MAP_SHARED, mem_fd,
 		 memory_virt_to_phys (start_page_addr))) == MAP_FAILED)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
 
@@ -134,16 +134,16 @@ memory_read_pcigart (unsigned int addr, unsigned int size)
 
       if (munmap (page_mem_map, ATI_PCIGART_PAGE_SIZE) < 0)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
     }
 
   if (!(dest = (void *) malloc (size)))
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
   memcpy (dest, mem_map + addr_mod, size);

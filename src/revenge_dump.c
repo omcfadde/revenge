@@ -158,8 +158,8 @@ dump_packets (unsigned int head, unsigned int tail, unsigned int *mem_map,
 
   if (!(file = fopen (name, "w")))
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 

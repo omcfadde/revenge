@@ -94,8 +94,8 @@ random_texture (int width, int height)
 
   if (!(texture = (GLuint *) malloc (width * height * sizeof (GLuint))))
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       return NULL;
     }
 
@@ -151,7 +151,8 @@ test_prologue (char *buf)
 	{
 	  if (errno != EEXIST)
 	    {
-	      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	      fprintf (stderr, "%s: %s:%d: %s\n",
+		       program_invocation_short_name, __FILE__, __LINE__,
 		       strerror (errno));
 	      exit (EXIT_FAILURE);
 	    }
@@ -159,8 +160,8 @@ test_prologue (char *buf)
 
       if (chdir (buf) < 0)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
     }
@@ -176,8 +177,8 @@ test_epilogue (bool buf)
     {
       if (chdir ("..") < 0)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
     }
@@ -254,7 +255,8 @@ test (void)
 	{
 	  if (errno != EEXIST)
 	    {
-	      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+	      fprintf (stderr, "%s: %s:%d: %s\n",
+		       program_invocation_short_name, __FILE__, __LINE__,
 		       strerror (errno));
 	      exit (EXIT_FAILURE);
 	    }
@@ -262,8 +264,8 @@ test (void)
 
       if (chdir (test->name) < 0)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
 
@@ -273,8 +275,8 @@ test (void)
 
       if (chdir ("..") < 0)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
     }

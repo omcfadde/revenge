@@ -156,8 +156,8 @@ main (int argc, char **argv)
 
   if ((mem_fd = open ("/dev/mem", O_RDWR)) < 0)
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
@@ -166,8 +166,8 @@ main (int argc, char **argv)
        mmap (NULL, reg_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 	     reg_addr)) == MAP_FAILED)
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
@@ -176,8 +176,8 @@ main (int argc, char **argv)
        mmap (NULL, fb_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 	     fb_addr)) == MAP_FAILED)
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
@@ -189,8 +189,8 @@ main (int argc, char **argv)
 	   mmap (NULL, agp_len, PROT_READ | PROT_WRITE, MAP_SHARED, mem_fd,
 		 agp_addr)) == MAP_FAILED)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
       break;
@@ -200,8 +200,8 @@ main (int argc, char **argv)
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
       break;
@@ -212,8 +212,8 @@ main (int argc, char **argv)
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
       break;
@@ -223,8 +223,8 @@ main (int argc, char **argv)
 	   mmap (NULL, pcigart_len, PROT_READ | PROT_WRITE, MAP_SHARED,
 		 mem_fd, pcigart_addr)) == MAP_FAILED)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
       break;
@@ -240,16 +240,16 @@ main (int argc, char **argv)
     {
       if (errno != EEXIST)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
     }
 
   if (chdir (buf) < 0)
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
@@ -259,15 +259,15 @@ main (int argc, char **argv)
 
   if (munmap (reg_mem_map, reg_len) < 0)
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
   if (munmap (fb_mem_map, fb_len) < 0)
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
@@ -276,8 +276,8 @@ main (int argc, char **argv)
     case INTERFACE_AGP:
       if (munmap (agp_mem_map, agp_len) < 0)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
       break;
@@ -287,8 +287,8 @@ main (int argc, char **argv)
     case INTERFACE_RS690:
       if (munmap (pcigart_mem_map, pcigart_len) < 0)
 	{
-	  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-		   strerror (errno));
+	  fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+		   __FILE__, __LINE__, strerror (errno));
 	  exit (EXIT_FAILURE);
 	}
       break;
@@ -299,15 +299,15 @@ main (int argc, char **argv)
 
   if (close (mem_fd) < 0)
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
   if (chdir ("..") < 0)
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 

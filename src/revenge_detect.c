@@ -66,8 +66,8 @@ detect_agp_aperture (void)
 
   if (!(file = fopen ("/proc/iomem", "r")))
     {
-      fprintf (stderr, "%s: %s\n", program_invocation_short_name,
-	       strerror (errno));
+      fprintf (stderr, "%s: %s:%d: %s\n", program_invocation_short_name,
+	       __FILE__, __LINE__, strerror (errno));
       exit (EXIT_FAILURE);
     }
 
@@ -229,7 +229,8 @@ detect_reg_aperture (void)
 	    {
 	      if (!(pci_config = (unsigned char *) malloc (64)))
 		{
-		  fprintf (stderr, "%s: %s\n", program_invocation_short_name,
+		  fprintf (stderr, "%s: %s:%d: %s\n",
+			   program_invocation_short_name, __FILE__, __LINE__,
 			   strerror (errno));
 		  exit (EXIT_FAILURE);
 		}
