@@ -43,7 +43,14 @@ memory_read_agp (unsigned int addr, unsigned int size)
       exit (EXIT_FAILURE);
     }
 
-  memcpy (tmp, agp_mem_map + ((addr - agp_addr) >> 2), size);
+  if (addr < agp_addr || addr > agp_addr + agp_len)
+    {
+      memcpy (tmp, fb_mem_map + ((addr - fb_addr) >> 2), size);
+    }
+  else
+    {
+      memcpy (tmp, agp_mem_map + ((addr - agp_addr) >> 2), size);
+    }
 
   return tmp;
 }
