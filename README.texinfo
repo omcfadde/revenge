@@ -71,5 +71,5 @@ etc; it's best to simply let Revenge run without interference.
 
 After executing this command and waiting some time (typically a few minutes) a
 dump tarball will be created. You should send this dump tarball to
-@samp{revenge@@freedesktop.org}.
+@samp{z3ro.geek@@gmail.com}.
 
