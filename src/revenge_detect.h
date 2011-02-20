@@ -1,7 +1,7 @@
 /*
  * $Id$
  * Copyright (C) 2007  Maciej Cencora <m.cencora@gmail.com>
- * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
+ * Copyright (C) 2007  Oliver McFadden <omcfadde@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

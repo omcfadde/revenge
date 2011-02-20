@@ -2,7 +2,7 @@
  * $Id$
  * Copyright (C) 2007  Christoph Brill <egore911@egore911.de>
  * Copyright (C) 2007  Maciej Cencora <m.cencora@gmail.com>
- * Copyright (C) 2007  Oliver McFadden <z3ro.geek@gmail.com>
+ * Copyright (C) 2007  Oliver McFadden <omcfadde@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,6 +121,13 @@ main (int argc, char **argv)
   int i = 0;
   int opt;
   int revenge_rand;
+
+  if (getuid () != 0)
+    {
+      fprintf (stderr, "%s: %s:%d: you are not root! http://xkcd.com/149/\n",
+	       program_invocation_short_name, __FILE__, __LINE__);
+      exit (EXIT_FAILURE);
+    }
 
   srand (time (NULL));
   revenge_rand = rand () & 0xffff;
